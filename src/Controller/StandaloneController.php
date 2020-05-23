@@ -4,14 +4,8 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Abraham\TwitterOAuth\TwitterOAuth;
-use App\Entity\AutomatedUpdate;
-use App\Entity\LoginAttempt;
-use App\Entity\User;
 use App\Form\ContactFormType;
-use App\Model\TwitterModel;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use ReCaptcha\ReCaptcha;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
@@ -21,7 +15,7 @@ class StandaloneController extends AbstractController
     /**
      * @Route("/", name="index")
      */
-    public function index(Request $request)
+    public function index()
     {
         return $this->render('standalone/index.html.twig', [
             'ignore' => true
@@ -31,21 +25,17 @@ class StandaloneController extends AbstractController
     /**
      * @Route("/privacy-policy", name="privacy_policy")
      */
-    public function privacy(Request $request)
+    public function privacy()
     {
-        return $this->render('standalone/privacy.html.twig', [
-            'darkmode' => $request->cookies->has("darkmode") ? $request->cookies->get("darkmode") : false
-        ]);
+        return $this->render('standalone/privacy.html.twig');
     }
     
     /**
      * @Route("/legal-disclosure", name="legal_disclosure")
      */
-    public function imprint(Request $request)
+    public function imprint()
     {
-        return $this->render('standalone/legal.html.twig', [
-            'darkmode' => $request->cookies->has("darkmode") ? $request->cookies->get("darkmode") : false
-        ]);
+        return $this->render('standalone/legal.html.twig');
     }
     
     /**
@@ -86,7 +76,6 @@ class StandaloneController extends AbstractController
 
         return $this->render('standalone/contact.html.twig', [
             'submitted' => $submitted,
-            'darkmode' => $request->cookies->has("darkmode") ? $request->cookies->get("darkmode") : false,
             'form' => $form->createView(),
             'recaptcha_public' => $this->getParameter("recaptcha_public")
         ]);

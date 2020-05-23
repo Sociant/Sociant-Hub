@@ -58,7 +58,7 @@ class TwitterModel
         $followerUserRelation = $repository->findOneBy(["user" => $user->getId(), "type" => "follower"]) ?? new UserRelation();
         $followingUserRelation = $repository->findOneBy(["user" => $user->getId(), "type" => "following"]) ?? new UserRelation();
 
-        $userStats = $this->entityManager->createQuery("select s from App\Entity\UserStatistic s where s.date = CURRENT_DATE() and s.user = :user")->setParameter("user", $user->getId())->getOneOrNullResult() ?? new UserStatistic();
+        $userStats = $this->entityManager->getRepository(UserStatistic::class)->findTodaysStatisticsByUser($user) ?? new UserStatistic();
 
         $this->verifyCredentials($user);
 
@@ -322,13 +322,8 @@ class TwitterModel
                     foreach ($result as $item)
                         array_push($ids, $item["id"]);
 
-                    $query = $this->entityManager->createQuery(
-                        "select s.date, s.followerCount, s.followingCount, MONTH(s.date) as sMonth, YEAR(s.date) as sYear from App\Entity\UserStatistic s
-                    where s.user = :user
-                    and s.id in (:list)
-                    order by s.date"
-                    )->setParameter(":user", $user->getId())
-                        ->setParameter(":list", $ids);
+                    $query = $this->entityManager->getRepository(UserStatistic::class)
+                        ->findStatisticsForUserByIds($user,$ids);
                 }
                 break;
             case "day": {
@@ -349,13 +344,8 @@ class TwitterModel
                     foreach ($result as $item)
                         array_push($ids, $item["id"]);
 
-                    $query = $this->entityManager->createQuery(
-                        "select s.date, s.followerCount, s.followingCount, MONTH(s.date) as sMonth, YEAR(s.date) as sYear from App\Entity\UserStatistic s
-                    where s.user = :user
-                    and s.id in (:list)
-                    order by s.date"
-                    )->setParameter(":user", $user->getId())
-                        ->setParameter(":list", $ids);
+                    $query = $this->entityManager->getRepository(UserStatistic::class)
+                        ->findStatisticsForUserByIds($user,$ids);
                 }
                 break;
             case "hour": {
@@ -376,22 +366,17 @@ class TwitterModel
                     foreach ($result as $item)
                         array_push($ids, $item["id"]);
 
-                    $query = $this->entityManager->createQuery(
-                        "select s.date, s.followerCount, s.followingCount from App\Entity\UserStatistic s
-                    where s.user = :user
-                    and s.id in (:list)
-                    order by s.date"
-                    )->setParameter(":user", $user->getId())
-                        ->setParameter(":list", $ids);
+                    $query = $this->entityManager->getRepository(UserStatistic::class)
+                                ->findStatisticsForUserByIds($user,$ids);
                 }
         }
 
         if (!$simplyfied)
-            return $query->getArrayResult();
+            return $query;
         else {
             $output = [];
 
-            foreach ($query->getArrayResult() as $row) {
+            foreach ($query as $row) {
                 array_push($output, [
                     "date" => date_timestamp_get($row["date"]),
                     "followerCount" => $row["followerCount"],

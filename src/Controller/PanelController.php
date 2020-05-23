@@ -4,10 +4,8 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Abraham\TwitterOAuth\TwitterOAuth;
 use App\Entity\AutomatedUpdate;
-use App\Entity\LoginAttempt;
-use App\Entity\User;
+use App\Entity\UserAction;
 use App\Model\TwitterModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,8 +47,7 @@ class PanelController extends AbstractController
         $twitterUser = $twitterModel->verifyCredentials($user);
 
         return $this->render('panel/setup.html.twig', [
-            'twitterUser' => $twitterUser,
-            'darkmode' => $request->cookies->has("darkmode") ? $request->cookies->get("darkmode") : false
+            'twitterUser' => $twitterUser
         ]);
     }
 
@@ -73,15 +70,9 @@ class PanelController extends AbstractController
 
         $entityManager = $this->getDoctrine()->getManager();
 
-        $recentActivities = $entityManager->createQuery(
-            "select a,tu from App\Entity\UserAction a
-            left join a.twitterUser tu
-            where a.user = :user
-            order by a.id desc"
-            )->setParameter(":user",$this->getUser()->getId())
-            ->setMaxResults(10)
-            ->getResult();
-
+        $recentActivities = $entityManager->getRepository(UserAction::class)
+                                ->findActivitesByUser($this->getUser(),10);
+        
         $automatedUpdate = $entityManager->getRepository(AutomatedUpdate::class)->findOneBy(["user"=>$this->getUser()->getId()]);
             
         return $this->render('panel/home.html.twig', [
@@ -89,7 +80,6 @@ class PanelController extends AbstractController
             'dailyHistory' => $dailyHistory,
             'hourlyHistory' => $hourlyHistory,
             'recentActivities' => $recentActivities,
-            'darkmode' => $request->cookies->has("darkmode") ? $request->cookies->get("darkmode") : false,
             'canUpdate' => $automatedUpdate->getLastUpdate() < new \DateTime("-59 minutes")
         ]);
     }
@@ -97,21 +87,15 @@ class PanelController extends AbstractController
     /**
      * @Route("/activities", name="activities")
      */
-    public function activities(Request $request)
+    public function activities()
     {
         if(!$this->getUser()->getSetupCompleted()) return $this->redirectToRoute("panel_setup");
 
-        $activities = $this->getDoctrine()->getManager()->createQuery(
-            "select a,tu from App\Entity\UserAction a
-            left join a.twitterUser tu
-            where a.user = :user
-            order by a.id desc"
-            )->setParameter(":user",$this->getUser()->getId())
-            ->getResult();
+        $activities = $this->getDoctrine()->getManager()->getRepository(UserAction::class)
+                        ->findActivitesByUser($this->getUser(),null);
 
         return $this->render('panel/activities.html.twig', [
-            'activities' => $activities,
-            'darkmode' => $request->cookies->has("darkmode") ? $request->cookies->get("darkmode") : false
+            'activities' => $activities
         ]);
     }
 
@@ -169,7 +153,6 @@ class PanelController extends AbstractController
         return $this->render('panel/settings.html.twig', [
             'twitterUser' => $twitterUser,
             'currentState' => $currentState,
-            'darkmode' => $request->cookies->has("darkmode") ? $request->cookies->get("darkmode") : false
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\UserAction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,32 +20,19 @@ class UserActionRepository extends ServiceEntityRepository
         parent::__construct($registry, UserAction::class);
     }
 
-    // /**
-    //  * @return UserAction[] Returns an array of UserAction objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return UserAction[] Returns an array of UserAction objects
+    */
+    public function findActivitesByUser(User $user, $maxResults = 10)
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('a')
+            ->leftJoin("a.twitterUser","tu")
+            ->where('a.user = :user')
+            ->setParameter('user', $user->getId())
+            ->orderBy('a.id', 'DESC')
+            ->setMaxResults($maxResults)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?UserAction
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

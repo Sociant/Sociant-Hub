@@ -51,7 +51,7 @@
         <script src="https://kit.fontawesome.com/2bd4ca0a41.js" crossorigin="anonymous"></script>
         {% endblock %}
     </head>
-    <body class="{{ darkmode is defined ? darkmode : "" }}{{ ignore is defined ? " ignore" : "" }}">
+    <body class="{{ app.request.cookies.get("darkmode") | default("") }}{{ ignore is defined ? " ignore" : "" }}">
         <div id="website">
         {% block navigation %}
         {% include "panel/elements/navigation.html.twig" %}

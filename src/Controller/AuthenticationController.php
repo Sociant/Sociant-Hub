@@ -6,8 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use App\Entity\LoginAttempt;
-use App\Entity\User;
-use App\Model\TwitterModel;
 use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticationController extends AbstractController
