@@ -1,4 +1,8 @@
-![Analyze your account with Sociant Hub](readme-header.png "Sociant Hub Header")
+<h1 align="center">
+    <a href="https://hub.sociant.de" target="_blank">
+        <img src="readme-header.png" />
+    </a>
+</h1>
 
 # Sociant Hub
 
