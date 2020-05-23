@@ -38,7 +38,7 @@ MAILER_DSN | DSN Settings for E-Mail delivery || Please consider checking out th
 TWITTER_API_KEY | Public Twitter API Key || Please visit [Twitter Developer](https://developer.twitter.com/en/apps) for obtaining the key pair
 TWITTER_API_SECRET_KEY | Secret Twitter API Key || Read above
 TWITTER_CALLBACK_URL | Return URL after successful authentication || Read above
-REPATCHA_PUBLIC | Public Recaptcha Key for Contact Page || Please visit [Recaptcha Admin](https://www.google.com/recaptcha/admi) for obtaining the key pair
+REPATCHA_PUBLIC | Public Recaptcha Key for Contact Page || Please visit [Recaptcha Admin](https://www.google.com/recaptcha/admin) for obtaining the key pair
 REPATCHA_SECRET | Secret Recaptcha Key for Contact Page ||  Read above
 RECIPIENT_EMAIL | Recipient E-Mail for Contact Page || john@doe.com
 
