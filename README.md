@@ -68,4 +68,4 @@ Sociant Hub is released under the [Apache-2.0](license.md) License
 
 Sociant Hub was created by [l9cgv](https://twitter.com/l9cgv) as Project for [SociantWD](https://twitter.com/SociantWD).
 
-Thanks to [DeZio91](https://twitter.com/DeZio91) for testing out the application in beta state.
+Thanks to [DeZio91](https://twitter.com/DeZio91) and [Marcel Malberg](https://twitter.com/TheCrealm) for testing out the application in beta state.
