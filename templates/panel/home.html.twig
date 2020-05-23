@@ -1,0 +1,450 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block title %}Sociant Hub ~ Home{% endblock %}
+
+{% block body %}
+    <div id="overlayer">
+        <div class="inner">
+            <div class="box">
+                <div class="title">Updating data</div>
+                <div class="message">We're fetching your public user information and updating your data. This might take a while...</div>
+                <div class="spinner">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="content">
+        <div class="container">
+            <div class="page-title">Statistics for <span>{{ app.user.twitterUser ? app.user.twitterUser.name : app.user.twitterUserScreenName }}</span></div>
+            <div class="row">
+                <div class="column chart-frame">
+                    <div class="title">Graph</div>
+                    <div class="actions">
+                        <div class="action menu" data-type="graph-type">
+                            Range: <span class="base">Daily</span>
+                            <div class="items">
+                                <div class="item" data-type="hourly">Hourly</div>
+                                <div class="item" data-type="daily">Daily</div>
+                                <div class="item" data-type="monthly">Montly</div>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="userStat" height="200"></canvas>
+                </div>
+                <div class="column">
+                    <div class="title row">
+                        <span>Recent Activities</span>
+                        <a href="{{ path("panel_activities") }}">Show all</a>
+                    </div>
+                    {% if recentActivities | length == 0 %}
+                    <div class="empty-info">
+                        Sit tight, we're still crawling your statistics.
+                    </div>
+                    {% endif %}
+                    {% for item in recentActivities %}
+                        <a{% if item.twitterUser %} target="_blank" href="https://twitter.com/{{ item.twitterUser.screenName }}"{% endif %} class="user-card">
+                            {% if item.twitterUser %}
+                            <div class="image" style="background-image: url({{ item.twitterUser.profileImageURL | replace({"_normal":""}) }})"></div>
+                            <span class="name">{{ item.twitterUser.name }}<small>@{{ item.twitterUser.screenName }}</small></span>
+                            {% else %}
+                            <div class="image" style="background-image: url(https://abs.twimg.com/sticky/default_profile_images/default_profile.png)"></div>
+                            <span class="name">{{ item.uuid }}</span>
+                            {% endif %}
+                            <div class="datestamp">
+                                <span>{{ item.timestamp | date("H:i m/d/Y") }}</span>
+                                {% if item.action == "unfollow_self" %}
+                                <small>you unfollowed</small>
+                                {% elseif item.action == "unfollow_other" %}
+                                <small>unfollowed you</small>
+                                {% elseif item.action == "follow_self" %}
+                                <small>you followed</small>
+                                {% elseif item.action == "follow_other" %}
+                                <small>followed you</small>
+                                {% endif %}
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    {% set analytics = app.user.analytics %}
+                    <div class="title">Follower Analytics<br><small>Last Update: {{ analytics.updated | date }}</small></div>
+                    <div class="row analytics">
+                        <div class="item number">
+                            <span class="label">Verified Followers</span>
+                            <i class="fas fa-user-check"></i>
+                            {{ analytics.verifiedFollowers }} Followers
+                        </div>
+                        <div class="item number">
+                            <span class="label">Protected Followers</span>
+                            <i class="fas fa-user-lock"></i>
+                            {{ analytics.protectedFollowers }} Followers
+                        </div>
+                        <div class="item number">
+                            <span class="label">Tweets Total</span>
+                            <i class="fas fa-comments"></i>
+                            {{ analytics.statusCount }} Tweets
+                        </div>
+                        <div class="item number">
+                            <span class="label">Favorites Total</span>
+                            <i class="fas fa-heart"></i>
+                            {{ analytics.favoriteCount }} Favorites
+                        </div>
+                        {% if analytics.mostStatuses %}
+                        <div class="item profile">
+                            <span class="label">Most Tweets</span>
+                            <i class="fas fa-inbox"></i>
+                            <span class="name">@{{ analytics.mostStatuses.screenName }}</span>
+                            {{ analytics.mostStatuses.statusesCount }} Tweets
+                        </div>
+                        {% endif %}
+                        {% if analytics.mostFollowers %}
+                        <div class="item profile">
+                            <span class="label">Most Followers</span>
+                            <i class="fas fa-users"></i>
+                            <span class="name">@{{ analytics.mostFollowers.screenName }}</span>
+                            {{ analytics.mostFollowers.followersCount }} Followers
+                        </div>
+                        {% endif %}
+                        {% if analytics.oldestAccount %}
+                        <div class="item profile">
+                            <span class="label">Oldest Account</span>
+                            <i class="fas fa-user-clock"></i>
+                            <span class="name">@{{ analytics.oldestAccount.screenName }}</span>
+                            Created {{ analytics.oldestAccount.accountCreatedAt | date }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <div class="title">User Analytics (@{{ app.user.twitterUser ? app.user.twitterUser.screenName : app.user.twitterUserScreenName }})
+                        {% if app.user.twitterUser %}<br><small>Last Update: {{ app.user.twitterUser.created | date }}</small>{% endif %}
+                    </div>
+                    {% if app.user.twitterUser %}
+                    <div class="row analytics">
+                        <div class="item number">
+                            <span class="label">Followers</span>
+                            <i class="fas fa-users"></i>
+                            {{ app.user.twitterUser.followersCount }} Followers
+                        </div>
+                        <div class="item number">
+                            <span class="label">Following</span>
+                            <i class="fas fa-user-tag"></i>
+                            Follwing {{ app.user.twitterUser.friendsCount }} Users
+                        </div>
+                        <div class="item number">
+                            <span class="label">Lists</span>
+                            <i class="fas fa-list"></i>
+                            Listed in {{ app.user.twitterUser.listedCount }} Lists
+                        </div>
+                        <div class="item number">
+                            <span class="label">Tweets</span>
+                            <i class="fas fa-comment"></i>
+                            {{ app.user.twitterUser.statusesCount }} Tweets
+                        </div>
+                        <div class="item number">
+                            <span class="label">Favorites</span>
+                            <i class="fas fa-heart"></i>
+                            {{ app.user.twitterUser.favoritesCount }} Favorites
+                        </div>
+                        {% set age = app.user.twitterUser.getAge %}
+                        <div class="item number">
+                            <span class="label">Account Age</span>
+                            <i class="fas fa-clock"></i>
+                            {{ age.y }} Years, {{ age.m }} Months, {{ age.d }} Days<br>
+                            {{ app.user.twitterUser.accountCreatedAt | date }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="setting">
+                <div class="label">Update Data
+                    <br>
+                    {% if app.user.automatedUpdate.updateInterval == "h1" %}
+                    <small>You cannot update your data manually because it updates itself every hour.</small>
+                    {% else %}
+                    <small>You can update your data manually once every hour. The last updated was finished {{ app.user.automatedUpdate.lastUpdate | date }}.<br>The update might take a while.</small>
+                    {% endif %}
+                    {% if app.user.automatedUpdate.updateInterval != "n" %}
+                    <br><small>Next scheduled update scheduled for: {{ app.user.automatedUpdate.nextUpdate | date }}</small>
+                    {% endif %}
+                </div>
+                <div class="actions">
+                    <div class="action update{{ (app.user.automatedUpdate.updateInterval == "h1" or not canUpdate) ? " disabled" : "" }}">
+                        Update data
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script defer>
+
+        var displayType = getLocalStorageItem("home-graph-display-type","hourly");
+        var monthlyData = {{ monthlyHistory | json_encode | raw }};
+        var dailyData = {{ dailyHistory | json_encode | raw }};
+        var hourlyData = {{ hourlyHistory | json_encode | raw }};
+
+        updateButton(displayType);
+
+        var chartData = {
+                datasets: [
+                    {
+                        label: 'Follower',
+                        data: createData("follower"),
+                        yAxisID: 'A',
+                        borderColor: "#00B294",
+                        backgroundColor: '#00B2941A'
+                    },
+                    {
+                        label: 'Following',
+                        data: createData("following"),
+                        yAxisID: 'B',
+                        borderColor: "#FF8C00",
+                        backgroundColor: '#FF8C001A'
+                    }
+                ]
+            };
+        
+        var chartOptions = {
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                        time: getAxisData()
+                    }],
+                    yAxes: [
+                        {
+                            id: 'A',
+                            type: 'linear',
+                            position: 'left',
+                            ticks: {
+                                callback: function (value) { if (Number.isInteger(value)) { return value; } },
+                                stepSize: 1,
+                                suggestedMax: 60,
+                                min: getMinimum("follower"),
+                                max: getMaximum("follower"),
+                                autoSkip: true,
+                                maxTicksLimit: 20
+                            }
+                        },
+                        {
+                            id: 'B',
+                            type: 'linear',
+                            position: 'right',
+                            ticks: {
+                                callback: function (value) { if (Number.isInteger(value)) { return value; } },
+                                stepSize: 1,
+                                suggestedMax: 60,
+                                min: getMinimum("following"),
+                                max: getMaximum("following"),
+                                autoSkip: true,
+                                maxTicksLimit: 20
+                            }
+                        }
+                    ]
+                },
+                legend: {
+                    position: "top",
+                    align: "start",
+                    labels: {
+                        usePointStyle: true,
+                    }
+                }
+            }
+
+        function updateChart() {
+            chartData.datasets[0].data = createData("follower");
+            chartData.datasets[1].data = createData("following");
+            chartOptions.scales.xAxes[0].time = getAxisData();
+            chartOptions.scales.yAxes[0].ticks.min = getMinimum("follower");
+            chartOptions.scales.yAxes[0].ticks.max = getMaximum("follower");
+            chartOptions.scales.yAxes[1].ticks.min = getMinimum("following");
+            chartOptions.scales.yAxes[1].ticks.max = getMaximum("following");
+
+            chart.options = chartOptions;
+
+            chart.update();
+        }
+
+        function getAxisData() {
+            switch(displayType) {
+                case "monthly": 
+                    return {
+                        unit: 'month',
+                        parser: "MM / YYYY",
+                        tooltipFormat: 'MMM YY'
+                    };
+                case "daily": 
+                    return {
+                        unit: 'day',
+                        parser: "DD / MM / YYYY",
+                        tooltipFormat: 'DD MMM YY'
+                    };
+                case "hourly": 
+                    return {
+                        unit: 'hour',
+                        parser: "HH / DD / MM / YYYY",
+                        tooltipFormat: 'HH:00 DD MMM YY'
+                    };
+            }
+        }
+
+        function updateButton() {
+            var text = "Hourly";
+            switch(displayType) {
+                case "monthly": text = "Monthly"; break;
+                case "daily": text = "Daily"; break;
+                case "hourly": text = "Hourly"; break;
+            }
+
+            document.querySelector("#content .actions .action[data-type='graph-type'] .base").textContent = text;
+        }
+
+        function createData(type) {
+            var output = [];
+            var data = monthlyData;
+
+            switch(displayType) {
+                case "monthly": data = monthlyData; break;
+                case "daily": data = dailyData; break;
+                case "hourly": data = hourlyData; break;
+            }
+
+            for(key in data) {
+                var item = data[key];
+                var date = new Date(item.date*1000);
+
+                if(displayType == "monthly") { 
+                    date.setDate(1);
+                    date.setHours(0,0,0);
+                } else if(displayType == "daily") {
+                    date.setHours(0,0,0);
+                } else if(displayType == "hourly")
+                    date.setMinutes(0,0);
+
+                switch(type) {
+                    case "follower": output.push({x: date, y: item.followerCount}); break;
+                    case "following": output.push({x: date, y: item.followingCount}); break;
+                }
+            }
+
+            return output;
+        }
+
+        function getMinimum(type) {
+            var data = monthlyData;
+            var min = 0;
+            var max = 0;
+
+            switch(displayType) {
+                case "monthly": data = monthlyData; break;
+                case "daily": data = dailyData; break;
+                case "hourly": data = hourlyData; break;
+            }
+
+
+            for(key in data) {
+                var item = data[key];
+                var value = type == "follower" ? item.followerCount : item.followingCount;
+
+                if(min == 0 || value < min) min = value;
+                if(max == 0 || value > max) max = value;
+            }
+
+            var range = min - ((Math.abs(min-max)) / 100 * 5) - 1;
+            if(range < 0) return 0;
+            return parseInt(range);
+        }
+
+        function getMaximum(type) {
+            var data = monthlyData;
+            var min = 0;
+            var max = 0;
+
+            switch(displayType) {
+                case "monthly": data = monthlyData; break;
+                case "daily": data = dailyData; break;
+                case "hourly": data = hourlyData; break;
+            }
+
+
+            for(key in data) {
+                var item = data[key];
+                var value = type == "follower" ? item.followerCount : item.followingCount;
+
+                if(min == 0 || value < min) min = value;
+                if(max == 0 || value > max) max = value;
+            }
+
+
+            var range = max + ((Math.abs(min-max)) / 100 * 5) + 1;
+            return parseInt(range);
+        }
+
+        var ctx = document.getElementById('userStat').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: chartData,
+            options: chartOptions,
+            plugins: [{
+                beforeInit: function(chart, options) {
+                    chart.legend.afterFit = function() {
+                        this.height = this.height + 20;
+                    };
+                }
+            }]
+        });
+
+        onEvent(document, "click", ".action.menu", function (e) {
+            e.stopPropagation();
+            this.classList.toggle("opened");
+        });
+
+        onEvent(document, "click", ".action.menu .items .item", function (e) {
+            e.stopPropagation();
+            
+            var action = this.closest(".action.menu");
+            var type = action.getAttribute("data-type");
+            
+            switch(type) {
+                case "graph-type": {
+                    displayType = this.getAttribute("data-type");
+                    localStorage.setItem("home-graph-display-type",displayType);
+                    updateChart();
+
+                    action.querySelector(".base").textContent = this.textContent;
+                } break;
+            }
+        });
+
+        onEvent(document, "click", ".action.update", function (e) {
+            document.querySelector("#overlayer").classList.add("reveal");
+            
+            request({
+                method: "POST",
+                url: "{{ path("panel_home") }}",
+                success(data) {
+                    window.location = "{{ path("panel_home") }}";
+                },
+                error(data) {
+                    alert("Updating data, please try again");
+                    document.querySelector("#overlayer").classList.remove("reveal");
+                },
+            });
+        });
+    </script>
+{% endblock %}

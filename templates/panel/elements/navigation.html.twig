@@ -1,0 +1,29 @@
+<div id="navigation"{% if mainpage is defined %} class="mainpage"{% endif %}>
+	<div class="container">
+		<div class="logo">Sociant Hub</div>
+		<div class="spacer"></div>
+		{% if app.user %}
+		<div class="profile">
+			{% if app.user.twitterUser %}
+				<span>{{ app.user.twitterUser.name }}<small>@{{ app.user.twitterUser.screenName }}</small>
+				</span>
+				<div class="image" style="background-image: url({{ app.user.twitterUser.profileImageURL | replace({" _normal":" "}) }})"></div>
+			{% else %}
+				<span>{{ app.user.twitterUserScreenName }}</span>
+				<div class="image" style="background-image: url(https://abs.twimg.com/sticky/default_profile_images/default_profile.png)"></div>
+			{% endif %}
+			<div class="menu">
+				<a href="{{ path("panel_home") }}" class="item"><i class="fa fa-home"></i> Panel Home</a>
+				<a href="{{ path("panel_settings") }}" class="item"><i class="fa fa-cog"></i> Settings</a>
+				<div class="divider"></div>
+				<a target="_blank" href="https://twitter.com/{{ app.user.twitterUser ? app.user.twitterUser.screenName : app.user.twitterUserScreenName }}" class="item"><i class="fa fa-user"></i> View Twitter Profile</a>
+				<div class="divider"></div>
+				<a href="{{ path("feedback") }}" class="item"><i class="fa fa-heart"></i> Submit Feedback</a>
+				<a href="{{ path("logout") }}" href class="item"><i class="fa fa-sign-out-alt"></i> Logout</a>
+			</div>
+		</div>
+		{% else %}
+		<a class="login" href="{{ path("login") }}"><i class="fab fa-twitter"></i> Sign in with Twitter</a>
+		{% endif %}
+	</div>
+</div>

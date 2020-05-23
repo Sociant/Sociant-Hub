@@ -1,0 +1,37 @@
+<div id="footer"{% if mainpage is defined %} class="mainpage"{% endif %}>
+	<div class="container">
+		<div class="row">
+			<div class="column">
+				<div class="title">About</div>
+				<div class="item">Sociant Hub v1.0.2 © 2020</div>
+				<div class="item">Made with <i class="fa fa-heart"></i> in Germany</div>
+			</div>
+			<div class="column">
+				<div class="title">Sociant Hub</div>
+				<a href="{{ path("index") }}" class="item">Mainpage</a>
+				{% if app.user %}
+				<a href="{{ path("panel_home") }}" class="item">Home</a>
+				<a href="{{ path("panel_settings") }}" class="item">Settings</a>
+				{% else %}
+				<a href="{{ path("login") }}" class="item">Login</a>
+				{% endif %}
+			</div>
+			<div class="column">
+				<div class="title">Further Information</div>
+				<a href="{{ path("contact") }}" class="item">Feedback / Contact</a>
+				<a href="{{ path("privacy_policy") }}" class="item">Privacy Policy</a>
+				<a href="{{ path("legal_disclosure") }}" class="item">Legal Disclosure</a>
+			</div>
+			<div class="column">
+				<div class="title">Follow us</div>
+				<a href="https://twitter.com/SociantWD" class="item">@SociantWD on Twitter</a>
+				<a href="https://twitter.com/l9cgv" class="item">@l9cgv on Twitter</a>
+			</div>
+		</div>
+		<div class="row margin color-toggle">
+			<div class="column toggle">
+				<span>Toggle Light/Sepia/Dark-Mode</span>
+			</div>
+		</div>
+	</div>
+</div>

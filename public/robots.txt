@@ -1,0 +1,4 @@
+User-Agent: *
+Disallow: /panel*/
+
+Sitemap: https://hub.sociant.de/sitemap.xml
