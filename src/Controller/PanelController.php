@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\AutomatedUpdate;
 use App\Entity\UserAction;
+use App\Model\SpotifyModel;
 use App\Model\TwitterModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -154,5 +155,32 @@ class PanelController extends AbstractController
             'twitterUser' => $twitterUser,
             'currentState' => $currentState,
         ]);
+    }
+
+    /**
+     * @Route("/spotify/history", name="spotify_history")
+     */
+    public function spotifyHistory()
+    {
+        $recentTracks = $this->getDoctrine()->getManager()->createQuery(
+            "select h,t,a from App\Entity\SpotifyTrackHistory h
+            left join h.spotifyTrack t
+            left join t.additional a
+             where h.user = :user
+             order by h.timestamp desc"
+            )->setParameter("user",$this->getUser()->getId())->getArrayResult();
+
+        return $this->render('panel/spotify/history.html.twig', [
+            'recentTracks' => $recentTracks
+        ]);
+    }
+
+    /**
+     * @Route("/spotify/test", name="spotify_test")
+     */
+    public function spotifyTest(SpotifyModel $spotifyModel)
+    {
+        $spotifyModel->updateRecentlyPlayed($this->getUser(),50);
+        return $this->redirectToRoute("panel_spotify_history");
     }
 }

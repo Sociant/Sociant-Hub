@@ -439,7 +439,7 @@ body, html {
     height: 400px;
 }
 
-.row .column .user-card {
+.row .column .mini-card {
     display: flex;
     padding: 10px 5px;
     align-items: center;
@@ -447,11 +447,11 @@ body, html {
     transition: background .2s ease;
 }
 
-.row .column .user-card[href]:hover {
+.row .column .mini-card[href]:hover {
     background: rgba(0, 0, 0, 0.04);
 }
 
-.row .column .user-card .image {
+.row .column .mini-card .image {
     width: 40px;
     height: 40px;
     background-size: cover;
@@ -460,7 +460,7 @@ body, html {
     border-radius: 50%;
 }
 
-.row .column .user-card .name {
+.row .column .mini-card .name {
     font-size: 15px;
     font-weight: 600;
     color: var(--base-text-primary);
@@ -468,27 +468,89 @@ body, html {
     transition: color .2s ease;
 }
 
-.row .column .user-card .name small {
+.row .column .mini-card .name small {
     display: block;
     font-weight: 500;
     color: var(--base-text-secondary);
     transition: color .2s ease;
 }
 
-.row .column .user-card .datestamp {
+.row .column .mini-card .datestamp {
     text-align: right;
 }
 
-.row .column .user-card .datestamp span {
+.row .column .mini-card .datestamp span {
     font-size: 14px;
     color: var(--base-text-primary);
     transition: color .2s ease;
 }
 
-.row .column .user-card .datestamp small {
+.row .column .mini-card .datestamp small {
     display: block;
     color: var(--base-text-secondary);
     transition: color .2s ease;
+}
+
+.row .column .track-card .image {
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+    background-position: center;
+    margin-right: 10px;
+    border-radius: 4px;
+}
+
+.row .column .track-card .stat-icons {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+    margin-left: 10px;
+}
+
+.row .column .track-card .stat-icons .item {
+    font-size: 18px;
+    margin: 0 12px;
+    color: var(--base-text-secondary);
+    cursor: pointer;
+    position: relative;
+}
+
+.row .column .track-card .stat-icons .item i {
+    opacity: .6;
+    transition: opacity .2s ease;
+}
+
+.row .column .track-card .stat-icons .item:hover i {
+    opacity: 1;
+}
+
+.row .column .track-card .stat-icons .item span {
+    position: absolute;
+    top: 50%;
+    margin-top: -12px;
+    right: 100%;
+    margin-right: 10px;
+    background: var(--base-box-bg);
+    color: var(--base-text-primary);
+    -webkit-box-shadow: 0 1px 3px 0 rgba(63, 63, 68, .15);
+    -moz-box-shadow: 0 1px 3px 0 rgba(63, 63, 68, .15);
+    box-shadow: 0 1px 3px 0 rgba(63, 63, 68, .15);
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    transition: opacity .2s ease;
+    opacity: 0;
+    pointer-events: none;
+    font-weight: 500;
+}
+
+.row .column .track-card .stat-icons .item:hover span {
+    opacity: 1;
+}
+
+.row .column .track-card .datestamp {
+    min-width: 150px;
 }
 
 .row.analytics {
@@ -1048,13 +1110,13 @@ body, html {
         min-width: 0;
         margin: 20px 0;
     }
-    .row .column .user-card .name {
+    .row .column .mini-card .name {
         font-size: 13px;
     }
-    .row .column .user-card .datestamp span {
+    .row .column .mini-card .datestamp span {
         font-size: 12px;
     }
-    .row .column .user-card .datestamp small {
+    .row .column .mini-card .datestamp small {
         font-size: 11px;
     }
     #footer .row .column.toggle span {

@@ -95,11 +95,22 @@ class User implements UserInterface
      */
     private $spotifyUser;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $spotifyRefreshToken;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SpotifyTrackHistory::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $spotifyTrackHistory;
+
     public function __construct()
     {
         $this->userRelations = new ArrayCollection();
         $this->userActions = new ArrayCollection();
         $this->statistics = new ArrayCollection();
+        $this->spotifyTrackHistory = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -397,6 +408,49 @@ class User implements UserInterface
     public function setSpotifyUser(?SpotifyUser $spotifyUser): self
     {
         $this->spotifyUser = $spotifyUser;
+
+        return $this;
+    }
+
+    public function getSpotifyRefreshToken(): ?string
+    {
+        return $this->spotifyRefreshToken;
+    }
+
+    public function setSpotifyRefreshToken(?string $spotifyRefreshToken): self
+    {
+        $this->spotifyRefreshToken = $spotifyRefreshToken;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SpotifyTrackHistory[]
+     */
+    public function getSpotifyTrackHistory(): Collection
+    {
+        return $this->spotifyTrackHistory;
+    }
+
+    public function addSpotifyTrackHistory(SpotifyTrackHistory $spotifyTrackHistory): self
+    {
+        if (!$this->spotifyTrackHistory->contains($spotifyTrackHistory)) {
+            $this->spotifyTrackHistory[] = $spotifyTrackHistory;
+            $spotifyTrackHistory->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSpotifyTrackHistory(SpotifyTrackHistory $spotifyTrackHistory): self
+    {
+        if ($this->spotifyTrackHistory->contains($spotifyTrackHistory)) {
+            $this->spotifyTrackHistory->removeElement($spotifyTrackHistory);
+            // set the owning side to null (unless already changed)
+            if ($spotifyTrackHistory->getUser() === $this) {
+                $spotifyTrackHistory->setUser(null);
+            }
+        }
 
         return $this;
     }

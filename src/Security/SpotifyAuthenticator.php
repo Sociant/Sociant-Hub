@@ -51,6 +51,7 @@ class SpotifyAuthenticator extends AbstractGuardAuthenticator
         $session = $this->spotifyModel->getSession();
         $session->requestAccessToken($credentials["code"]);
         $accessToken = $session->getAccessToken();
+        $refreshToken = $session->getRefreshToken();
 
         $api = new SpotifyWebAPI();
         $api->setAccessToken($accessToken);
@@ -68,6 +69,7 @@ class SpotifyAuthenticator extends AbstractGuardAuthenticator
         $user->setSpotifyUser($spotifyUser);
         $user->setSpotifyID($spotifyAccount->id);
         $user->setSpotifyAccessToken($accessToken);
+        $user->setSpotifyRefreshToken($refreshToken);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

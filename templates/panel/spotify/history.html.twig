@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block title %}Sociant Hub ~ Spotify History{% endblock %}
+
+{% block body %}
+    <div id="content">
+        <div class="container">
+            <div class="page-title"><span>{{ app.user.spotifyUser ? app.user.spotifyUser.displayName : app.user.spotifyID }}'s</span> Spotify History</div>
+            <div class="row">
+                <div class="column">
+                    {% if recentTracks | length == 0 %}
+                    <div class="empty-info">
+                        Sit tight, we're still crawling your statistics.
+                    </div>
+                    {% endif %}
+                    {% for track in recentTracks %}
+                        {% set additional = track.spotifyTrack.additional %}
+                        <div class="track-card mini-card">
+                            <div class="image"{% if additional %} style="background-image: url({{ additional.albumImageURL }})"{% endif %}></div>
+                            <span class="name">
+                                {{ track.spotifyTrack.name }}
+                                {% if additional %}
+                                    <small>{% for artist in additional.artists %}
+                                        {{ artist.name }} 
+                                    {% endfor %}</small>
+                                {% endif %}
+                            </span>
+                            <div class="stat-icons">
+                                {% if track.spotifyTrack.danceability > 0.6 %}<div class="item"><span>High danceability ({{ track.spotifyTrack.danceability * 100 }} %)</span><i class="fas fa-globe"></i></div>{% endif %}
+                                {% if track.spotifyTrack.energy > 0.6 %}<div class="item"><span>High energy ({{ track.spotifyTrack.energy * 100 }} %)</span><i class="fas fa-bolt"></i></div>{% endif %}
+                                {% if track.spotifyTrack.instrumentalness > 0.6 %}<div class="item"><span>Instrumental ({{ track.spotifyTrack.instrumentalness * 100 }} %)</span><i class="fas fa-drum"></i></div>{% endif %}
+                                {% if track.spotifyTrack.liveness > 0.6 %}<div class="item"><span>Live ({{ track.spotifyTrack.liveness * 100 }} %)</span><i class="fas fa-microphone"></i></div>{% endif %}
+                                {% if track.spotifyTrack.loudness > 0.6 %}<div class="item"><span>Loud ({{ track.spotifyTrack.loudness * 100 }} %)</span><i class="fas fa-volume-up"></i></div>{% endif %}
+                                {% if track.spotifyTrack.speechiness > 0.6 %}<div class="item"><span>Speechiness ({{ track.spotifyTrack.speechiness * 100 }} %)</span><i class="fas fa-comment"></i></div>{% endif %}
+                                {% if track.spotifyTrack.valence > 0.66 %}<div class="item"><span>Positive ({{ track.spotifyTrack.valence * 100 }} %)</span><i class="fas fa-smile-beam"></i></div>
+                                {% elseif track.spotifyTrack.valence > 0.33 %}<div class="item"><span>Neutral ({{ track.spotifyTrack.valence * 100 }} %)</span><i class="fas fa-meh"></i></div>
+                                {% else %}<div class="item"><span>Negative ({{ track.spotifyTrack.valence * 100 }} %)</span><i class="fas fa-frown"></i></div>{% endif %}
+                            </div>
+                            <div class="datestamp">
+                                {% set seconds = (track.spotifyTrack.duration / 1000) | number_format %}
+                                <span>Duration: {{ seconds >= 3600 ? seconds | date('H:i:s','+00:00 GMT') : seconds | date('i:s','+00:00 GMT') }}</span>
+                                <small>Listened at: {{ track.timestamp | date("H:i") }}</small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
