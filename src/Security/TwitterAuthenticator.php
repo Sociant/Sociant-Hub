@@ -33,7 +33,7 @@ class TwitterAuthenticator extends AbstractGuardAuthenticator
 
     public function supports(Request $request)
     {
-        return 'login_callback' === $request->attributes->get('_route') &&
+        return 'login_callback_twitter' === $request->attributes->get('_route') &&
             $request->query->has("oauth_token") &&
             $request->query->has("oauth_verifier");
     }

@@ -25,6 +25,8 @@ security:
             guard:
                 authenticators:
                     - App\Security\TwitterAuthenticator
+                    - App\Security\SpotifyAuthenticator
+                entry_point: App\Security\TwitterAuthenticator
             logout:
                 path: logout
                 target: index

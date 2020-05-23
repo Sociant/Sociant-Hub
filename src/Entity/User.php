@@ -21,7 +21,7 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", length=180, unique=true, nullable=true)
      */
     private $uuid;
 
@@ -31,17 +31,17 @@ class User implements UserInterface
     private $roles = [];
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $twitterUserScreenName;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $twitterUserOauthToken;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $twitterUserOauthTokenSecret;
 
@@ -80,6 +80,21 @@ class User implements UserInterface
      */
     private $setupCompleted = false;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $spotifyID;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $spotifyAccessToken;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=SpotifyUser::class)
+     */
+    private $spotifyUser;
+
     public function __construct()
     {
         $this->userRelations = new ArrayCollection();
@@ -90,6 +105,11 @@ class User implements UserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getType(): string {
+        if($this->getUuid() != null) return "twitter";
+        if($this->getSpotifyID() != null) return "spotify";
     }
 
     public function getUuid(): ?string
@@ -341,6 +361,42 @@ class User implements UserInterface
     public function setSetupCompleted(bool $setupCompleted): self
     {
         $this->setupCompleted = $setupCompleted;
+
+        return $this;
+    }
+
+    public function getSpotifyID(): ?string
+    {
+        return $this->spotifyID;
+    }
+
+    public function setSpotifyID(?string $spotifyID): self
+    {
+        $this->spotifyID = $spotifyID;
+
+        return $this;
+    }
+
+    public function getSpotifyAccessToken(): ?string
+    {
+        return $this->spotifyAccessToken;
+    }
+
+    public function setSpotifyAccessToken(?string $spotifyAccessToken): self
+    {
+        $this->spotifyAccessToken = $spotifyAccessToken;
+
+        return $this;
+    }
+
+    public function getSpotifyUser(): ?SpotifyUser
+    {
+        return $this->spotifyUser;
+    }
+
+    public function setSpotifyUser(?SpotifyUser $spotifyUser): self
+    {
+        $this->spotifyUser = $spotifyUser;
 
         return $this;
     }

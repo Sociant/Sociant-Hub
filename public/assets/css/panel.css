@@ -132,6 +132,33 @@ body, html {
     background-size: cover;
     background-position: center;
     border-radius: 50%;
+    position: relative;
+}
+
+#navigation .profile .image .brand-circle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+#navigation .profile .image .brand-circle.twitter {
+    color: white;
+    background: #1da1f2;
+    font-size: 12px;
+    padding-top: 2px;
+    padding-left: 2px;
+}
+
+#navigation .profile .image .brand-circle.spotify {
+    color: #1db954;
+    font-size: 22px;
 }
 
 #navigation .profile span {

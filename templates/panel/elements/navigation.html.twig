@@ -4,26 +4,48 @@
 		<div class="spacer"></div>
 		{% if app.user %}
 		<div class="profile">
-			{% if app.user.twitterUser %}
-				<span>{{ app.user.twitterUser.name }}<small>@{{ app.user.twitterUser.screenName }}</small>
-				</span>
-				<div class="image" style="background-image: url({{ app.user.twitterUser.profileImageURL | replace({" _normal":" "}) }})"></div>
-			{% else %}
-				<span>{{ app.user.twitterUserScreenName }}</span>
-				<div class="image" style="background-image: url(https://abs.twimg.com/sticky/default_profile_images/default_profile.png)"></div>
+			{% if app.user.type == "twitter" %}
+				{% if app.user.twitterUser %}
+					<span>{{ app.user.twitterUser.name }}<small>@{{ app.user.twitterUser.screenName }}</small>
+					</span>
+					<div class="image" style="background-image: url({{ app.user.twitterUser.profileImageURL | replace({" _normal":" "}) }})">
+						<div class="brand-circle twitter"><i class="fab fa-twitter"></i></div>
+					</div>
+				{% else %}
+					<span>{{ app.user.twitterUserScreenName }}</span>
+					<div class="image" style="background-image: url(https://abs.twimg.com/sticky/default_profile_images/default_profile.png)">
+						<div class="brand-circle twitter"><i class="fab fa-twitter"></i></div>
+					</div>
+				{% endif %}
+			{% elseif app.user.type == "spotify" %}
+				{% if app.user.spotifyUser %}
+					<span>{{ app.user.spotifyUser.displayName }}<small>{{ app.user.spotifyUser.sid }}</small></span>
+					<div class="image" style="background-image: url({{ app.user.spotifyUser.profileImageURL }})">
+						<div class="brand-circle spotify"><i class="fab fa-spotify"></i></div>
+					</div>
+				{% else %}
+					<span>{{ app.user.spotifyID }}</span>
+					<div class="image" style="background-image: url(https://abs.twimg.com/sticky/default_profile_images/default_profile.png)">
+						<div class="brand-circle spotify"><i class="fab fa-spotify"></i></div>
+					</div>
+				{% endif %}
 			{% endif %}
 			<div class="menu">
 				<a href="{{ path("panel_home") }}" class="item"><i class="fa fa-home"></i> Panel Home</a>
 				<a href="{{ path("panel_settings") }}" class="item"><i class="fa fa-cog"></i> Settings</a>
 				<div class="divider"></div>
+				{% if app.user.type == "twitter" %}
 				<a target="_blank" href="https://twitter.com/{{ app.user.twitterUser ? app.user.twitterUser.screenName : app.user.twitterUserScreenName }}" class="item"><i class="fa fa-user"></i> View Twitter Profile</a>
+				{% elseif app.user.type == "spotify" %}
+				<a target="_blank" href="https://open.spotify.com/user/{{ app.user.spotifyUser ? app.user.spotifyUser.sid : app.user.spotifyID }}" class="item"><i class="fa fa-user"></i> View Spotify Profile</a>
+				{% endif %}
 				<div class="divider"></div>
 				<a href="{{ path("feedback") }}" class="item"><i class="fa fa-heart"></i> Submit Feedback</a>
 				<a href="{{ path("logout") }}" href class="item"><i class="fa fa-sign-out-alt"></i> Logout</a>
 			</div>
 		</div>
 		{% else %}
-		<a class="login" href="{{ path("login") }}"><i class="fab fa-twitter"></i> Sign in with Twitter</a>
+		<a class="login" href="{{ path("login_twitter") }}"><i class="fab fa-twitter"></i> Sign in with Twitter</a>
 		{% endif %}
 	</div>
 </div>

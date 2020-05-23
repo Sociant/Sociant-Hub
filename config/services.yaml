@@ -10,6 +10,9 @@ parameters:
     recaptcha_secret: '%env(REPATCHA_SECRET)%'
     recaptcha_public: '%env(REPATCHA_PUBLIC)%'
     recipient_email: '%env(RECIPIENT_EMAIL)%'
+    spotify_api_client_id: '%env(SPOTIFY_API_CLIENT_ID)%'
+    spotify_api_client_secret: '%env(SPOTIFY_API_CLIENT_SECRET)%'
+    spotify_callback_url: '%env(SPOTIFY_CALLBACK_URL)%'
 
 services:
     # default configuration for services in *this* file
@@ -29,13 +32,20 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-        
     App\Model\TwitterModel:
         public: true
         arguments:
             - "@doctrine.orm.entity_manager"
             - "%twitter_api_key%"
             - "%twitter_api_secret_key%" 
+
+    App\Model\SpotifyModel:
+        public: true
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "%spotify_api_client_id%"
+            - "%spotify_api_client_secret%" 
+            - "%spotify_callback_url%" 
         
 
     # add more service definitions when explicit configuration is needed
