@@ -4,6 +4,8 @@ namespace App\Model;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 use App\Entity\AutomatedUpdate;
+use App\Entity\SpotifyPlaylist;
+use App\Entity\SpotifyPlaylistAnalysis;
 use App\Entity\SpotifyTrack;
 use App\Entity\SpotifyTrackAdditional;
 use App\Entity\SpotifyTrackHistory;
@@ -76,15 +78,17 @@ class SpotifyModel
 
     public function createSpotifyUserFromArray($user, $skipDatabase = false, ?SpotifyUser $spotifyUser = null, $instantFlush = true): SpotifyUser 
     {
-
         if ($skipDatabase) $spotifyUser = $spotifyUser ?? new SpotifyUser();
         else $spotifyUser = $this->entityManager->getRepository(SpotifyUser::class)->findOneBy(["sid" => $user->id]) ?? new SpotifyUser();
 
         $spotifyUser->setSid($user->id);
         $spotifyUser->setCreated(new \DateTime());
         $spotifyUser->setDisplayName($user->display_name);
-        $spotifyUser->setFollowerCount($user->followers->total);
-        if(sizeof($user->images) > 0) 
+        if(isset($user->followers)) {
+            $spotifyUser->setFollowerCount($user->followers->total);
+            $spotifyUser->setFullUser(true);
+        }
+        if(isset($user->images) && sizeof($user->images) > 0) 
             $spotifyUser->setProfileImageURL($user->images[0]->url);
 
         $this->entityManager->persist($spotifyUser);
@@ -212,13 +216,193 @@ class SpotifyModel
         return $spotifyTrackAdditional;
     }
 
-    public function storeTrack(object $track, object $audioFeatures = null, $checkDuplicate = true, $instantFlush = true, SpotifyTrack $spotifyTrack = null): SpotifyTrack {
-        $spotifyTrack = $spotifyTrack ?? ($checkDuplicate ? $this->entityManager->getRepository(SpotifyTrack::class)->findOneBy(["tid"=>$track["id"]]) : null) ?? new SpotifyTrack();
+    public function getPlaylist($id, SpotifyWebAPI $api, $store = true, $retrieveTracks = false, $analyzePlaylist = false) {
+        $playlist = $api->getPlaylist($id);
+
+        if($store) {
+            $spotifyPlaylist = $this->storePlaylist($playlist,null,$retrieveTracks,$api,$analyzePlaylist,true,true);
+            return $spotifyPlaylist;
+        }
+
+        return $playlist;
+    }
+
+    public function storePlaylist(object $playlist, array $tracks = null, $retrieveTracks = false, SpotifyWebAPI $api, $analyzePlaylist = false, $checkDuplicate = true, $instantFlush = true, SpotifyPlaylist $spotifyPlaylist = null): SpotifyPlaylist {
+        $spotifyPlaylist = $spotifyPlaylist ?? ($checkDuplicate ? $this->entityManager->getRepository(SpotifyPlaylist::class)->findOneBy(["pid"=>$playlist->id]) : null) ?? new SpotifyPlaylist();
+    
+        $spotifyPlaylist->setPid($playlist->id);
+        $spotifyPlaylist->setDescription($playlist->description);
+
+        $coverImage = null;
+
+        foreach($playlist->images as $image) {
+            $height = $image->height ? $image->height : 0;
+            if($coverImage == null || $coverImage[0] < $height)
+                $coverImage = [$height,$image->url];
+        }
+
+        if($coverImage != null)
+            $spotifyPlaylist->setImageURL($coverImage[1]);
+
+        $spotifyPlaylist->setName($playlist->name);
+        $spotifyPlaylist->setOwner($this->createSpotifyUserFromArray($playlist->owner, false, null, false));
+        $spotifyPlaylist->setCollaborative($playlist->collaborative);
+        $spotifyPlaylist->setPublic($playlist->public);
+        $spotifyPlaylist->setLastUpdate(new \DateTime());
+
+        if($tracks != null) {
+            foreach($tracks as $track)
+                $spotifyPlaylist->addTrack($track);
+        } else if($retrieveTracks) {
+            $ids = [];
+            $next = null;
+            $offset = 0;
+            $first = true;
+
+            while($first || $next != null) {
+                $first = false;
+
+                $result = $api->getPlaylistTracks($spotifyPlaylist->getPid(),[
+                    "fields" => "items(track.id),total,next",
+                    "limit" => 100,
+                    "offset" => $offset
+                ]);
+
+                foreach($result->items as $item) {
+                    array_push($ids,$item->track->id);
+                }
+
+                $offset+=100;
+                $next = $result->next;
+            }
+
+            if(sizeof($ids) > 0) {
+
+                $idChunks = array_chunk($ids,100);
+
+                foreach($idChunks as $chunk) {
+                    $existingTracks = $this->entityManager->getRepository(SpotifyTrack::class)->findBy([
+                        "tid" => $chunk
+                    ]);
+
+                    foreach($existingTracks as $track) {
+                        if(($key = array_search($track->getTid(),$ids)) !== false)
+                            unset($ids[$key]);
+                        $spotifyPlaylist->addTrack($track);
+                    }
+                }
+
+                $retrieveChunks = array_chunk($ids,50);
+
+                foreach($retrieveChunks as $chunk) {
+                    $tracks = $api->getTracks($chunk);
+
+                    foreach($tracks->tracks as $track) {
+                        $spotifyTrack = $this->storeTrack($track,null,false,false);
+                        $spotifyTrack->setAdditional($this->getAdditionalFromObject($track,$spotifyTrack));
+                        $spotifyPlaylist->addTrack($spotifyTrack);
+                    }
+                }
+
+            }
+
+            if($analyzePlaylist) {
+                $needAnalization = [];
+
+                foreach($spotifyPlaylist->getTracks() as $track)
+                    if(!$track->getAudioFeaturesLoaded()) array_push($needAnalization,$track);
+                
+                if(sizeof($needAnalization) > 0) {
+                    $analizationChunks = array_chunk($needAnalization,100);
+
+                    foreach($analizationChunks as $chunk) {
+                        $ids = [];
+                        foreach($chunk as $track)
+                            array_push($ids,$track->getTid());
+                        $analizations = $api->getAudioFeatures($ids);
+                        foreach($analizations->audio_features as $analization) {
+                            foreach($needAnalization as $track) {
+                                if($track->getTid() == $analization->id)
+                                    $track = $this->storeTrack(null,$analization,false,false,$track,true);
+                            }
+                        }
+                    }
+                }
+
+                $playlistAnalysis = $spotifyPlaylist->getAnalysis() ?? new SpotifyPlaylistAnalysis();
+                $total = 0;
+
+                $stats = [
+                    "danceability" => 0,
+                    "energy" => 0,
+                    "keyValue" => 0,
+                    "loudness" => 0,
+                    "mode" => 0,
+                    "speechiness" => 0,
+                    "acousticness" => 0,
+                    "instrumentalness" => 0,
+                    "liveness" => 0,
+                    "valence" => 0,
+                    "tempo" => 0,
+                    "timeSignature" => 0,
+                    "duration" => 0
+                ];
+
+                foreach($spotifyPlaylist->getTracks() as $track) {
+                    if($track->getAudioFeaturesLoaded()) {
+                        $total++;
+
+                        $stats["danceability"]      += $track->getDanceability();
+                        $stats["energy"]            += $track->getEnergy();
+                        $stats["keyValue"]          += $track->getKeyValue();
+                        $stats["loudness"]          += $track->getLoudness();
+                        $stats["mode"]              += $track->getMode();
+                        $stats["speechiness"]       += $track->getSpeechiness();
+                        $stats["acousticness"]      += $track->getAcousticness();
+                        $stats["instrumentalness"]  += $track->getInstrumentalness();
+                        $stats["liveness"]          += $track->getLiveness();
+                        $stats["valence"]           += $track->getValence();
+                        $stats["tempo"]             += $track->getTempo();
+                        $stats["timeSignature"]     += $track->getTimeSignature();
+                    }
+
+                    $stats["duration"] += $track->getDuration();
+                }
+
+                $playlistAnalysis->setPlaylist($spotifyPlaylist);
+                $playlistAnalysis->setDanceability($stats["danceability"] / $total);
+                $playlistAnalysis->setEnergy($stats["energy"] / $total);
+                $playlistAnalysis->setKeyValue($stats["keyValue"] / $total);
+                $playlistAnalysis->setLoudness($stats["loudness"] / $total);
+                $playlistAnalysis->setMode($stats["mode"] / $total);
+                $playlistAnalysis->setSpeechiness($stats["speechiness"] / $total);
+                $playlistAnalysis->setAcousticness($stats["acousticness"] / $total);
+                $playlistAnalysis->setInstrumentalness($stats["instrumentalness"] / $total);
+                $playlistAnalysis->setLiveness($stats["liveness"] / $total);
+                $playlistAnalysis->setValence($stats["valence"] / $total);
+                $playlistAnalysis->setTempo($stats["tempo"] / $total);
+                $playlistAnalysis->setTimeSignature($stats["timeSignature"] / $total);
+                $playlistAnalysis->setTotalDuration($stats["duration"]);
+
+                $this->entityManager->persist($playlistAnalysis);
+            }
+        }
+
+        $this->entityManager->persist($spotifyPlaylist);
+        if($instantFlush) $this->entityManager->flush();
+
+        return $spotifyPlaylist;
+    }
+
+    public function storeTrack(?object $track, object $audioFeatures = null, $checkDuplicate = true, $instantFlush = true, SpotifyTrack $spotifyTrack = null, $onlyAudioAnalysis = false): SpotifyTrack {
+        $spotifyTrack = $spotifyTrack ?? ($checkDuplicate ? $this->entityManager->getRepository(SpotifyTrack::class)->findOneBy(["tid"=>$track->id]) : null) ?? new SpotifyTrack();
         
-        $spotifyTrack->setTid($track->id);
-        $spotifyTrack->setName($track->name);
-        $spotifyTrack->setPreviewURL($track->preview_url);
-        $spotifyTrack->setDuration($track->duration_ms);
+        if(!$onlyAudioAnalysis) {
+            $spotifyTrack->setTid($track->id);
+            $spotifyTrack->setName($track->name);
+            $spotifyTrack->setPreviewURL($track->preview_url);
+            $spotifyTrack->setDuration($track->duration_ms);
+        }
         
         if($audioFeatures != null) {
             $spotifyTrack->setAudioFeaturesLoaded(true);

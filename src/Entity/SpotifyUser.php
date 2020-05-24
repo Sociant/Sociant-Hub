@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SpotifyUserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,12 +37,27 @@ class SpotifyUser
     /**
      * @ORM\Column(type="integer")
      */
-    private $followerCount;
+    private $followerCount = 0;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $profileImageURL;
+
+    /**
+     * @ORM\OneToMany(targetEntity=SpotifyPlaylist::class, mappedBy="owner", orphanRemoval=true)
+     */
+    private $playlists;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $fullUser = false;
+
+    public function __construct()
+    {
+        $this->playlists = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -103,6 +120,49 @@ class SpotifyUser
     public function setProfileImageURL(?string $profileImageURL): self
     {
         $this->profileImageURL = $profileImageURL;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SpotifyPlaylist[]
+     */
+    public function getPlaylists(): Collection
+    {
+        return $this->playlists;
+    }
+
+    public function addPlaylist(SpotifyPlaylist $playlist): self
+    {
+        if (!$this->playlists->contains($playlist)) {
+            $this->playlists[] = $playlist;
+            $playlist->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylist(SpotifyPlaylist $playlist): self
+    {
+        if ($this->playlists->contains($playlist)) {
+            $this->playlists->removeElement($playlist);
+            // set the owning side to null (unless already changed)
+            if ($playlist->getOwner() === $this) {
+                $playlist->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getFullUser(): ?bool
+    {
+        return $this->fullUser;
+    }
+
+    public function setFullUser(bool $fullUser): self
+    {
+        $this->fullUser = $fullUser;
 
         return $this;
     }

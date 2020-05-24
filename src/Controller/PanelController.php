@@ -176,11 +176,19 @@ class PanelController extends AbstractController
     }
 
     /**
-     * @Route("/spotify/test", name="spotify_test")
+     * @Route("/spotify/playlist/{id}", name="spotify_playlist")
      */
-    public function spotifyTest(SpotifyModel $spotifyModel)
+    public function spotifyPlaylist(SpotifyModel $spotifyModel, $id)
     {
-        $spotifyModel->updateRecentlyPlayed($this->getUser(),50);
-        return $this->redirectToRoute("panel_spotify_history");
+        $playlist = $this->getDoctrine()->getManager()->createQuery(
+            "select p,t,a from App\Entity\SpotifyPlaylist p
+             left join p.tracks t
+             left join t.additional a
+             where p.pid = :id"
+        )->setParameter(":id",$id)->getOneOrNullResult() ?? $spotifyModel->getPlaylist($id,$spotifyModel->getWebAPI($this->getUser()),true,true,true);
+
+        return $this->render('panel/spotify/playlist.html.twig', [
+            'playlist' => $playlist
+        ]);
     }
 }

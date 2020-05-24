@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SpotifyTrackRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,7 +30,7 @@ class SpotifyTrack
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $previewURL;
 
@@ -107,6 +109,16 @@ class SpotifyTrack
      */
     private $additional;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=SpotifyPlaylist::class, mappedBy="tracks")
+     */
+    private $playlists;
+
+    public function __construct()
+    {
+        $this->playlists = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -141,7 +153,7 @@ class SpotifyTrack
         return $this->previewURL;
     }
 
-    public function setPreviewURL(string $previewURL): self
+    public function setPreviewURL(?string $previewURL): self
     {
         $this->previewURL = $previewURL;
 
@@ -328,6 +340,34 @@ class SpotifyTrack
         // set the owning side of the relation if necessary
         if ($additional->getSpotifyTrack() !== $this) {
             $additional->setSpotifyTrack($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SpotifyPlaylist[]
+     */
+    public function getPlaylists(): Collection
+    {
+        return $this->playlists;
+    }
+
+    public function addPlaylist(SpotifyPlaylist $playlist): self
+    {
+        if (!$this->playlists->contains($playlist)) {
+            $this->playlists[] = $playlist;
+            $playlist->addTrack($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlaylist(SpotifyPlaylist $playlist): self
+    {
+        if ($this->playlists->contains($playlist)) {
+            $this->playlists->removeElement($playlist);
+            $playlist->removeTrack($this);
         }
 
         return $this;

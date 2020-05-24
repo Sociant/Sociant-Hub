@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block title %}Sociant Hub ~ Spotify Playlist{% endblock %}
+
+{% block body %}
+    <div id="content">
+        <div class="container">
+            <div class="page-title small-margin">{{ playlist.name }} <span>by {{ playlist.owner.displayName }}</span><small>{{ playlist.tracks | length }} Tracks</small></div>
+            {% if playlist.analysis != null %}
+            <div class="overall-stat-icons">
+                {% if playlist.analysis.danceability > 0.6 %}<div class="item"><span>High danceability ({{ (playlist.analysis.danceability * 100) | number_format(2,'.',',') }} %)</span><i class="fas fa-globe"></i></div>{% endif %}
+                {% if playlist.analysis.energy > 0.6 %}<div class="item"><span>High energy ({{ (playlist.analysis.energy * 100) | number_format(2,'.',',') }} %)</span><i class="fas fa-bolt"></i></div>{% endif %}
+                {% if playlist.analysis.instrumentalness > 0.6 %}<div class="item"><span>Instrumental ({{ (playlist.analysis.instrumentalness * 100) | number_format(2,'.',',') }} %)</span><i class="fas fa-drum"></i></div>{% endif %}
+                {% if playlist.analysis.liveness > 0.6 %}<div class="item"><span>Live ({{ (playlist.analysis.liveness * 100) | number_format(2,'.',',') }} %)</span><i class="fas fa-microphone"></i></div>{% endif %}
+                {% if playlist.analysis.loudness > 0.6 %}<div class="item"><span>Loud ({{ (playlist.analysis.loudness * 100) | number_format(2,'.',',') }} %)</span><i class="fas fa-volume-up"></i></div>{% endif %}
+                {% if playlist.analysis.speechiness > 0.6 %}<div class="item"><span>Speechiness ({{ (playlist.analysis.speechiness * 100) | number_format(2,'.',',') }} %)</span><i class="fas fa-comment"></i></div>{% endif %}
+                {% if playlist.analysis.valence > 0.66 %}<div class="item"><span>Positive ({{ (playlist.analysis.valence * 100) | number_format(2,'.',',') }} %)</span><i class="fas fa-smile-beam"></i></div>
+                {% elseif playlist.analysis.valence > 0.33 %}<div class="item"><span>Neutral ({{ (playlist.analysis.valence * 100) | number_format(2,'.',',') }} %)</span><i class="fas fa-meh"></i></div>
+                {% else %}<div class="item"><span>Negative ({{ (playlist.analysis.valence * 100) | number_format(2,'.',',') }} %)</span><i class="fas fa-frown"></i></div>{% endif %}
+                
+                {% set seconds = (playlist.analysis.totalDuration / 1000) | number_format(0,'','') %}
+                <div class="item"><span>Total Duration: {{ seconds >= 86400 ? seconds | date('m:d:H:i:s','+00:00 GMT') :seconds >= 3600 ? seconds | date('H:i:s','+00:00 GMT') : seconds | date('i:s','+00:00 GMT') }}</span><i class="fas fa-clock"></i></div>
+            </div>
+            {% endif %}
+            <div class="row">
+                <div class="column">
+                    {% if playlist.tracks | length == 0 %}
+                    <div class="empty-info">
+                        This playlist seems to be empty
+                    </div>
+                    {% endif %}
+                    {% for track in playlist.tracks %}
+                        {% set additional = track.additional %}
+                        <div class="track-card mini-card">
+                            <div class="image"{% if additional is not null %} style="background-image: url({{ additional.albumImageURL }})"{% endif %}></div>
+                            <span class="name">
+                                {{ track.name }}
+                                {% if additional %}
+                                    <small>{% for artist in additional.artists %}
+                                        {{ artist.name }} 
+                                    {% endfor %}</small>
+                                {% endif %}
+                            </span>
+                            <div class="stat-icons">
+                                {% if track.danceability > 0.6 %}<div class="item"><span>High danceability ({{ track.danceability * 100 }} %)</span><i class="fas fa-globe"></i></div>{% endif %}
+                                {% if track.energy > 0.6 %}<div class="item"><span>High energy ({{ track.energy * 100 }} %)</span><i class="fas fa-bolt"></i></div>{% endif %}
+                                {% if track.instrumentalness > 0.6 %}<div class="item"><span>Instrumental ({{ track.instrumentalness * 100 }} %)</span><i class="fas fa-drum"></i></div>{% endif %}
+                                {% if track.liveness > 0.6 %}<div class="item"><span>Live ({{ track.liveness * 100 }} %)</span><i class="fas fa-microphone"></i></div>{% endif %}
+                                {% if track.loudness > 0.6 %}<div class="item"><span>Loud ({{ track.loudness * 100 }} %)</span><i class="fas fa-volume-up"></i></div>{% endif %}
+                                {% if track.speechiness > 0.6 %}<div class="item"><span>Speechiness ({{ track.speechiness * 100 }} %)</span><i class="fas fa-comment"></i></div>{% endif %}
+                                {% if track.valence > 0.66 %}<div class="item"><span>Positive ({{ track.valence * 100 }} %)</span><i class="fas fa-smile-beam"></i></div>
+                                {% elseif track.valence > 0.33 %}<div class="item"><span>Neutral ({{ track.valence * 100 }} %)</span><i class="fas fa-meh"></i></div>
+                                {% else %}<div class="item"><span>Negative ({{ track.valence * 100 }} %)</span><i class="fas fa-frown"></i></div>{% endif %}
+                            </div>
+                            <div class="datestamp">
+                                {% set seconds = (track.duration / 1000) | number_format %}
+                                <span>Duration: {{ seconds >= 3600 ? seconds | date('H:i:s','+00:00 GMT') : seconds | date('i:s','+00:00 GMT') }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -49,7 +49,7 @@
                     </div>
                     {% endif %}
                     {% for item in recentActivities %}
-                        <a{% if item.twitterUser %} target="_blank" href="https://twitter.com/{{ item.twitterUser.screenName }}"{% endif %} class="user-card">
+                        <a{% if item.twitterUser %} target="_blank" href="https://twitter.com/{{ item.twitterUser.screenName }}"{% endif %} class="user-card mini-card">
                             {% if item.twitterUser %}
                             <div class="image" style="background-image: url({{ item.twitterUser.profileImageURL | replace({"_normal":""}) }})"></div>
                             <span class="name">{{ item.twitterUser.name }}<small>@{{ item.twitterUser.screenName }}</small></span>
