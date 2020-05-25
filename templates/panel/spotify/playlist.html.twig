@@ -4,12 +4,17 @@
     {{ parent() }}
 {% endblock %}
 
-{% block title %}Sociant Hub ~ Spotify Playlist{% endblock %}
+{% block title %}Sociant Hub ~ {{ playlist.name }} by {{ playlist.owner.displayName }}{% endblock %}
 
 {% block body %}
     <div id="content">
         <div class="container">
-            <div class="page-title small-margin">{{ playlist.name }} <span>by {{ playlist.owner.displayName }}</span><small>{{ playlist.tracks | length }} Tracks</small></div>
+            <div class="page-title-row">
+                <div class="image"{% if playlist.imageURL is not null %} style="background-image: url({{ playlist.imageURL }})"{% endif %}>
+                    <div class="play-track" data-uri="spotify:playlist:{{ playlist.pid }}"><i class="fa fa-play-circle"></i></div>
+                </div>
+                <div class="page-title small-margin">{{ playlist.name }} <span>by {{ playlist.owner.displayName }}</span><small>{{ playlist.tracks | length }} Tracks</small></div>
+            </div>
             {% if playlist.analysis != null %}
             <div class="overall-stat-icons">
                 {% if playlist.analysis.danceability > 0.6 %}<div class="item"><span>High danceability ({{ (playlist.analysis.danceability * 100) | number_format(2,'.',',') }} %)</span><i class="fas fa-globe"></i></div>{% endif %}
@@ -36,7 +41,9 @@
                     {% for track in playlist.tracks %}
                         {% set additional = track.additional %}
                         <div class="track-card mini-card">
-                            <div class="image"{% if additional is not null %} style="background-image: url({{ additional.albumImageURL }})"{% endif %}></div>
+                            <div class="image"{% if additional is not null %} style="background-image: url({{ additional.albumImageURL }})"{% endif %}>
+                                <div class="play-track" data-uri="spotify:track:{{ track.tid }}"><i class="fa fa-play-circle"></i></div>
+                            </div>
                             <span class="name">
                                 {{ track.name }}
                                 {% if additional %}
@@ -57,7 +64,7 @@
                                 {% else %}<div class="item"><span>Negative ({{ track.valence * 100 }} %)</span><i class="fas fa-frown"></i></div>{% endif %}
                             </div>
                             <div class="datestamp">
-                                {% set seconds = (track.duration / 1000) | number_format %}
+                                {% set seconds = (track.duration / 1000) | number_format(0,'','') %}
                                 <span>Duration: {{ seconds >= 3600 ? seconds | date('H:i:s','+00:00 GMT') : seconds | date('i:s','+00:00 GMT') }}</span>
                             </div>
                         </div>
@@ -66,5 +73,18 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        onEvent(document, "click", ".play-track", function (e) {
+            var uri = this.getAttribute("data-uri");
+
+            request({
+                method: "PUT",
+                url: "/panel/spotify/play/"+uri
+            });
+        });
+    </script>
 {% endblock %}

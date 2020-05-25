@@ -48,7 +48,9 @@ class AuthenticationController extends AbstractController
                 'user-top-read',
                 'user-read-playback-position',
                 'user-read-recently-played',
-                'user-follow-read'
+                'user-follow-read',
+                'streaming',
+                'playlist-modify-private'
             ]
         ];
 

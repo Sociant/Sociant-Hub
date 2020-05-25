@@ -19,70 +19,116 @@ class PanelController extends AbstractController
     /**
      * @Route("/setup", name="setup")
      */
-    public function setup(TwitterModel $twitterModel, Request $request)
+    public function setup(TwitterModel $twitterModel, SpotifyModel $spotifyModel, Request $request)
     {
         $user = $this->getUser();
+        $type = $user->getType();
 
         if($user->getSetupCompleted()) return $this->redirectToRoute("panel_home");
 
-        if($request->isMethod("post") && $request->request->has("interval")) {
-            $interval = $request->request->get("interval");
+        if($type == "twitter") {
+            if($request->isMethod("post") && $request->request->has("interval")) {
+                $interval = $request->request->get("interval");
 
-            switch($interval) {
-                case "n": case "h1": case "h12": case "d1": case "w1": $interval = $interval; break;
-                default: $interval = "h1";
+                switch($interval) {
+                    case "n": case "h1": case "h12": case "d1": case "w1": $interval = $interval; break;
+                    default: $interval = "h1";
+                }
+                
+                $entityManager = $this->getDoctrine()->getManager();
+
+                $twitterModel->fetchUserData($user,true,$interval);
+                
+                $user->setSetupCompleted(true);
+                $entityManager->persist($user);
+
+                $entityManager->flush();
+
+                return new Response("OK");
             }
-            
-            $entityManager = $this->getDoctrine()->getManager();
 
-            $twitterModel->fetchUserData($user,true,$interval);
-            
-            $user->setSetupCompleted(true);
-            $entityManager->persist($user);
+            $twitterUser = $twitterModel->verifyCredentials($user);
 
-            $entityManager->flush();
+            return $this->render('panel/twitter/setup.html.twig', [
+                'twitterUser' => $twitterUser
+            ]);
+        } else if($type == "spotify") {
+            if($request->isMethod("post") && $request->request->has("interval")) {
+                $interval = $request->request->get("interval");
 
-            return new Response("OK");
+                switch($interval) {
+                    case "n": case "m15": case "m30": case "h1": case "d1": case "w1": $interval = $interval; break;
+                    default: $interval = "m15";
+                }
+                
+                $entityManager = $this->getDoctrine()->getManager();
+
+                $spotifyModel->updateRecentlyPlayed($user,50,true,true,true,null,$interval);
+                
+                $user->setSetupCompleted(true);
+                $entityManager->persist($user);
+
+                $entityManager->flush();
+
+                return new Response("OK");
+            }
+
+            $spotifyUser = $spotifyModel->verifyCredentials($spotifyModel->getWebAPI($user,false));
+
+            return $this->render('panel/spotify/setup.html.twig', [
+                'spotifyUser' => $spotifyUser
+            ]);
         }
-
-        $twitterUser = $twitterModel->verifyCredentials($user);
-
-        return $this->render('panel/setup.html.twig', [
-            'twitterUser' => $twitterUser
-        ]);
     }
 
     /**
      * @Route("/home", name="home")
      */
-    public function home(TwitterModel $twitterModel, Request $request)
+    public function home(TwitterModel $twitterModel, SpotifyModel $spotifyModel, Request $request)
     {
-        if(!$this->getUser()->getSetupCompleted()) return $this->redirectToRoute("panel_setup");
+        $user = $this->getUser();
+        if(!$user->getSetupCompleted()) return $this->redirectToRoute("panel_setup");
 
-        if($request->isMethod("post")) {
-            $twitterModel->fetchUserData($this->getUser());
-
-            return new Response("OK");
-        }
-
-        $monthlyHistory = $twitterModel->getTotalHistory($this->getUser(),"month",true);
-        $dailyHistory = $twitterModel->getTotalHistory($this->getUser(),"day",true);
-        $hourlyHistory = $twitterModel->getTotalHistory($this->getUser(),"hour",true);
-
+        $type = $user->getType();
         $entityManager = $this->getDoctrine()->getManager();
 
-        $recentActivities = $entityManager->getRepository(UserAction::class)
-                                ->findActivitesByUser($this->getUser(),10);
-        
-        $automatedUpdate = $entityManager->getRepository(AutomatedUpdate::class)->findOneBy(["user"=>$this->getUser()->getId()]);
+        if($type == "twitter") {
+            if($request->isMethod("post")) {
+                $twitterModel->fetchUserData($user);
+
+                return new Response("OK");
+            }
+
+            $monthlyHistory = $twitterModel->getTotalHistory($user,"month",true);
+            $dailyHistory = $twitterModel->getTotalHistory($user,"day",true);
+            $hourlyHistory = $twitterModel->getTotalHistory($user,"hour",true);
+
+            $recentActivities = $entityManager->getRepository(UserAction::class)
+                                    ->findActivitesByUser($user,10);
             
-        return $this->render('panel/home.html.twig', [
-            'monthlyHistory' => $monthlyHistory,
-            'dailyHistory' => $dailyHistory,
-            'hourlyHistory' => $hourlyHistory,
-            'recentActivities' => $recentActivities,
-            'canUpdate' => $automatedUpdate->getLastUpdate() < new \DateTime("-59 minutes")
-        ]);
+            $automatedUpdate = $entityManager->getRepository(AutomatedUpdate::class)->findOneBy(["user"=>$user->getId()]);
+                
+            return $this->render('panel/twitter/home.html.twig', [
+                'monthlyHistory' => $monthlyHistory,
+                'dailyHistory' => $dailyHistory,
+                'hourlyHistory' => $hourlyHistory,
+                'recentActivities' => $recentActivities,
+                'canUpdate' => $automatedUpdate->getLastUpdate() < new \DateTime("-59 minutes")
+            ]);
+        } else if($type == "spotify") {
+
+            if($request->isMethod("post")) {
+                $spotifyModel->updateRecentlyPlayed($user,50);
+
+                return new Response("OK");
+            }
+            
+            $automatedUpdate = $entityManager->getRepository(AutomatedUpdate::class)->findOneBy(["user"=>$user->getId()]);
+                
+            return $this->render('panel/spotify/home.html.twig', [
+                'canUpdate' => $automatedUpdate->getLastUpdate() < new \DateTime("-15 minutes")
+            ]);
+        }
     }
 
     /**
@@ -190,5 +236,17 @@ class PanelController extends AbstractController
         return $this->render('panel/spotify/playlist.html.twig', [
             'playlist' => $playlist
         ]);
+    }
+
+    /**
+     * @Route("/spotify/play/{uri}", name="spotify_play", methods={"PUT"})
+     */
+    public function spotifyPlay(SpotifyModel $spotifyModel, $uri)
+    {
+        $spotifyModel->getWebAPI($this->getUser())->play(false,[
+            'uris' => [$uri]
+        ]);
+
+        return new Response("OK");
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Model\SpotifyModel;
 use App\Model\TwitterModel;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -13,11 +14,13 @@ class UpdateUserCommand extends Command
 
     private $entityManager;
     private $twitterModel;
+    private $spotifyModel;
 
-    public function __construct(EntityManagerInterface $entityManager, TwitterModel $twitterModel)
+    public function __construct(EntityManagerInterface $entityManager, TwitterModel $twitterModel, SpotifyModel $spotifyModel)
     {
         $this->entityManager = $entityManager;
         $this->twitterModel = $twitterModel;
+        $this->spotifyModel = $spotifyModel;
     
         parent::__construct();
     }
@@ -34,21 +37,30 @@ class UpdateUserCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $automatedUpdates = $this->entityManager->createQuery(
-            "select a from App\Entity\AutomatedUpdate a
-            where a.nextUpdate <= :now
-            and a.lastUpdate < :check"
+            "select a,u from App\Entity\AutomatedUpdate a
+            left join a.user u
+            where (u.uuid is not null and a.nextUpdate <= :now
+            and a.lastUpdate < :checkTwitter) or
+            (u.spotifyID is not null and a.nextUpdate <= :now
+            and a.lastUpdate < :checkSpotify)"
         )
         ->setParameter("now",new \DateTime())
-        ->setParameter("check",new \DateTime("-59 minutes"))
+        ->setParameter("checkTwitter",new \DateTime("-59 minutes"))
+        ->setParameter("checkSpotify",new \DateTime("-14 minutes"))
         ->getResult();
 
         $now = new \DateTime();
 
         if(sizeof($automatedUpdates) > 0) {
-            $output->writeln("Updating ".sizeof($automatedUpdates)." users");
+            $output->writeln("Updating ".sizeof($automatedUpdates)." spotify and twitter users");
 
             foreach($automatedUpdates as $update) {
-                $this->twitterModel->fetchUserData($update->getUser());
+                $user = $update->getUser();
+
+                switch($user->getType()) {
+                    case "twitter": $this->twitterModel->fetchUserData($user); break;
+                    case "spotify": $this->spotifyModel->updateRecentlyPlayed($user,50); break;
+                }
             }
 
             $output->writeln("Finished updating ".sizeof($automatedUpdates)." users after ".(new \DateTime())->diff($now)->s." seconds");

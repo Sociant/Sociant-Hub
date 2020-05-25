@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block title %}Sociant Hub ~ Home{% endblock %}
+
+{% block body %}
+    <div id="overlayer">
+        <div class="inner">
+            <div class="box">
+                <div class="title">Updating data</div>
+                <div class="message">We're fetching your track history and updating your data. This might take a while...</div>
+                <div class="spinner">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="content">
+        <div class="container">
+            <div class="page-title">Statistics for <span>{{ app.user.spotifyUser ? app.user.spotifyUser.displayName : app.user.spotifyID }}</span></div>
+            <div class="setting">
+                <div class="label">Update Data
+                    <br>
+                    {% if app.user.automatedUpdate.updateInterval == "m15" %}
+                    <small>You cannot update your data manually because it updates itself every 15 minutes.</small>
+                    {% else %}
+                    <small>You can update your data manually once every 15 minutes. The last updated was finished {{ app.user.automatedUpdate.lastUpdate | date }}.<br>The update might take a while.</small>
+                    {% endif %}
+                    {% if app.user.automatedUpdate.updateInterval != "n" %}
+                    <br><small>Next scheduled update scheduled for: {{ app.user.automatedUpdate.nextUpdate | date }}</small>
+                    {% endif %}
+                </div>
+                <div class="actions">
+                    <div class="action update{{ (app.user.automatedUpdate.updateInterval == "m15" or not canUpdate) ? " disabled" : "" }}">
+                        Update data
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script defer>
+        onEvent(document, "click", ".action.update", function (e) {
+            document.querySelector("#overlayer").classList.add("reveal");
+            
+            request({
+                method: "POST",
+                url: "{{ path("panel_home") }}",
+                success(data) {
+                    window.location = "{{ path("panel_home") }}";
+                },
+                error(data) {
+                    alert("Updating data failed, please try again");
+                    document.querySelector("#overlayer").classList.remove("reveal");
+                },
+            });
+        });
+    </script>
+{% endblock %}

@@ -11,7 +11,7 @@
         <div class="inner">
             <div class="box">
                 <div class="title">Finishing Setup</div>
-                <div class="message">We're saving your preferences and fetching your public user information. This might take a while...</div>
+                <div class="message">We're saving your preferences and fetching your recent track history. This might take a while...</div>
                 <div class="spinner">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>
@@ -22,8 +22,8 @@
     </div>
     <div id="content">
         <div class="container">
-            <div class="page-title">Setup for <span>{{ app.user.twitterUser ? app.user.twitterUser.name : app.user.twitterUserScreenName }}</div>
-            <div class="welcome-message">Welcome {{ app.user.twitterUser ? app.user.twitterUser.name : app.user.twitterUserScreenName }}! To proceed please check your settings, whether you want automated updates and in which interval. After confirmation we will fetch public user information once for basic functionality.</div>
+            <div class="page-title">Setup for <span>{{ spotifyUser.displayName }}</div>
+            <div class="welcome-message">Welcome {{ spotifyUser.displayName }}! To proceed please check your settings, whether you want automated updates and in which interval. After confirmation we will fetch your recent track history once for basic functionality.</div>
             <div class="setting">
                 <div class="label">Preferred Color Theme<br><small>You can always switch color theme over the footer. We're saving your preference as a cookie.</small></div>
                 <div class="color-theme-items">
@@ -33,14 +33,15 @@
                 </div>
             </div>
             <div class="setting">
-                <div class="label">Automatic Update Interval<br><small>Update interval for follower and friend-lists.</small></div>
+                <div class="label">Automatic Update Interval<br><small>Update interval for track history. Please consider that we can only fetch your recent 50 tracks from history.</small></div>
                 <div class="actions">
                     <div class="action menu" data-type="update-interval">
-                        Interval: <span class="base">Every hour</span>
+                        Interval: <span class="base">Every 15 minutes</span>
                         <div class="items">
                             <div class="item" data-type="n">Never (manually)</div>
+                            <div class="item" data-type="m15">Every 15 minutes</div>
+                            <div class="item" data-type="m30">Every 30 minutes</div>
                             <div class="item" data-type="h1">Every hour</div>
-                            <div class="item" data-type="h12">Every 12 hours</div>
                             <div class="item" data-type="d1">Every day</div>
                             <div class="item" data-type="w1">Every week</div>
                         </div>
@@ -63,7 +64,7 @@
     {{ parent() }}
     <script>
         var selectedColor = null;
-        var updateInterval = "h1";
+        var updateInterval = "m15";
 
         onEvent(document, "click", ".action.menu", function (e) {
             e.stopPropagation();

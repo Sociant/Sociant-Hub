@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block title %}Sociant Hub ~ Setup{% endblock %}
+
+{% block body %}
+    <div id="overlayer">
+        <div class="inner">
+            <div class="box">
+                <div class="title">Finishing Setup</div>
+                <div class="message">We're saving your preferences and fetching your public user information. This might take a while...</div>
+                <div class="spinner">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="content">
+        <div class="container">
+            <div class="page-title">Setup for <span>{{ twitterUser.name }}</div>
+            <div class="welcome-message">Welcome {{ twitterUser.name }}! To proceed please check your settings, whether you want automated updates and in which interval. After confirmation we will fetch public user information once for basic functionality.</div>
+            <div class="setting">
+                <div class="label">Preferred Color Theme<br><small>You can always switch color theme over the footer. We're saving your preference as a cookie.</small></div>
+                <div class="color-theme-items">
+                    <div class="item dark" data-type="dark">Darkmode<br><i>Pretty Dark</i></div>
+                    <div class="item light" data-type="light">Lightmode<br><i>Eye-Burner</i></div>
+                    <div class="item sepia" data-type="sepia">Sepia<br><i>Quite fine</i></div>
+                </div>
+            </div>
+            <div class="setting">
+                <div class="label">Automatic Update Interval<br><small>Update interval for follower and friend-lists.</small></div>
+                <div class="actions">
+                    <div class="action menu" data-type="update-interval">
+                        Interval: <span class="base">Every hour</span>
+                        <div class="items">
+                            <div class="item" data-type="n">Never (manually)</div>
+                            <div class="item" data-type="h1">Every hour</div>
+                            <div class="item" data-type="h12">Every 12 hours</div>
+                            <div class="item" data-type="d1">Every day</div>
+                            <div class="item" data-type="w1">Every week</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting">
+                <div class="label">Finish setup<br><small>After confirmation we will fetch public user information once for basic functionality. This might take a while</small></div>
+                <div class="actions">
+                    <div class="action finish">
+                        Finish setup
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var selectedColor = null;
+        var updateInterval = "h1";
+
+        onEvent(document, "click", ".action.menu", function (e) {
+            e.stopPropagation();
+            this.classList.toggle("opened");
+        });
+
+        onEvent(document, "click", ".action.menu .items .item", function (e) {
+            e.stopPropagation();
+            
+            var action = this.closest(".action.menu");
+            var type = action.getAttribute("data-type");
+            
+            switch(type) {
+                case "update-interval": {
+                    updateInterval = this.getAttribute("data-type");
+                    action.querySelector(".base").textContent = this.textContent;
+                } break;
+            }
+        });
+
+        onEvent(document, "click", ".color-theme-items .item", function (e) {
+            var body = document.querySelector("body");
+            var type = this.getAttribute("data-type");
+            body.classList.remove("white","dark","sepia");
+            body.classList.add(type);
+            setCookie("darkmode",type);
+        });
+
+        onEvent(document, "click", ".action.finish", function (e) {
+            document.querySelector("#overlayer").classList.add("reveal");
+
+            var formData = new FormData();
+            formData.append("interval",updateInterval);
+            
+            request({
+                method: "POST",
+                url: "{{ path("panel_setup") }}",
+                data: formData,
+                success(data) {
+                    window.location = "{{ path("panel_home") }}";
+                },
+                error(data) {
+                    alert("Setup failed, please try again");
+                    document.querySelector("#overlayer").classList.remove("reveal");
+                },
+            });
+        });
+    </script>
+{% endblock %} 

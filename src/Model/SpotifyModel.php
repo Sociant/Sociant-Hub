@@ -97,91 +97,119 @@ class SpotifyModel
         return $spotifyUser;
     }
 
-    public function updateRecentlyPlayed(User $user, $limit = 10, $storeData = true, $fetchAudioFeatures = true, $fetchAdditionalData = true, SpotifyWebAPI $api = null) {
+    public function updateRecentlyPlayed(User $user, $limit = 10, $storeData = true, $fetchAudioFeatures = true, $fetchAdditionalData = true, SpotifyWebAPI $api = null, $updateInterval = "m15") {
         $api = $api ?? $this->getWebAPI($user);
+        $lastUpdate = $user->getAutomatedUpdate() ? $user->getAutomatedUpdate()->getLastUpdate() : null;
+        if($lastUpdate == null || $lastUpdate < new \DateTime("-10 minutes")) {
+        
+            $lastTrack = $this->entityManager->createQuery(
+                "select h from App\Entity\SpotifyTrackHistory h
+                where h.user = :user
+                order by h.next desc"
+            )->setParameter("user",$user->getId())->setMaxResults(1)->getOneOrNullResult();
 
-        $lastTrack = $this->entityManager->createQuery(
-            "select h from App\Entity\SpotifyTrackHistory h
-             where h.user = :user
-             order by h.next desc"
-        )->setParameter("user",$user->getId())->setMaxResults(1)->getOneOrNullResult();
-
-        $recentTracks = $api->getMyRecentTracks([
-            "limit" => $limit > 50 ? 50 : $limit,
-            "after" => $lastTrack ? $lastTrack->getNext() : null
-        ]);
-
-        $next = $recentTracks->cursors ? $recentTracks->cursors->after : time()*1000;
-
-        $items = $recentTracks->items;
-
-        if($storeData) {
-            $tracks = [];
-            $ids = [];
-
-            foreach($items as $track) {
-                array_push($ids,$track->track->id);
-                $tracks[$track->track->id] = [
-                    'item' => null,
-                    'track' => $track->track,
-                    'played_at' => $track->played_at,
-                    'audioFeaturesGiven' => false,
-                    'audioFeatures' => null
-                ];
-            }
-
-            $existingTracks = $this->entityManager->getRepository(SpotifyTrack::class)->findBy([
-                "tid" => $ids
+            $recentTracks = $api->getMyRecentTracks([
+                "limit" => $limit > 50 ? 50 : $limit,
+                "after" => $lastTrack ? $lastTrack->getNext() : null
             ]);
 
-            foreach($existingTracks as $track) {
-                $tracks[$track->getTid()]["item"] = $track;
-                $tracks[$track->getTid()]["audioFeaturesGiven"] = $track->getAudioFeaturesLoaded();
-            }
+            $next = $recentTracks->cursors ? $recentTracks->cursors->after : time()*1000;
 
-            if($fetchAudioFeatures) {
+            $items = $recentTracks->items;
+
+            if($storeData) {
+                $tracks = [];
                 $ids = [];
 
-                foreach($tracks as $tid=>$track)
-                    if(!$track["audioFeaturesGiven"])
-                        array_push($ids,$tid);
+                foreach($items as $track) {
+                    array_push($ids,$track->track->id);
+                    $tracks[$track->track->id] = [
+                        'item' => null,
+                        'track' => $track->track,
+                        'played_at' => $track->played_at,
+                        'audioFeaturesGiven' => false,
+                        'audioFeatures' => null
+                    ];
+                }
 
-                $audioFeatures = $api->getAudioFeatures($ids);
+                $existingTracks = $this->entityManager->getRepository(SpotifyTrack::class)->findBy([
+                    "tid" => $ids
+                ]);
 
-                foreach($audioFeatures->audio_features as $item) {
-                    if($item != null) $tracks[$item->id]["audioFeatures"] = $item;
+                foreach($existingTracks as $track) {
+                    $tracks[$track->getTid()]["item"] = $track;
+                    $tracks[$track->getTid()]["audioFeaturesGiven"] = $track->getAudioFeaturesLoaded();
+                }
+
+                if($fetchAudioFeatures) {
+                    $ids = [];
+
+                    foreach($tracks as $tid=>$track)
+                        if(!$track["audioFeaturesGiven"])
+                            array_push($ids,$tid);
+
+                    $audioFeatures = $api->getAudioFeatures($ids);
+
+                    foreach($audioFeatures->audio_features as $item) {
+                        if($item != null) $tracks[$item->id]["audioFeatures"] = $item;
+                    }
+                }
+
+                foreach($tracks as $id=>$track) {
+                    $spotifyTrack = $this->storeTrack($track['track'],$track['audioFeatures'],false,false,$track['item']);
+                    $tracks[$id]['item'] = $spotifyTrack;
+                    
+                    $spotifyTrackHistory = new SpotifyTrackHistory();
+                    $spotifyTrackHistory->setUser($user);
+                    $spotifyTrackHistory->setSpotifyTrack($spotifyTrack);
+                    $spotifyTrackHistory->setTimestamp(new \DateTime("@".strtotime($track['played_at'])));
+                    $spotifyTrackHistory->setNext($next);
+
+                    $this->entityManager->persist($spotifyTrackHistory);
+                }
+
+                if($fetchAdditionalData) {
+                    $ids = [];
+
+                    foreach($tracks as $track) {
+                        if($track['item']->getAdditional() == null)
+                            array_push($ids,$track['item']->getTid());
+                    }
+
+                    $fullTracks = $api->getTracks($ids);
+
+                    foreach($fullTracks->tracks as $track) {
+                        $spotifyTrack = $tracks[$track->id]['item'];
+                        $spotifyTrack->setAdditional($this->getAdditionalFromObject($track,$spotifyTrack));
+                        $this->entityManager->persist($spotifyTrack);
+                    }
                 }
             }
 
-            foreach($tracks as $id=>$track) {
-                $spotifyTrack = $this->storeTrack($track['track'],$track['audioFeatures'],false,false,$track['item']);
-                $tracks[$id]['item'] = $spotifyTrack;
-                
-                $spotifyTrackHistory = new SpotifyTrackHistory();
-                $spotifyTrackHistory->setUser($user);
-                $spotifyTrackHistory->setSpotifyTrack($spotifyTrack);
-                $spotifyTrackHistory->setTimestamp(new \DateTime("@".strtotime($track['played_at'])));
-                $spotifyTrackHistory->setNext($next);
+            
+            $automatedUpdate = $user->getAutomatedUpdate();
 
-                $this->entityManager->persist($spotifyTrackHistory);
+            if($automatedUpdate == null) {
+                $automatedUpdate = new AutomatedUpdate();
+                $automatedUpdate->setUser($user);
+                $automatedUpdate->setUpdateInterval($updateInterval);
             }
 
-            if($fetchAdditionalData) {
-                $ids = [];
+            $automatedUpdate->setLastUpdate(new \DateTime());
+            
+            $nextUpdate = null;
 
-                foreach($tracks as $track) {
-                    if($track['item']->getAdditional() == null)
-                        array_push($ids,$track['item']->getTid());
-                }
-
-                $fullTracks = $api->getTracks($ids);
-
-                foreach($fullTracks->tracks as $track) {
-                    $spotifyTrack = $tracks[$track->id]['item'];
-                    $spotifyTrack->setAdditional($this->getAdditionalFromObject($track,$spotifyTrack));
-                    $this->entityManager->persist($spotifyTrack);
-                }
+            switch($automatedUpdate->getUpdateInterval()) {
+                case "m15": $nextUpdate = new \DateTime("+15 minutes"); break;
+                case "m30": $nextUpdate = new \DateTime("+30 minutes"); break;
+                case "h1": $nextUpdate = new \DateTime("+1 hours"); break;
+                case "d1": $nextUpdate = new \DateTime("+1 days"); break;
+                case "w1": $nextUpdate = new \DateTime("+7 days"); break;
             }
+
+            $automatedUpdate->setNextUpdate($nextUpdate);
+
+            $this->entityManager->persist($automatedUpdate);
 
             $this->entityManager->flush();
         }
@@ -383,6 +411,8 @@ class SpotifyModel
                 $playlistAnalysis->setTempo($stats["tempo"] / $total);
                 $playlistAnalysis->setTimeSignature($stats["timeSignature"] / $total);
                 $playlistAnalysis->setTotalDuration($stats["duration"]);
+
+                $spotifyPlaylist->setAnalysis($playlistAnalysis);
 
                 $this->entityManager->persist($playlistAnalysis);
             }

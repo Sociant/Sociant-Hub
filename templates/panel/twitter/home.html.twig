@@ -441,7 +441,7 @@
                     window.location = "{{ path("panel_home") }}";
                 },
                 error(data) {
-                    alert("Updating data, please try again");
+                    alert("Updating data failed, please try again");
                     document.querySelector("#overlayer").classList.remove("reveal");
                 },
             });
