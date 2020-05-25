@@ -81,29 +81,29 @@
                         <div class="item number">
                             <span class="label">Verified Followers</span>
                             <i class="fas fa-user-check"></i>
-                            {{ analytics.verifiedFollowers }} Followers
+                            {{ analytics.verifiedFollowers | number_format(0,',','.') }} Followers
                         </div>
                         <div class="item number">
                             <span class="label">Protected Followers</span>
                             <i class="fas fa-user-lock"></i>
-                            {{ analytics.protectedFollowers }} Followers
+                            {{ analytics.protectedFollowers | number_format(0,',','.') }} Followers
                         </div>
                         <div class="item number">
                             <span class="label">Tweets Total</span>
                             <i class="fas fa-comments"></i>
-                            {{ analytics.statusCount }} Tweets
+                            {{ analytics.statusCount | number_format(0,',','.') }} Tweets
                         </div>
                         <div class="item number">
                             <span class="label">Favorites Total</span>
                             <i class="fas fa-heart"></i>
-                            {{ analytics.favoriteCount }} Favorites
+                            {{ analytics.favoriteCount | number_format(0,',','.') }} Favorites
                         </div>
                         {% if analytics.mostStatuses %}
                         <div class="item profile">
                             <span class="label">Most Tweets</span>
                             <i class="fas fa-inbox"></i>
                             <span class="name">@{{ analytics.mostStatuses.screenName }}</span>
-                            {{ analytics.mostStatuses.statusesCount }} Tweets
+                            {{ analytics.mostStatuses.statusesCount | number_format(0,',','.') }} Tweets
                         </div>
                         {% endif %}
                         {% if analytics.mostFollowers %}
@@ -111,7 +111,7 @@
                             <span class="label">Most Followers</span>
                             <i class="fas fa-users"></i>
                             <span class="name">@{{ analytics.mostFollowers.screenName }}</span>
-                            {{ analytics.mostFollowers.followersCount }} Followers
+                            {{ analytics.mostFollowers.followersCount | number_format(0,',','.') }} Followers
                         </div>
                         {% endif %}
                         {% if analytics.oldestAccount %}
@@ -135,27 +135,27 @@
                         <div class="item number">
                             <span class="label">Followers</span>
                             <i class="fas fa-users"></i>
-                            {{ app.user.twitterUser.followersCount }} Followers
+                            {{ app.user.twitterUser.followersCount | number_format(0,',','.') }} Followers
                         </div>
                         <div class="item number">
                             <span class="label">Following</span>
                             <i class="fas fa-user-tag"></i>
-                            Following {{ app.user.twitterUser.friendsCount }} Users
+                            Following {{ app.user.twitterUser.friendsCount | number_format(0,',','.') }} Users
                         </div>
                         <div class="item number">
                             <span class="label">Lists</span>
                             <i class="fas fa-list"></i>
-                            Listed in {{ app.user.twitterUser.listedCount }} Lists
+                            Listed in {{ app.user.twitterUser.listedCount | number_format(0,',','.') }} Lists
                         </div>
                         <div class="item number">
                             <span class="label">Tweets</span>
                             <i class="fas fa-comment"></i>
-                            {{ app.user.twitterUser.statusesCount }} Tweets
+                            {{ app.user.twitterUser.statusesCount | number_format(0,',','.') }} Tweets
                         </div>
                         <div class="item number">
                             <span class="label">Favorites</span>
                             <i class="fas fa-heart"></i>
-                            {{ app.user.twitterUser.favoritesCount }} Favorites
+                            {{ app.user.twitterUser.favoritesCount | number_format(0,',','.') }} Favorites
                         </div>
                         {% set age = app.user.twitterUser.getAge %}
                         <div class="item number">
