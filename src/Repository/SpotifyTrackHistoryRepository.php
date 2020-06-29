@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\SpotifyTrackHistory;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,32 +20,18 @@ class SpotifyTrackHistoryRepository extends ServiceEntityRepository
         parent::__construct($registry, SpotifyTrackHistory::class);
     }
 
-    // /**
-    //  * @return SpotifyTrackHistory[] Returns an array of SpotifyTrackHistory objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return SpotifyTrackHistory[] Returns an array of UserAction objects
+    */
+    public function findActivitesByUser(User $user, $maxResults = 10)
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('h')
+            ->where('h.user = :user')
+            ->setParameter('user', $user->getId())
+            ->orderBy('h.timestamp', 'DESC')
+            ->setMaxResults($maxResults)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?SpotifyTrackHistory
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

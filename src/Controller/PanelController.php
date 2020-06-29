@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\AutomatedUpdate;
+use App\Entity\SpotifyTrackHistory;
 use App\Entity\UserAction;
 use App\Model\SpotifyModel;
 use App\Model\TwitterModel;
@@ -122,11 +123,15 @@ class PanelController extends AbstractController
 
                 return new Response("OK");
             }
+
+            $recentListeningActivities = $entityManager->getRepository(SpotifyTrackHistory::class)
+                                            ->findActivitesByUser($user,6);
             
             $automatedUpdate = $entityManager->getRepository(AutomatedUpdate::class)->findOneBy(["user"=>$user->getId()]);
                 
             return $this->render('panel/spotify/home.html.twig', [
-                'canUpdate' => $automatedUpdate->getLastUpdate() < new \DateTime("-15 minutes")
+                'canUpdate' => $automatedUpdate->getLastUpdate() < new \DateTime("-15 minutes"),
+                'recentListeningActivities' => $recentListeningActivities
             ]);
         }
     }
@@ -243,9 +248,10 @@ class PanelController extends AbstractController
      */
     public function spotifyPlay(SpotifyModel $spotifyModel, $uri)
     {
-        $spotifyModel->getWebAPI($this->getUser())->play(false,[
-            'uris' => [$uri]
-        ]);
+        $options = strpos($uri,"spotify:track:") !== false ?
+            ['uris' => [$uri]] : ['context_uri' => $uri];
+
+        $spotifyModel->getWebAPI($this->getUser())->play(false,$options);
 
         return new Response("OK");
     }

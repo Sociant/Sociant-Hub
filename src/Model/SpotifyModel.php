@@ -176,12 +176,14 @@ class SpotifyModel
                             array_push($ids,$track['item']->getTid());
                     }
 
-                    $fullTracks = $api->getTracks($ids);
+                    if(sizeof($ids) > 0) {
+                        $fullTracks = $api->getTracks($ids);
 
-                    foreach($fullTracks->tracks as $track) {
-                        $spotifyTrack = $tracks[$track->id]['item'];
-                        $spotifyTrack->setAdditional($this->getAdditionalFromObject($track,$spotifyTrack));
-                        $this->entityManager->persist($spotifyTrack);
+                        foreach($fullTracks->tracks as $track) {
+                            $spotifyTrack = $tracks[$track->id]['item'];
+                            $spotifyTrack->setAdditional($this->getAdditionalFromObject($track,$spotifyTrack));
+                            $this->entityManager->persist($spotifyTrack);
+                        }
                     }
                 }
             }

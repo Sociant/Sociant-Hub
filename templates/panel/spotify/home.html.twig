@@ -23,6 +23,49 @@
     <div id="content">
         <div class="container">
             <div class="page-title">Statistics for <span>{{ app.user.spotifyUser ? app.user.spotifyUser.displayName : app.user.spotifyID }}</span></div>
+            <div class="row">
+                <div class="column chart-frame">
+                    <div class="title">Graph</div>
+                    <div class="actions">
+                        <div class="action menu" data-type="graph-type">
+                            Range: <span class="base">Daily</span>
+                            <div class="items">
+                                <div class="item" data-type="hourly">Hourly</div>
+                                <div class="item" data-type="daily">Daily</div>
+                                <div class="item" data-type="monthly">Montly</div>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="userStat" height="200"></canvas>
+                </div>
+                <div class="column">
+                    <div class="title row">
+                        <span>Recent Listening Activities</span>
+                        <a href="{{ path("panel_activities") }}">Show all</a>
+                    </div>
+                    {% for item in recentListeningActivities %}
+                        {% set track = item.spotifyTrack %}
+                        {% set additional = track.additional %}
+                        <div class="track-card mini-card">
+                            <div class="image"{% if additional is not null %} style="background-image: url({{ additional.albumImageURL }})"{% endif %}>
+                                <div class="play-track" data-uri="spotify:track:{{ track.tid }}"><i class="fa fa-play-circle"></i></div>
+                            </div>
+                            <span class="name">
+                                {{ track.name }}
+                                {% if additional %}
+                                    <small>{% for artist in additional.artists %}
+                                        {{ artist.name }} 
+                                    {% endfor %}</small>
+                                {% endif %}
+                            </span>
+                            <div class="datestamp">
+                                {% set seconds = (track.duration / 1000) | number_format(0,'','') %}
+                                <span>Duration: {{ seconds >= 3600 ? seconds | date('H:i:s','+00:00 GMT') : seconds | date('i:s','+00:00 GMT') }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
             <div class="setting">
                 <div class="label">Update Data
                     <br>
@@ -61,6 +104,15 @@
                     alert("Updating data failed, please try again");
                     document.querySelector("#overlayer").classList.remove("reveal");
                 },
+            });
+        });
+        
+        onEvent(document, "click", ".play-track", function (e) {
+            var uri = this.getAttribute("data-uri");
+
+            request({
+                method: "PUT",
+                url: "/panel/spotify/play/"+uri
             });
         });
     </script>

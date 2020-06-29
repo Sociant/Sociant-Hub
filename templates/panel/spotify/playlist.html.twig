@@ -9,11 +9,11 @@
 {% block body %}
     <div id="content">
         <div class="container">
-            <div class="page-title-row">
+            <div class="page-title-row small-margin">
                 <div class="image"{% if playlist.imageURL is not null %} style="background-image: url({{ playlist.imageURL }})"{% endif %}>
                     <div class="play-track" data-uri="spotify:playlist:{{ playlist.pid }}"><i class="fa fa-play-circle"></i></div>
                 </div>
-                <div class="page-title small-margin">{{ playlist.name }} <span>by {{ playlist.owner.displayName }}</span><small>{{ playlist.tracks | length }} Tracks</small></div>
+                <div class="page-title">{{ playlist.name }} <span>by {{ playlist.owner.displayName }}</span><small>{{ playlist.tracks | length }} Tracks</small></div>
             </div>
             {% if playlist.analysis != null %}
             <div class="overall-stat-icons">
