@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Model\TwitterModel;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -48,7 +49,15 @@ class UpdateUserCommand extends Command
             $output->writeln("Updating ".sizeof($automatedUpdates)." users");
 
             foreach($automatedUpdates as $update) {
-                $this->twitterModel->fetchUserData($update->getUser());
+                $user = $update->getUser();
+
+                $output->writeln("Updating User with ID ".$user->getId());
+
+                try {
+                    $this->twitterModel->fetchUserData($user);
+                } catch(Exception $exception) {
+                    $output->writeln("Updating User with ID ".$user->getId()." failed: Exception: " . $exception->getMessage());
+                }
             }
 
             $output->writeln("Finished updating ".sizeof($automatedUpdates)." users after ".(new \DateTime())->diff($now)->s." seconds");
