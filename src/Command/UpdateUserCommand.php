@@ -49,11 +49,10 @@ class UpdateUserCommand extends Command
             $output->writeln("Updating ".sizeof($automatedUpdates)." users");
 
             foreach($automatedUpdates as $update) {
-                $user = $update->getUser();
-
-                $output->writeln("Updating User with ID ".$user->getId());
-
                 try {
+                    $user = $update->getUser();
+                    $output->writeln("Updating User with ID ".$user->getId());
+
                     $this->twitterModel->fetchUserData($user);
                 } catch(Exception $exception) {
                     $output->writeln("Updating User with ID ".$user->getId()." failed: Exception: " . $exception->getMessage());
