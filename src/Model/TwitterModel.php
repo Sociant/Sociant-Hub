@@ -11,6 +11,7 @@ use App\Entity\UserAnalytics;
 use App\Entity\UserRelation;
 use App\Entity\UserStatistic;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class TwitterModel
 {
@@ -42,6 +43,8 @@ class TwitterModel
 
         $userData = $connection->get("account/verify_credentials");
         $twitterUser = $this->createTwitterUserFromArray((array) $userData);
+
+        if($twitterUser == null) throw new Exception("Could not fetch user data, user might have removed API-Access.");
 
         $user->setTwitterUser($twitterUser);
         $this->entityManager->persist($user);
@@ -269,9 +272,9 @@ class TwitterModel
         }
     }
 
-    public function createTwitterUserFromArray($user, $skipDatabase = false, ?TwitterUser $twitterUser = null, $instantFlush = true): TwitterUser
+    public function createTwitterUserFromArray($user, $skipDatabase = false, ?TwitterUser $twitterUser = null, $instantFlush = true): ?TwitterUser
     {
-
+        if(!isset($user["id_str"])) return null;
         if ($skipDatabase) $twitterUser = $twitterUser ?? new TwitterUser();
         else $twitterUser = $this->entityManager->getRepository(TwitterUser::class)->findOneBy(["uuid" => $user["id_str"]]) ?? new TwitterUser();
 
