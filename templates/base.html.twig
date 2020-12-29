@@ -38,6 +38,7 @@
         <meta name="theme-color" content="#121212">
 
         {% block javascripts_head %}
+        {% block analytics %}
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167464741-1"></script>
         <script>
@@ -47,6 +48,7 @@
 
         gtag('config', 'UA-167464741-1');
         </script>
+        {% endblock %}
 
         <script src="https://kit.fontawesome.com/2bd4ca0a41.js" crossorigin="anonymous"></script>
         {% endblock %}

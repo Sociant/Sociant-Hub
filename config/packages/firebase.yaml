@@ -1,0 +1,4 @@
+kreait_firebase:
+  projects:
+    sociant_hub:
+      credentials: '%kernel.project_dir%/config/project-credentials.json'

@@ -13,10 +13,13 @@ class AuthenticationController extends AbstractController
     /**
      * @Route("/login", name="login")
      */
-    public function login()
+    public function login(Request $request)
     {
+        $callbackURL = $this->getParameter("twitter_callback_url");
+        $callbackURL .= (strpos($callbackURL,"?") !== false ? "&" : "?") . "return_type=" . $request->query->get("return_type","login");
+
         $connection = new TwitterOAuth($this->getParameter("twitter_api_key"), $this->getParameter("twitter_api_secret_key"));
-        $requestToken = $connection->oauth("oauth/request_token", ["oauth_callback" => $this->getParameter("twitter_callback_url")]);
+        $requestToken = $connection->oauth("oauth/request_token", ["oauth_callback" => $callbackURL]);
 
         $loginAttempt = new LoginAttempt();
         $loginAttempt->setCreated(new \DateTime());

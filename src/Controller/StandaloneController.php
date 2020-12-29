@@ -25,17 +25,21 @@ class StandaloneController extends AbstractController
     /**
      * @Route("/privacy-policy", name="privacy_policy")
      */
-    public function privacy()
+    public function privacy(Request $request)
     {
-        return $this->render('standalone/privacy.html.twig');
+        return $this->render('standalone/privacy.html.twig',[
+            "fromApp" => $request->query->has("from-app")
+        ]);
     }
     
     /**
      * @Route("/legal-disclosure", name="legal_disclosure")
      */
-    public function imprint()
+    public function imprint(Request $request)
     {
-        return $this->render('standalone/legal.html.twig');
+        return $this->render('standalone/legal.html.twig',[
+            "fromApp" => $request->query->has("from-app")
+        ]);
     }
     
     /**

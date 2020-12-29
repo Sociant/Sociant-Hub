@@ -4,6 +4,18 @@
     {{ parent() }}
 {% endblock %}
 
+{% block navigation %}
+    {% if not fromApp %}{{ parent() }}{% endif %}
+{% endblock %}
+
+{% block footer %}
+    {% if not fromApp %}{{ parent() }}{% endif %}
+{% endblock %}
+
+{% block analytics %}
+    {% if not fromApp %}{{ parent() }}{% endif %}
+{% endblock %}
+
 {% block title %}Sociant Hub ~ Legal Disclosure{% endblock %}
 
 {% block body %}

@@ -80,11 +80,22 @@ class User implements UserInterface
      */
     private $setupCompleted = false;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $apiToken;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ApiNotification::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $apiNotifications;
+
     public function __construct()
     {
         $this->userRelations = new ArrayCollection();
         $this->userActions = new ArrayCollection();
         $this->statistics = new ArrayCollection();
+        $this->apiNotifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -341,6 +352,49 @@ class User implements UserInterface
     public function setSetupCompleted(bool $setupCompleted): self
     {
         $this->setupCompleted = $setupCompleted;
+
+        return $this;
+    }
+
+    public function getApiToken(): ?string
+    {
+        return $this->apiToken;
+    }
+
+    public function setApiToken(?string $apiToken): self
+    {
+        $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ApiNotification[]
+     */
+    public function getApiNotifications(): Collection
+    {
+        return $this->apiNotifications;
+    }
+
+    public function addApiNotification(ApiNotification $apiNotification): self
+    {
+        if (!$this->apiNotifications->contains($apiNotification)) {
+            $this->apiNotifications[] = $apiNotification;
+            $apiNotification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApiNotification(ApiNotification $apiNotification): self
+    {
+        if ($this->apiNotifications->contains($apiNotification)) {
+            $this->apiNotifications->removeElement($apiNotification);
+            // set the owning side to null (unless already changed)
+            if ($apiNotification->getUser() === $this) {
+                $apiNotification->setUser(null);
+            }
+        }
 
         return $this;
     }
