@@ -41,38 +41,47 @@
                 <div class="column">
                     <div class="title row">
                         <span>Recent Activities</span>
+                        {% if not app.user.aboveFollowerLimit %}
                         <a href="{{ path("panel_activities") }}">Show all</a>
+                        {% endif %}
                     </div>
-                    {% if recentActivities | length == 0 %}
-                    <div class="empty-info">
-                        Sit tight, we're still crawling your statistics.
-                    </div>
-                    {% endif %}
-                    {% for item in recentActivities %}
-                        <a{% if item.twitterUser %} target="_blank" href="https://twitter.com/{{ item.twitterUser.screenName }}"{% endif %} class="user-card">
-                            {% if item.twitterUser %}
-                            <div class="image" style="background-image: url({{ item.twitterUser.profileImageURL | replace({"_normal":""}) }})"></div>
-                            <span class="name">{{ item.twitterUser.name }}<small>@{{ item.twitterUser.screenName }}</small></span>
-                            {% else %}
-                            <div class="image" style="background-image: url(https://abs.twimg.com/sticky/default_profile_images/default_profile.png)"></div>
-                            <span class="name">{{ item.uuid }}</span>
-                            {% endif %}
-                            <div class="datestamp">
-                                <span>{{ item.timestamp | date("H:i m/d/Y") }}</span>
-                                {% if item.action == "unfollow_self" %}
-                                <small>you unfollowed</small>
-                                {% elseif item.action == "unfollow_other" %}
-                                <small>unfollowed you</small>
-                                {% elseif item.action == "follow_self" %}
-                                <small>you followed</small>
-                                {% elseif item.action == "follow_other" %}
-                                <small>followed you</small>
+                    {% if not app.user.aboveFollowerLimit %}
+                        {% if recentActivities | length == 0 %}
+                        <div class="empty-info">
+                            Sit tight, we're still crawling your statistics.
+                        </div>
+                        {% endif %}
+                        {% for item in recentActivities %}
+                            <a{% if item.twitterUser %} target="_blank" href="https://twitter.com/{{ item.twitterUser.screenName }}"{% endif %} class="user-card">
+                                {% if item.twitterUser %}
+                                <div class="image" style="background-image: url({{ item.twitterUser.profileImageURL | replace({"_normal":""}) }})"></div>
+                                <span class="name">{{ item.twitterUser.name }}<small>@{{ item.twitterUser.screenName }}</small></span>
+                                {% else %}
+                                <div class="image" style="background-image: url(https://abs.twimg.com/sticky/default_profile_images/default_profile.png)"></div>
+                                <span class="name">{{ item.uuid }}</span>
                                 {% endif %}
-                            </div>
-                        </a>
-                    {% endfor %}
+                                <div class="datestamp">
+                                    <span>{{ item.timestamp | date("H:i m/d/Y") }}</span>
+                                    {% if item.action == "unfollow_self" %}
+                                    <small>you unfollowed</small>
+                                    {% elseif item.action == "unfollow_other" %}
+                                    <small>unfollowed you</small>
+                                    {% elseif item.action == "follow_self" %}
+                                    <small>you followed</small>
+                                    {% elseif item.action == "follow_other" %}
+                                    <small>followed you</small>
+                                    {% endif %}
+                                </div>
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-info">
+                            Unfortunately fetching unfollowers and followers for accounts with more than {{ follower_limit | number_format(0, ',', '.') }} followers is not possible
+                        </div>
+                    {% endif %}
                 </div>
             </div>
+            {% if not app.user.aboveFollowerLimit and app.user.analytics is not null %}
             <div class="row">
                 <div class="column">
                     {% set analytics = app.user.analytics %}
@@ -125,6 +134,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             <div class="row">
                 <div class="column">
                     <div class="title">User Analytics (@{{ app.user.twitterUser ? app.user.twitterUser.screenName : app.user.twitterUserScreenName }})

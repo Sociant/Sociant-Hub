@@ -28,7 +28,7 @@ class PanelController extends AbstractController
             $interval = $request->request->get("interval");
 
             switch($interval) {
-                case "n": case "h1": case "h12": case "d1": case "w1": $interval = $interval; break;
+                case "n": case "h1": case "h12": case "d1": case "w1": break;
                 default: $interval = "h1";
             }
             
@@ -80,7 +80,8 @@ class PanelController extends AbstractController
             'dailyHistory' => $dailyHistory,
             'hourlyHistory' => $hourlyHistory,
             'recentActivities' => $recentActivities,
-            'canUpdate' => $automatedUpdate->getLastUpdate() < new \DateTime("-59 minutes")
+            'canUpdate' => $automatedUpdate->getLastUpdate() < new \DateTime("-59 minutes"),
+            'follower_limit' => $this->getParameter("follower_limit")
         ]);
     }
 
@@ -114,22 +115,11 @@ class PanelController extends AbstractController
             $interval = $request->request->get("interval");
 
             switch($interval) {
-                case "n": case "h1": case "h12": case "d1": case "w1": $interval = $interval; break;
+                case "n": case "h1": case "h12": case "d1": case "w1": break;
                 default: $interval = "h1";
             }
 
-            $automatedUpdate->setUpdateInterval($interval);
-
-            $nextUpdate = null;
-
-            switch($interval) {
-                case "h1": $nextUpdate = new \DateTime("+1 hours"); break;
-                case "h12": $nextUpdate = new \DateTime("+12 hours"); break;
-                case "d1": $nextUpdate = new \DateTime("+1 days"); break;
-                case "w1": $nextUpdate = new \DateTime("+7 days"); break;
-            }
-
-            $automatedUpdate->setNextUpdate($nextUpdate);
+            $automatedUpdate->updateIntervalWithNextUpdate($interval);
 
             $entityManager->persist($automatedUpdate);
 

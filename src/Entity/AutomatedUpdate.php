@@ -90,4 +90,25 @@ class AutomatedUpdate
 
         return $this;
     }
+
+    public function updateIntervalWithNextUpdate(string $interval): self {
+        $lastUpdate = $this->lastUpdate;
+
+        if($lastUpdate != null)
+            $lastUpdate = clone $lastUpdate;
+        else
+            $lastUpdate = new \DateTime();
+
+        switch($interval) {
+            case "h1": $this->nextUpdate = $lastUpdate->modify("+1 hours"); break;
+            case "h12": $this->nextUpdate = $lastUpdate->modify("+12 hours"); break;
+            case "d1": $this->nextUpdate = $lastUpdate->modify("+1 days"); break;
+            case "w1": $this->nextUpdate = $lastUpdate->modify("+7 days"); break;
+            default: $this->nextUpdate = null; break;
+        }
+
+        $this->updateInterval = $interval;
+
+        return $this;
+    }
 }

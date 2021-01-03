@@ -5,6 +5,7 @@ namespace App\Handler;
 
 
 use App\Entity\ApiNotification;
+use App\Entity\AutomatedUpdate;
 use App\Entity\TwitterUser;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -46,6 +47,15 @@ class ApiExportHandler
             "device_token" => $apiNotification->getDeviceToken(),
             "device_unique_id" => $apiNotification->getDeviceUniqueId(),
             "notification_preferences" => $apiNotification->getNotificationPreferences()
+        ];
+    }
+
+    public function exportAutomatedUpdate(AutomatedUpdate $automatedUpdate): array
+    {
+        return [
+            "update_interval" => $automatedUpdate->getUpdateInterval(),
+            "next_update" => date_format($automatedUpdate->getNextUpdate(),"Y-m-d H:i:s"),
+            "last_update" => date_format($automatedUpdate->getLastUpdate(),"Y-m-d H:i:s")
         ];
     }
 

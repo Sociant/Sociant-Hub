@@ -11,6 +11,7 @@ parameters:
     recaptcha_secret: '%env(REPATCHA_SECRET)%'
     recaptcha_public: '%env(REPATCHA_PUBLIC)%'
     recipient_email: '%env(RECIPIENT_EMAIL)%'
+    follower_limit: '%env(FOLLOWER_LIMIT)%'
 
 services:
     # default configuration for services in *this* file
@@ -37,6 +38,7 @@ services:
             - "@doctrine.orm.entity_manager"
             - "%twitter_api_key%"
             - "%twitter_api_secret_key%"
+            - "%follower_limit%"
 
     App\Handler\ApiExportHandler:
         public: true

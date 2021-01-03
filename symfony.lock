@@ -5,6 +5,9 @@
     "beberlei/doctrineextensions": {
         "version": "v1.2.6"
     },
+    "composer/ca-bundle": {
+        "version": "1.2.8"
+    },
     "cron/cron": {
         "version": "1.4.2"
     },
@@ -87,6 +90,9 @@
     "doctrine/reflection": {
         "version": "1.2.1"
     },
+    "doctrine/sql-formatter": {
+        "version": "1.1.1"
+    },
     "egulias/email-validator": {
         "version": "2.1.17"
     },
@@ -95,6 +101,9 @@
     },
     "firebase/php-jwt": {
         "version": "v5.2.0"
+    },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.1"
     },
     "giggsey/libphonenumber-for-php": {
         "version": "8.12.15"
@@ -283,6 +292,9 @@
     "symfony/dependency-injection": {
         "version": "v5.0.8"
     },
+    "symfony/deprecation-contracts": {
+        "version": "v2.2.0"
+    },
     "symfony/doctrine-bridge": {
         "version": "v5.0.8"
     },
@@ -454,6 +466,9 @@
     },
     "symfony/polyfill-php73": {
         "version": "v1.17.0"
+    },
+    "symfony/polyfill-php80": {
+        "version": "v1.20.0"
     },
     "symfony/process": {
         "version": "v5.0.8"

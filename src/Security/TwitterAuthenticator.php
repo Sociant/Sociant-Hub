@@ -122,8 +122,6 @@ class TwitterAuthenticator extends AbstractGuardAuthenticator
                 $this->entityManager->flush();
             }
 
-            $twitterUser = $user->getTwitterUser();
-
             return new RedirectResponse($this->container->getParameter("ios_platform_schema") . "?token=" . $apiToken);
         }
 

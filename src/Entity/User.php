@@ -90,6 +90,11 @@ class User implements UserInterface
      */
     private $apiNotifications;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $aboveFollowerLimit = false;
+
     public function __construct()
     {
         $this->userRelations = new ArrayCollection();
@@ -395,6 +400,18 @@ class User implements UserInterface
                 $apiNotification->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAboveFollowerLimit(): ?bool
+    {
+        return $this->aboveFollowerLimit;
+    }
+
+    public function setAboveFollowerLimit(bool $aboveFollowerLimit): self
+    {
+        $this->aboveFollowerLimit = $aboveFollowerLimit;
 
         return $this;
     }

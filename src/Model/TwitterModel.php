@@ -19,12 +19,14 @@ class TwitterModel
     private $entityManager;
     private $apiKey;
     private $apiSecretKey;
+    private $followerLimit;
 
-    public function __construct(EntityManagerInterface $entityManager, $apiKey, $apiSecretKey)
+    public function __construct(EntityManagerInterface $entityManager, $apiKey, $apiSecretKey, $followerLimit)
     {
         $this->entityManager = $entityManager;
         $this->apiKey = $apiKey;
         $this->apiSecretKey = $apiSecretKey;
+        $this->followerLimit = $followerLimit;
     }
 
     public function createConnection(User $user): TwitterOAuth
@@ -47,6 +49,12 @@ class TwitterModel
         if($twitterUser == null) throw new Exception("Could not fetch user data, user might have removed API-Access.");
 
         $user->setTwitterUser($twitterUser);
+
+        $user->setAboveFollowerLimit(
+            $twitterUser->getFollowersCount() > $this->followerLimit ||
+            $twitterUser->getFriendsCount() > $this->followerLimit
+        );
+
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
@@ -74,35 +82,43 @@ class TwitterModel
 
         $lastUpdate = $user->getAutomatedUpdate() ? $user->getAutomatedUpdate()->getLastUpdate() : null;
 
+
         if($lastUpdate == null || $lastUpdate < new \DateTime("-50 minutes")) {
 
-            $followerIDs = $this->fetchFollowers($user, $connection);
-            $existingData = is_null($followerUserRelation->getData()) ? [] : json_decode($followerUserRelation->getData());
+            if(!$user->getAboveFollowerLimit()) {
 
-            if (!$firstUpdate) $this->compareLists($existingData, $followerIDs, "follower", $user);
+                $priorRelationsAvailable = $repository->findOneBy(["user" => $user->getId()]) != null;
+                if(!$priorRelationsAvailable) $firstUpdate = true;
 
-            $followerUserRelation->setType("follower");
-            $followerUserRelation->setUpdated(new \DateTime());
-            $followerUserRelation->setUser($user);
-            $followerUserRelation->setData(json_encode($followerIDs));
-            $followerUserRelation->setCount(sizeof($followerIDs));
+                $followerIDs = $this->fetchFollowers($user, $connection);
+                $existingData = is_null($followerUserRelation->getData()) ? [] : json_decode($followerUserRelation->getData());
 
-            $this->entityManager->persist($followerUserRelation);
+                if (!$firstUpdate) $this->compareLists($existingData, $followerIDs, "follower", $user);
 
-            $followingIDs = $this->fetchFollowing($user, $connection);
-            $existingData = is_null($followingUserRelation->getData()) ? [] : json_decode($followingUserRelation->getData());
+                $followerUserRelation->setType("follower");
+                $followerUserRelation->setUpdated(new \DateTime());
+                $followerUserRelation->setUser($user);
+                $followerUserRelation->setData(json_encode($followerIDs));
+                $followerUserRelation->setCount(sizeof($followerIDs));
 
-            if (!$firstUpdate) $this->compareLists($existingData, $followingIDs, "following", $user);
+                $this->entityManager->persist($followerUserRelation);
 
-            $followingUserRelation->setType("following");
-            $followingUserRelation->setUpdated(new \DateTime());
-            $followingUserRelation->setUser($user);
-            $followingUserRelation->setData(json_encode($followingIDs));
-            $followingUserRelation->setCount(sizeof($followingIDs));
+                $followingIDs = $this->fetchFollowing($user, $connection);
+                $existingData = is_null($followingUserRelation->getData()) ? [] : json_decode($followingUserRelation->getData());
 
-            $this->entityManager->persist($followingUserRelation);
+                if (!$firstUpdate) $this->compareLists($existingData, $followingIDs, "following", $user);
 
-            $this->updateAnalytics($user);
+                $followingUserRelation->setType("following");
+                $followingUserRelation->setUpdated(new \DateTime());
+                $followingUserRelation->setUser($user);
+                $followingUserRelation->setData(json_encode($followingIDs));
+                $followingUserRelation->setCount(sizeof($followingIDs));
+
+                $this->entityManager->persist($followingUserRelation);
+
+                $this->updateAnalytics($user);
+            }
+
 
             $automatedUpdate = $user->getAutomatedUpdate();
 

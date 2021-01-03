@@ -11,14 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 class ApiNotification
 {
 
-    private $defaultPreferences = [
-        "unfollow_self" => false,
-        "unfollow_other" => true,
-        "follow_self" => false,
-        "follow_other" => true,
-        "scheduled_update" => false
-    ];
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -40,7 +32,13 @@ class ApiNotification
     /**
      * @ORM\Column(type="object")
      */
-    private $notificationPreferences = [];
+    private $notificationPreferences = [
+        "unfollow_self" => false,
+        "unfollow_other" => true,
+        "follow_self" => false,
+        "follow_other" => true,
+        "scheduled_update" => false
+    ];
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -78,12 +76,12 @@ class ApiNotification
 
     public function getNotificationPreferences()
     {
-        return array_merge($this->defaultPreferences, $this->notificationPreferences);
+        return $this->notificationPreferences;
     }
 
     public function setNotificationPreferences($notificationPreferences): self
     {
-        $this->notificationPreferences = array_merge($this->defaultPreferences, $notificationPreferences);
+        $this->notificationPreferences = $notificationPreferences;
 
         return $this;
     }
