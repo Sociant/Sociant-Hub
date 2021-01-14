@@ -71,7 +71,7 @@ class PanelController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         $recentActivities = $entityManager->getRepository(UserAction::class)
-                                ->findActivitesByUser($this->getUser(),10);
+                                ->findActivitiesByUser($this->getUser(),10);
         
         $automatedUpdate = $entityManager->getRepository(AutomatedUpdate::class)->findOneBy(["user"=>$this->getUser()->getId()]);
             
@@ -93,7 +93,7 @@ class PanelController extends AbstractController
         if(!$this->getUser()->getSetupCompleted()) return $this->redirectToRoute("panel_setup");
 
         $activities = $this->getDoctrine()->getManager()->getRepository(UserAction::class)
-                        ->findActivitesByUser($this->getUser(),null);
+                        ->findActivitiesByUser($this->getUser(),null);
 
         return $this->render('panel/activities.html.twig', [
             'activities' => $activities

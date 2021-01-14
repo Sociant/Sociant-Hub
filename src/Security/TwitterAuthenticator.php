@@ -122,7 +122,7 @@ class TwitterAuthenticator extends AbstractGuardAuthenticator
                 $this->entityManager->flush();
             }
 
-            return new RedirectResponse($this->container->getParameter("ios_platform_schema") . "?token=" . $apiToken);
+            return new RedirectResponse($this->container->getParameter("mobile_platform_schema") . "?token=" . $apiToken);
         }
 
         return new RedirectResponse("/panel/home");
@@ -139,12 +139,15 @@ class TwitterAuthenticator extends AbstractGuardAuthenticator
     }
 
     private function generateUUID() {
-        return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+        $uuid = sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
             mt_rand( 0, 0xffff ),
             mt_rand( 0, 0x0fff ) | 0x4000,
             mt_rand( 0, 0x3fff ) | 0x8000,
             mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
         );
+
+        $check = $this->entityManager->getRepository(User::class)->findOneBy(["apiToken" => $uuid]);
+        return $check != null ? $this->generateUUID() : $uuid;
     }
 }

@@ -10,7 +10,7 @@ Sociant Hub is an mini project for tracking and analyzing Twitter Followers on t
 
 This project was created originally for private use to test the still existing twitter features. Due to some requests I worked on the project as a public accessible website, [Sociant Hub](https://hub.sociant.de).
 
-This project uses [TwitterOAuth](https://github.com/abraham/twitteroauth) by [abraham](https://github.com/abraham) for requests and is based on Symfony 5.0.
+This project uses [TwitterOAuth](https://github.com/abraham/twitteroauth) by [abraham](https://github.com/abraham) for requests and [Firebase Bundle](https://github.com/kreait/firebase-bundle) by [kreait](https://github.com/kreait) and is based on Symfony 5.0.
 
 # Installation
 
@@ -41,6 +41,17 @@ TWITTER_CALLBACK_URL | Return URL after successful authentication || Read above
 REPATCHA_PUBLIC | Public Recaptcha Key for Contact Page || Please visit [Recaptcha Admin](https://www.google.com/recaptcha/admin) for obtaining the key pair
 REPATCHA_SECRET | Secret Recaptcha Key for Contact Page ||  Read above
 RECIPIENT_EMAIL | Recipient E-Mail for Contact Page || john@doe.com
+MOBILE_PLATFORM_SCHEMA | Schema Redirection after Login from mobile Device | socianthub://callback
+FOLLOWER_LIMIT | Follower Limit for Follower Analytics | 70000
+
+With the API-Integration Update Firebase is also added to the project. To configure the application correctly you have to
+include the project-credentials.json from firebase into `[Project-Root]/config/project-credentials.json`
+
+Firebase is included for Live-Notifications to connected mobile devices. You can find your project credentails under:
+
+https://console.firebase.google.com/project/[your-project-id]/settings/serviceaccounts/adminsdk
+
+Go to Firebase Admin SDK and click on generate new private key. (or use your already generated one) and copy the contents into your project-credentails.json
 
 ### 4. Run Symfony
 
@@ -63,6 +74,10 @@ Please consider that due to API limitations you can only update every user once 
 # Used Plugins
 
 * [TwitterOAuth](https://github.com/abraham/twitteroauth) by [abraham](https://github.com/abraham)
+* [Firebase Bundle](https://github.com/kreait/firebase-bundle) by [kreait](https://github.com/kreait)
+* [DoctrineExtensions](https://github.com/beberlei/DoctrineExtensions) by [beberlei](https://github.com/beberlei)
+* [CronBundle](https://github.com/Cron/Symfony-Bundle) by [cron](https://github.com/Cron)
+* [Recaptcha](https://github.com/google/recaptcha) by [Google](https://github.com/google)
 
 # License
 

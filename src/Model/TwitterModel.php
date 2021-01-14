@@ -10,6 +10,7 @@ use App\Entity\UserAction;
 use App\Entity\UserAnalytics;
 use App\Entity\UserRelation;
 use App\Entity\UserStatistic;
+use App\Handler\ApiNotificationHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
@@ -17,13 +18,15 @@ class TwitterModel
 {
 
     private $entityManager;
+    private $apiNotificationHandler;
     private $apiKey;
     private $apiSecretKey;
     private $followerLimit;
 
-    public function __construct(EntityManagerInterface $entityManager, $apiKey, $apiSecretKey, $followerLimit)
+    public function __construct(EntityManagerInterface $entityManager, ApiNotificationHandler $apiNotificationHandler, $apiKey, $apiSecretKey, $followerLimit)
     {
         $this->entityManager = $entityManager;
+        $this->apiNotificationHandler = $apiNotificationHandler;
         $this->apiKey = $apiKey;
         $this->apiSecretKey = $apiSecretKey;
         $this->followerLimit = $followerLimit;
@@ -64,6 +67,7 @@ class TwitterModel
     public function fetchUserData(User $user, $firstUpdate = false, $updateInterval = "h1")
     {
         $connection = $this->createConnection($user);
+        $notificationItems = [];
 
         $repository = $this->entityManager->getRepository(UserRelation::class);
         $followerUserRelation = $repository->findOneBy(["user" => $user->getId(), "type" => "follower"]) ?? new UserRelation();
@@ -93,7 +97,7 @@ class TwitterModel
                 $followerIDs = $this->fetchFollowers($user, $connection);
                 $existingData = is_null($followerUserRelation->getData()) ? [] : json_decode($followerUserRelation->getData());
 
-                if (!$firstUpdate) $this->compareLists($existingData, $followerIDs, "follower", $user);
+                if (!$firstUpdate) $notificationItems = array_merge($notificationItems, $this->compareLists($existingData, $followerIDs, "follower", $user));
 
                 $followerUserRelation->setType("follower");
                 $followerUserRelation->setUpdated(new \DateTime());
@@ -106,7 +110,7 @@ class TwitterModel
                 $followingIDs = $this->fetchFollowing($user, $connection);
                 $existingData = is_null($followingUserRelation->getData()) ? [] : json_decode($followingUserRelation->getData());
 
-                if (!$firstUpdate) $this->compareLists($existingData, $followingIDs, "following", $user);
+                if (!$firstUpdate) $notificationItems = array_merge($notificationItems, $this->compareLists($existingData, $followingIDs, "following", $user));
 
                 $followingUserRelation->setType("following");
                 $followingUserRelation->setUpdated(new \DateTime());
@@ -145,11 +149,14 @@ class TwitterModel
         }
 
         $this->entityManager->flush();
+
+        if(sizeof($notificationItems) > 0)
+            $this->apiNotificationHandler->sendActivitiesNotificationToUser($user, $notificationItems);
     }
 
 
 
-    public function compareLists($oldList = [], $newList = [], $action, User $user)
+    public function compareLists($oldList = [], $newList = [], $action, User $user) : array
     {
         $ids = [];
 
@@ -188,6 +195,8 @@ class TwitterModel
 
         $date = new \DateTime();
 
+        $output = [];
+
         foreach ($ids as $id => $data) {
             $userAction = new UserAction();
             $userAction->setUser($user);
@@ -197,7 +206,10 @@ class TwitterModel
             $userAction->setAction($data["action"]);
 
             $this->entityManager->persist($userAction);
+            $output[] = $userAction;
         }
+
+        return $output;
     }
 
     public function fetchFollowers(User $user, ?TwitterOAuth $connection)
@@ -424,11 +436,6 @@ class TwitterModel
             $chunks = array_chunk(json_decode($followerUserRelation->getData()), 100);
 
             foreach ($chunks as $chunk) {
-                $needUpdate = [];
-
-                foreach ($chunk as $id)
-                    $needUpdate[$id] = null;
-
                 $cachedResult = $this->entityManager->getRepository(TwitterUser::class)->findBy([
                     "uuid" => $chunk
                 ]);
@@ -459,6 +466,44 @@ class TwitterModel
             
             $this->entityManager->persist($userAnalytics);
             $this->entityManager->flush();
+        }
+    }
+
+    public function getUsersByType(User $user, string $type, $limit = 20, $page = 0) : array {
+        if($user->getAboveFollowerLimit()) return [];
+
+        $followerUserRelation = $this->entityManager->getRepository(UserRelation::class)->findOneBy(["user" => $user->getId(), "type" => "follower"]);
+        $userAnalytics = $user->getAnalytics() ?? new UserAnalytics();
+
+        $twitterUsers = [];
+
+        if ($followerUserRelation) {
+            $chunks = array_chunk(json_decode($followerUserRelation->getData()), 100);
+
+            foreach ($chunks as $chunk) {
+                $twitterUsers = array_merge($twitterUsers, $this->entityManager->getRepository(TwitterUser::class)->findBy(
+                    [ "uuid" => $chunk, "$type" => true ]
+                ));
+            }
+        }
+
+        if(sizeof($twitterUsers) <= $limit) {
+            return [
+                "items" => $twitterUsers,
+                "more_available" => false
+            ];
+        } else {
+            $chunks = array_chunk($twitterUsers, $limit);
+            if((sizeof($chunks) - 1) >= $page)
+                return [
+                    "items" => $chunks[$page],
+                    "more_available" => (sizeof($chunks) - 1) >= ($page + 1)
+                ];
+            else
+                return [
+                    "items" => [],
+                    "more_available" => false
+                ];
         }
     }
 }

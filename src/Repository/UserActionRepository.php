@@ -22,17 +22,18 @@ class UserActionRepository extends ServiceEntityRepository
 
     /**
      * @return UserAction[] Returns an array of UserAction objects
-    */
-    public function findActivitesByUser(User $user, $maxResults = 10)
+     */
+    public function findActivitiesByUser(User $user, $maxResults = 10, $page = 0, $increaseForMoreAvailable = false)
     {
         return $this->createQueryBuilder('a')
             ->leftJoin("a.twitterUser","tu")
             ->where('a.user = :user')
             ->setParameter('user', $user->getId())
             ->orderBy('a.id', 'DESC')
-            ->setMaxResults($maxResults)
+            ->setFirstResult($maxResults * $page)
+            ->setMaxResults($increaseForMoreAvailable ? ($maxResults + 1) : $maxResults)
             ->getQuery()
             ->getResult()
-        ;
+            ;
     }
 }

@@ -37,7 +37,8 @@ class UpdateUserCommand extends Command
         $automatedUpdates = $this->entityManager->createQuery(
             "select a from App\Entity\AutomatedUpdate a
             where a.nextUpdate <= :now
-            and a.lastUpdate < :check"
+            and a.lastUpdate < :check
+            and a.updateInterval != 'n'"
         )
         ->setParameter("now",new \DateTime())
         ->setParameter("check",new \DateTime("-59 minutes"))
