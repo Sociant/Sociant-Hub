@@ -4,6 +4,7 @@ namespace App\Model;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 use App\Entity\AutomatedUpdate;
+use App\Entity\BannedUser;
 use App\Entity\TwitterUser;
 use App\Entity\User;
 use App\Entity\UserAction;
@@ -13,6 +14,7 @@ use App\Entity\UserStatistic;
 use App\Handler\ApiNotificationHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 
 class TwitterModel
 {
@@ -66,6 +68,12 @@ class TwitterModel
 
     public function fetchUserData(User $user, $firstUpdate = false, $updateInterval = "h1")
     {
+        $bannedUser = $this->entityManager->getRepository(BannedUser::class)->findBy([
+            'twitterUserId' => $user->getUuid()
+        ]);
+
+        if(sizeof($bannedUser) > 0) return;
+
         $connection = $this->createConnection($user);
         $notificationItems = [];
 

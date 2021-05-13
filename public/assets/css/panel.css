@@ -55,6 +55,73 @@ body, html {
     transition: background .2s ease;
 }
 
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#overlay .inner {
+    position: absolute;
+    max-height: 100%;
+    overflow-y: auto;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#overlay .inner .box {
+    width: 100%;
+    max-width: 300px;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+    padding: 25px 40px;
+}
+
+#overlay .inner .box h4 {
+    color: #3c3c3c;
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0 0 10px;
+}
+
+#overlay .inner .box span {
+    font-weight: 400;
+    font-size: 14px
+}
+
+#overlay .inner .box .button {
+    margin-top: 20px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 15px;
+    background: #00B294;
+    border: solid 1px #00B294;
+    border-radius: 5px;
+    color: white;
+    height: 32px;
+    font-size: 14px;
+    position: relative;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .2s ease, color .2s ease;
+}
+#overlay .inner .box .button:hover {
+    background: white;
+    color: #00B294;
+    transition: background .2s ease;
+}
+
 #website {
     display: flex;
     flex-direction: column;

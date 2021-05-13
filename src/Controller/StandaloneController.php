@@ -15,10 +15,19 @@ class StandaloneController extends AbstractController
     /**
      * @Route("/", name="index")
      */
-    public function index()
+    public function index(Request $request)
     {
+        $loginError = null;
+
+        if($request->query->has('login_error'))
+            switch($request->query->get('login_error')) {
+                case 'token': $loginError = 'Invalid token, please try again.'; break;
+                case 'banned': $loginError = 'Your account has been banned from Sociant Hub.'; break;
+            }
+
         return $this->render('standalone/index.html.twig', [
-            'ignore' => true
+            'ignore' => true,
+            'loginError' => $loginError
         ]);
     }
 
