@@ -15,6 +15,17 @@
 {% block title %}Sociant Hub - Know your followers{% endblock %}
 
 {% block body %}
+{% if loginError %}
+   <div id="overlay">
+       <div class="inner">
+           <div class="box">
+               <h4>Login failed</h4>
+               <span>{{ loginError }}</span>
+               <div class="button">Close popup</div>
+           </div>
+       </div>
+   </div>
+{% endif %}
 <div id="mainpage">
     <div class="purple">
         <div class="container">
@@ -66,4 +77,18 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const overlay = document.getElementById('overlay');
+
+            if(overlay)
+                document.querySelector('#overlay .button').addEventListener('click', function() {
+                    overlay.remove();
+                });
+        });
+    </script>
 {% endblock %}

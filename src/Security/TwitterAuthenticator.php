@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
+use App\Entity\BannedUser;
 use App\Entity\LoginAttempt;
 use App\Entity\User;
 use App\Handler\ApiExportHandler;
@@ -71,14 +72,23 @@ class TwitterAuthenticator extends AbstractGuardAuthenticator
                 "oauth_verifier" => $credentials["oauthVerifier"]
             ]);
 
+            $userId = $accessToken["user_id"];
+
             $user = $this->entityManager->getRepository(User::class)->findOneBy([
-                "uuid" => $accessToken["user_id"]
+                "uuid" => $userId
             ]);
 
             $this->entityManager->remove($loginAttempt);
 
+            $bannedUser = $this->entityManager->getRepository(BannedUser::class)->findBy([
+                'twitterUserId' => $userId
+            ]);
+
+            if(sizeof($bannedUser) > 0)
+                throw new CustomUserMessageAuthenticationException('banned');
+
             if($user == null) $user = new User();
-            $user->setUuid($accessToken["user_id"]);
+            $user->setUuid($userId);
             $user->setTwitterUserScreenName($accessToken["screen_name"]);
             $user->setTwitterUserOauthToken($accessToken["oauth_token"]);
             $user->setTwitterUserOauthTokenSecret($accessToken["oauth_token_secret"]);
@@ -90,7 +100,7 @@ class TwitterAuthenticator extends AbstractGuardAuthenticator
 
             return $user;
         } else
-            throw new CustomUserMessageAuthenticationException("unknown oauthToken");
+            throw new CustomUserMessageAuthenticationException("token");
     }
 
     public function checkCredentials($credentials, UserInterface $user)
@@ -106,7 +116,7 @@ class TwitterAuthenticator extends AbstractGuardAuthenticator
             ]);
         }
 
-        return new RedirectResponse("/");
+        return new RedirectResponse("/?login_error=" . urlencode($exception->getMessage()));
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
