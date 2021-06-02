@@ -1,6 +1,10 @@
 <div id="navigation"{% if mainpage is defined %} class="mainpage"{% endif %}>
 	<div class="container">
-		<div class="logo">Sociant Hub</div>
+		<div class="logo">
+			<div style="overflow: hidden; border-radius: 4px; color: white;">
+				<span style="background: #e40303; padding-left: 5px;">So</span><span style="background: #ff8c00">ci</span><span style="background: #ffed00; color: #a7a7a7">an</span><span style="background: #008026">t </span><span style="background: #004dff">H</span><span style="background: #750587; padding-right: 5px;">ub</span>
+			</div>
+		</div>
 		<div class="spacer"></div>
 		{% if app.user %}
 		<div class="profile">
