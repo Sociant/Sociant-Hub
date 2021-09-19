@@ -36,4 +36,19 @@ class UserActionRepository extends ServiceEntityRepository
             ->getResult()
             ;
     }
+
+    /**
+     * @return UserAction[] Returns an array of UserAction objects
+     */
+    public function findAllActivitiesByUser(User $user)
+    {
+        return $this->createQueryBuilder('a')
+            ->leftJoin("a.twitterUser","tu")
+            ->where('a.user = :user')
+            ->setParameter('user', $user->getId())
+            ->orderBy('a.id', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

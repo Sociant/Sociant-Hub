@@ -24,12 +24,12 @@ class ApiKeyAuthenticator extends AbstractGuardAuthenticator
 
     public function supports(Request $request)
     {
-        return $request->headers->has('Authorization');
+        return $request->headers->has('Authorization') || $request->query->has('token');
     }
 
     public function getCredentials(Request $request)
     {
-        return str_replace("Bearer ","",$request->headers->get('Authorization'));
+        return str_replace("Bearer ","", $request->headers->has('Authorization') ? $request->headers->get('Authorization') : $request->query->get('token'));
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)

@@ -1,0 +1,93 @@
+export type HistoryEntry = {
+	date: number
+	followerCount: number
+	followingCount: number
+}
+
+export type HistoryResponse = {
+	items: HistoryEntry[]
+}
+
+export type TwitterUser = {
+	id: string
+	name: string
+	screen_name: string
+	protected: boolean
+	verified: boolean
+	translator: boolean
+	profile_image_url: string
+}
+
+export type TwitterUserExtended = TwitterUser & {
+	created_at: string
+	location: string | null
+	description: string
+	url: string | null
+	followers_count: number
+	friends_count: number
+	listed_count: number
+	favorites_count: number
+	statuses_count: number
+}
+
+export type ActivityEntry = {
+	id: number
+	timestamp: number
+	uuid: string
+	twitter_user: TwitterUser | TwitterUserExtended
+	action: string
+}
+
+export type AutomatedUpdate = {
+	update_interval: string
+	next_update: number
+	last_update: number
+}
+
+export type HomeResponse = {
+	type: string
+	history: HistoryEntry[]
+	activities: ActivityEntry[]
+	twitter_user: TwitterUserExtended | null
+	automated_update: AutomatedUpdate | null
+    can_update: boolean
+}
+
+export type Statistics = {
+	updated: string
+	followers_count: number
+	friends_count: number
+	listed_count: number
+	favorites_count: number
+	statuses_count: number
+	created_at: string
+}
+
+export type Analytics = {
+	updated: string
+	verified_followers: number
+	protected_followers: number
+	status_count: number
+	favorite_count: number
+	most_statuses: TwitterUser | TwitterUserExtended | null
+	most_followers: TwitterUser | TwitterUserExtended | null
+	oldest_account: TwitterUser | TwitterUserExtended | null
+}
+
+export type StatisticsResponse = {
+	statistics: Statistics
+	analytics: Analytics
+}
+
+export type ActivityResponse = {
+	items: ActivityEntry[]
+	length: number
+	limit: number
+	more_available: boolean
+	page: number
+	slim: boolean
+}
+
+export type ErrorResponse = {
+	error: string
+}

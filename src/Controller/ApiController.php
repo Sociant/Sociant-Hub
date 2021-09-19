@@ -4,11 +4,14 @@ namespace App\Controller;
 
 use App\Entity\ApiNotification;
 use App\Entity\AutomatedUpdate;
+use App\Entity\TwitterUser;
 use App\Entity\User;
 use App\Entity\UserAction;
+use App\Entity\UserStatistic;
 use App\Handler\ApiExportHandler;
 use App\Handler\ApiNotificationHandler;
 use App\Model\TwitterModel;
+use DateTime;
 use Kreait\Firebase\Messaging;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -326,7 +329,8 @@ class ApiController extends AbstractController
 
         $entityManager = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $activities = $entityManager->createQuery("select a from App\Entity\UserAction a where a.user = :user and a.uuid = :uuid")
+
+        $activities = $entityManager->createQuery("select a from App\Entity\UserAction a where a.user = :user and a.uuid = :uuid order by a.timestamp desc")
             ->setParameters([
                 "user" => $user,
                 "uuid" => $id
@@ -384,6 +388,7 @@ class ApiController extends AbstractController
 
 
         return $this->json([
+            'can_update' => $automatedUpdate ? $automatedUpdate->getLastUpdate() < new \DateTime("-59 minutes") : null,
             "type" => $type,
             "history" => $history,
             "activities" => $output,
@@ -444,5 +449,220 @@ class ApiController extends AbstractController
             "page" => $page,
             "limit" => $limit
         ]);
+    }
+
+    /**
+     * @Route("/users/get/{uuid}", name="users_get")
+     */
+    public function usersGet(Request $request, TwitterModel $twitterModel, ApiExportHandler $apiExportHandler, $uuid)
+    {
+        $slimTwitterUser = $request->query->getBoolean('slim', true);
+
+        $user = $this->getUser();
+
+        /** @var TwitterUser|null $result */
+        $result = $twitterModel->getUserByUuid($uuid, $user);
+
+        if($result) return $this->json($apiExportHandler->exportTwitterUser($result, $slimTwitterUser));
+
+        return $this->json(["error"=>"unknown user"],404);
+    }
+
+    /**
+     * @Route("/download/activities", name="download_activities")
+     */
+    public function downloadActivities(Request $request, ApiExportHandler $apiExportHandler)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+
+        $activities = $entityManager->getRepository(UserAction::class)
+            ->findAllActivitiesByUser($user);
+
+        $format = 'csv';
+
+        if($request->query->has('format')) {
+            switch($request->query->get('format')) {
+                case 'json': $format = 'json'; break;
+            }
+        }
+
+        $data = [];
+
+        foreach($activities as $activity) {
+            $data[] = $apiExportHandler->exportUserAction($activity, true);
+        }
+
+        if($format === 'csv') {
+            $rows = [
+                implode(',', [ 'date formatted'. 'date timestamp', 'uuid', 'name', 'screen name', 'action' ])
+            ];
+    
+            foreach($data as $entry) {
+                $rows[] = implode(',', [
+                    date_format(new DateTime('@' . $entry['timestamp']), 'H:i m/d/Y'),
+                    $entry['timestamp'],
+                    $entry['uuid'],
+                    $entry['twitter_user']['name'],
+                    $entry['twitter_user']['screen_name'],
+                    $entry['action']
+                ]);
+            }
+    
+            $content = implode("\n", $rows);
+    
+            $response = new Response($content);
+            $response->headers->set('Content-Encoding', 'UTF-8');
+            $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
+            $response->headers->set('Content-Disposition', 'attachment; filename=sociant_hub_activities.csv');
+    
+            return $response;
+        } else if($format === 'json') {
+            $output = [];
+
+            foreach($data as $entry) {
+                $output[] = [
+                    'date_formatted' => date_format(new DateTime('@' . $entry['timestamp']), 'H:i m/d/Y'),
+                    'date_timestamp' => $entry['timestamp'],
+                    'uuid' => $entry['uuid'],
+                    'name' => $entry['twitter_user']['name'],
+                    'screen_name' => $entry['twitter_user']['screen_name'],
+                    'action' => $entry['action']
+                ];
+            }
+        
+            $response = new Response(json_encode($output));
+            $response->headers->set('Content-Encoding', 'UTF-8');
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $response->headers->set('Content-Disposition', 'attachment; filename=sociant_hub_activities.json');
+    
+            return $response;
+        }
+    }
+
+    /**
+     * @Route("/download/history/{period}", name="download_history")
+     */
+    public function downloadHistory(Request $request, $period)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+
+        $data = $entityManager->getRepository(UserStatistic::class)
+            ->findAllStatisticsForUser($user);
+
+        $dateFormat = 'H:i m/d/Y';
+
+
+        switch($period) {
+            case 'year': {
+                $history = [];
+                $listedYears = [];
+
+                foreach($data as $entry) {
+                    $date = $entry['date'];
+                    $year = $date->format('y');
+
+                    if(!in_array($year, $listedYears)) {
+                        $history[] = $entry;
+                        $listedYears[] = $year;
+                    }
+                }
+
+                $dateFormat = 'Y';
+            }; break;
+            case 'month': {
+                $history = [];
+                $listedMonths = [];
+
+                foreach($data as $entry) {
+                    $date = $entry['date'];
+                    $year = $date->format('y');
+                    $month = $date->format('m');
+
+                    $timestamp = "$year-$month";
+
+                    if(!in_array($timestamp, $listedMonths)) {
+                        $history[] = $entry;
+                        $listedMonths[] = $timestamp;
+                    }
+                }
+
+                $dateFormat = 'm/Y';
+            }; break;
+            case 'day': {
+                $history = [];
+                $listedDates = [];
+
+                foreach($data as $entry) {
+                    $date = $entry['date'];
+                    $year = $date->format('y');
+                    $month = $date->format('m');
+                    $day = $date->format('d');
+
+                    $timestamp = "$year-$month-$day";
+
+                    if(!in_array($timestamp, $listedDates)) {
+                        $history[] = $entry;
+                        $listedDates[] = $timestamp;
+                    }
+                }
+
+                $dateFormat = 'm/d/Y';
+            }; break;
+            default: $history = $data; $period = 'all';
+        }
+
+        $format = 'csv';
+
+        if($request->query->has('format')) {
+            switch($request->query->get('format')) {
+                case 'json': $format = 'json'; break;
+            }
+        }
+
+        if($format === 'csv') {
+            $rows = [
+                implode(',', [ 'date formatted'. 'date timestamp', 'follower count', 'following count' ])
+            ];
+    
+            foreach($history as $entry) {
+                $rows[] = implode(',', [
+                    date_format($entry['date'], $dateFormat),
+                    $entry['date']->getTimestamp(),
+                    $entry['followerCount'],
+                    $entry['followingCount']
+                ]);
+            }
+    
+            $content = implode("\n", $rows);
+    
+            $response = new Response($content);
+            $response->headers->set('Content-Encoding', 'UTF-8');
+            $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
+            $response->headers->set('Content-Disposition', 'attachment; filename=sociant_hub_activities.csv');
+    
+            return $response;
+        } else if($format === 'json') {
+            $output = [];
+
+            foreach($history as $entry) {
+                $output[] = [
+                    'date_formatted' => date_format($entry['date'], $dateFormat),
+                    'date_timestamp' => $entry['date']->getTimestamp(),
+                    'follower_count' => $entry['followerCount'],
+                    'following_count' => $entry['followingCount']
+                ];
+            }
+        
+            $response = new Response(json_encode($output));
+            $response->headers->set('Content-Encoding', 'UTF-8');
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $response->headers->set('Content-Disposition', 'attachment; filename=sociant_hub_history_' . $period . '.json');
+    
+            return $response;
+        }
     }
 }

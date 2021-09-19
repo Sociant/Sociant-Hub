@@ -308,6 +308,17 @@ class TwitterModel
         }
     }
 
+    public function updateTwitterUserFromId(TwitterUser $twitterUser, TwitterOAuth $connection): ?TwitterUser {
+        $result = (array) $connection->get("users/show", [
+            "user_id" => $twitterUser->getUuid()
+        ]);
+
+        if(isset($result["id"]))
+            return $this->createTwitterUserFromArray($result, false, $twitterUser, true);
+
+        return null;
+    }
+
     public function createTwitterUserFromArray($user, $skipDatabase = false, ?TwitterUser $twitterUser = null, $instantFlush = true): ?TwitterUser
     {
         if(!isset($user["id_str"])) return null;
@@ -331,6 +342,7 @@ class TwitterModel
         $twitterUser->setStatusesCount($user["statuses_count"]);
         $twitterUser->setTranslator($user["is_translator"]);
         $twitterUser->setProfileImageURL($user["profile_image_url_https"]);
+        $twitterUser->setLastUpdated(new \DateTime());
 
         $this->entityManager->persist($twitterUser);
         if ($instantFlush) $this->entityManager->flush();
@@ -513,5 +525,22 @@ class TwitterModel
                     "more_available" => false
                 ];
         }
+    }
+
+    public function getUserByUuid(string $uuid, User $user): ?TwitterUser
+    {
+        $connection = $this->createConnection($user);
+
+        /** @var $twitterUser TwitterUser */
+        $twitterUser = $this->entityManager->getRepository(TwitterUser::class)->findOneBy(
+            [ "uuid" => $uuid ]
+        );
+
+        if(!$twitterUser) return null;
+
+        if(($twitterUser->getLastUpdated()->getTimestamp() + (60 * 60 * 24)) < time())
+            return $this->updateTwitterUserFromId($twitterUser, $connection);
+
+        return $twitterUser;
     }
 }

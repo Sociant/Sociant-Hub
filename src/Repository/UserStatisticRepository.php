@@ -50,4 +50,19 @@ class UserStatisticRepository extends ServiceEntityRepository
             ->getArrayResult()
         ;
     }
+
+    /**
+     * @return UserStatisticRepository[] Returns an array of UserStatisticRepository objects
+    */
+    public function findAllStatisticsForUser(User $user)
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s.date','s.followerCount','s.followingCount')
+            ->andWhere('s.user = :user')
+            ->setParameter('user', $user->getId())
+            ->orderBy('s.date','desc')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

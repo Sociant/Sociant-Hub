@@ -1,0 +1,29 @@
+{# templates/base.html.twig #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ... -->
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+    <title>Test</title>
+</head>
+<body>
+    <div id="app" data-app="{{ {
+        "authenticated": app.user != null,
+        "twitterUser": app.user ? (app.user.twitterUser ? {
+            "name": app.user.twitterUser.name,
+            "screenName": app.user.twitterUser.screenName,
+            "profileImageURL": app.user.twitterUser.profileImageURL | replace({"_normal":""})
+        } : null) : null,
+        "screenName": app.user ? (app.user.twitterUser ? app.user.twitterUser.screenName : app.user.twitterUserScreenName) : null,
+        "name": app.user ? app.user.twitterUser.name : null,
+        "apiToken": app.user ? app.user.apiToken : null
+    } | json_encode }}"></div>
+</body>
+</html>

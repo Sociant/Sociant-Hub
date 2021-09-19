@@ -109,6 +109,11 @@ class TwitterUser
      */
     private $userActions;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $lastUpdated;
+
     public function __construct()
     {
         $this->userActions = new ArrayCollection();
@@ -357,5 +362,17 @@ class TwitterUser
     public function getAge() {
         $difference = (new \DateTime())->diff($this->getAccountCreatedAt());
         return $difference;
+    }
+
+    public function getLastUpdated(): ?\DateTimeInterface
+    {
+        return $this->lastUpdated;
+    }
+
+    public function setLastUpdated(\DateTimeInterface $lastUpdated): self
+    {
+        $this->lastUpdated = $lastUpdated;
+
+        return $this;
     }
 }

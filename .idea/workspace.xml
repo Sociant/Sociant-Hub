@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8948d4bc-b748-4589-aa50-17c0b288eb28" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.npmrc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.prettierrc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/Base.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/app.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/components/userItem.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/font.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-500.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-500.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-500.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-500.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-500.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-600.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-600.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-600.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-600.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-600.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-800.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-800.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-800.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-800.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-800.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-regular.eot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-regular.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-regular.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-regular.woff" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter/inter-v3-latin-regular.woff2" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/routes/Activities.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/routes/Home.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/routes/Profile.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/routes/User.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/styledComponents/activityStyles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/styledComponents/globalStyles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/styledComponents/navigationStyles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/styledComponents/profileStyles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/styledComponents/themes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/styledComponents/twitterButtonStyles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/styledComponents/userStyles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/translations/english.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/translations/german.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/translations/i18n.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/types/global.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/utilities/utilities.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/packages/assets.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/packages/prod/webpack_encore.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/packages/test/webpack_encore.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/packages/webpack_encore.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/project-credentials.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/assets/images/empty.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/test/index.html.twig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/bundles.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/bundles.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/css/panel.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/css/panel.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/ApiController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/ApiController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/StandaloneController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/StandaloneController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/TwitterUser.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/TwitterUser.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Model/TwitterModel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/TwitterModel.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Security/TwitterAuthenticator.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Security/TwitterAuthenticator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/symfony.lock" beforeDir="false" afterPath="$PROJECT_DIR$/symfony.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/panel/elements/navigation.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/panel/elements/navigation.html.twig" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" doNotAsk="true">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+    <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JsBowerSettings">
+    <node-interpreter value="project" />
+    <bower-package value="" />
+    <bower.json value="" />
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/beberlei/doctrineextensions" />
+      <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/vendor/symfony/web-profiler-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/web-link" />
+      <path value="$PROJECT_DIR$/vendor/symfony/var-exporter" />
+      <path value="$PROJECT_DIR$/vendor/symfony/var-dumper" />
+      <path value="$PROJECT_DIR$/vendor/symfony/validator" />
+      <path value="$PROJECT_DIR$/vendor/symfony/twig-pack" />
+      <path value="$PROJECT_DIR$/vendor/symfony/twig-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/twig-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation" />
+      <path value="$PROJECT_DIR$/vendor/symfony/test-pack" />
+      <path value="$PROJECT_DIR$/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/vendor/symfony/stopwatch" />
+      <path value="$PROJECT_DIR$/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/serializer-pack" />
+      <path value="$PROJECT_DIR$/vendor/symfony/serializer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-http" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-guard" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-csrf" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-core" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/routing" />
+      <path value="$PROJECT_DIR$/vendor/symfony/property-info" />
+      <path value="$PROJECT_DIR$/vendor/symfony/property-access" />
+      <path value="$PROJECT_DIR$/vendor/symfony/profiler-pack" />
+      <path value="$PROJECT_DIR$/vendor/symfony/process" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php73" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-idn" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-icu" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/vendor/symfony/phpunit-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/orm-pack" />
+      <path value="$PROJECT_DIR$/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/vendor/symfony/notifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/monolog-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/monolog-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/maker-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/intl" />
+      <path value="$PROJECT_DIR$/vendor/symfony/inflector" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-kernel" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-foundation" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/symfony/framework-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/form" />
+      <path value="$PROJECT_DIR$/vendor/symfony/flex" />
+      <path value="$PROJECT_DIR$/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/vendor/symfony/expression-language" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/symfony/error-handler" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dotenv" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dom-crawler" />
+      <path value="$PROJECT_DIR$/vendor/symfony/doctrine-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dependency-injection" />
+      <path value="$PROJECT_DIR$/vendor/symfony/debug-pack" />
+      <path value="$PROJECT_DIR$/vendor/symfony/debug-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/css-selector" />
+      <path value="$PROJECT_DIR$/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/vendor/symfony/config" />
+      <path value="$PROJECT_DIR$/vendor/symfony/cache-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/cache" />
+      <path value="$PROJECT_DIR$/vendor/symfony/browser-kit" />
+      <path value="$PROJECT_DIR$/vendor/symfony/asset" />
+      <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-zendframework-bridge" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-eventmanager" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-code" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/type-resolver" />
+      <path value="$PROJECT_DIR$/vendor/giggsey/locale" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
+      <path value="$PROJECT_DIR$/vendor/giggsey/libphonenumber-for-php" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-common" />
+      <path value="$PROJECT_DIR$/vendor/egulias/email-validator" />
+      <path value="$PROJECT_DIR$/vendor/friendsofphp/proxy-manager-lts" />
+      <path value="$PROJECT_DIR$/vendor/abraham/twitteroauth" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/sensio/framework-extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/vendor/kreait/firebase-tokens" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/vendor/kreait/firebase-php" />
+      <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/vendor/kreait/firebase-bundle" />
+      <path value="$PROJECT_DIR$/vendor/riverline/multipart-parser" />
+      <path value="$PROJECT_DIR$/vendor/kreait/clock" />
+      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/vendor/google/recaptcha" />
+      <path value="$PROJECT_DIR$/vendor/mtdowling/jmespath.php" />
+      <path value="$PROJECT_DIR$/vendor/google/crc32" />
+      <path value="$PROJECT_DIR$/vendor/lcobucci/jwt" />
+      <path value="$PROJECT_DIR$/vendor/google/cloud-storage" />
+      <path value="$PROJECT_DIR$/vendor/lcobucci/clock" />
+      <path value="$PROJECT_DIR$/vendor/google/cloud-core" />
+      <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/vendor/google/auth" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/sql-formatter" />
+      <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/reflection" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/persistence" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/orm" />
+      <path value="$PROJECT_DIR$/vendor/rize/uri-template" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/migrations" />
+      <path value="$PROJECT_DIR$/vendor/cron/cron-bundle" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/lexer" />
+      <path value="$PROJECT_DIR$/vendor/cron/cron" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/vendor/psr/simple-cache" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/inflector" />
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/event-manager" />
+      <path value="$PROJECT_DIR$/vendor/psr/link" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-migrations-bundle" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-bundle" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/dbal" />
+      <path value="$PROJECT_DIR$/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/common" />
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/collections" />
+      <path value="$PROJECT_DIR$/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/cache" />
+      <path value="$PROJECT_DIR$/vendor/fig/http-message-util" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/annotations" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/webpack-encore-bundle" />
+    </include_path>
+  </component>
+  <component name="ProjectId" id="1mLULWxhkgwcgtdwjS34rGle7yv" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="AutoIdentifyTypo3Version" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="TYPO3AuthorEmailAddress" value="myname@example.org" />
+    <property name="TYPO3AuthorName" value="My Name" />
+    <property name="TYPO3PathToExtensionDomainModels" value="Classes/Domain/Model/" />
+    <property name="TYPO3PathToLocalExtensions" value="typo3conf/ext/" />
+    <property name="TYPO3PathToSystemExtensions" value="typo3/sysext/" />
+    <property name="TYPO3ProjectConfigured" value="true" />
+    <property name="TYPO3Version" value="None" />
+    <property name="TYPO3XliffLanguages" value="af:Afrikaans;&#10;ar:Arabic;&#10;bs:Bosnian;&#10;bg:Bulgarian;&#10;ca:Catalan;&#10;ch:Chinese (Simpl.);&#10;cs:Czech;&#10;da:Danish;&#10;de:German;&#10;el:Greek;&#10;eo:Esperanto;&#10;es:Spanish;&#10;et:Estonian;&#10;eu:Basque;&#10;fa:Persian;&#10;fi:Finnish;&#10;fo:Faroese;&#10;fr:French;&#10;fr_CA:French (Canada);&#10;gl:Galician;&#10;he:Hebrew;&#10;hi:Hindi;&#10;hr:Croatian;&#10;hu:Hungarian;&#10;is:Icelandic;&#10;it:Italian;&#10;ja:Japanese;&#10;ka:Georgian;&#10;kl:Greenlandic;&#10;km:Khmer;&#10;ko:Korean;&#10;lt:Lithuanian;&#10;lv:Latvian;&#10;ms:Malay;&#10;nl:Dutch;&#10;no:Norwegian;&#10;pl:Polish;&#10;pt:Portuguese;&#10;pt_BR:Brazilian Portuguese;&#10;ro:Romanian;&#10;ru:Russian;&#10;sk:Slovak;&#10;sl:Slovenian;&#10;sq:Albanian;&#10;sr:Serbian;&#10;sv:Swedish;&#10;th:Thai;&#10;tr:Turkish;&#10;uk:Ukrainian;&#10;vi:Vietnamese;&#10;zh:Chinese (Trad.)" />
+    <property name="TYPO3XliffPathToExtensionLanguageFiles" value="Resources/Private/Language/" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/public/assets/images" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="run.prettier.on.save" value="true" />
+    <property name="settings.editor.selected.configurable" value="JavaScript.Libraries" />
+    <property name="ts.external.directory.path" value="D:\Luca\Dokumente\Sociant WD\Projekte\parent-sociant-hub\symfony-sociant-hub\node_modules\typescript\lib" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Luca\Dokumente\Sociant\Sociant Hub\assets\fonts\Inter" />
+      <recent name="D:\Luca\Dokumente\Sociant\Sociant Hub\assets" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Luca\Dokumente\Sociant WD\Projekte\parent-sociant-hub\symfony-sociant-hub\public\assets\images" />
+      <recent name="D:\Luca\Dokumente\Sociant WD\Projekte\parent-sociant-hub\symfony-sociant-hub\assets\styledComponents" />
+      <recent name="D:\Luca\Dokumente\Sociant WD\Projekte\parent-sociant-hub\symfony-sociant-hub\assets\routes" />
+      <recent name="D:\Luca\Dokumente\Sociant WD\Projekte\parent-sociant-hub\symfony-sociant-hub\assets\translations" />
+      <recent name="D:\Luca\Dokumente\Sociant\Sociant Hub\assets\routes" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8948d4bc-b748-4589-aa50-17c0b288eb28" name="Default Changelist" comment="" />
+      <created>1609272309996</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1609272309996</updated>
+      <workItem from="1609272311017" duration="217000" />
+      <workItem from="1609272530347" duration="1310000" />
+      <workItem from="1609345491823" duration="2032000" />
+      <workItem from="1609458178204" duration="335000" />
+      <workItem from="1609519723961" duration="4244000" />
+      <workItem from="1609586905493" duration="8530000" />
+      <workItem from="1609669379584" duration="2988000" />
+      <workItem from="1609754257608" duration="5414000" />
+      <workItem from="1609853023676" duration="1140000" />
+      <workItem from="1609937906766" duration="1686000" />
+      <workItem from="1610099482762" duration="5375000" />
+      <workItem from="1610213248004" duration="6062000" />
+      <workItem from="1610239152300" duration="2976000" />
+      <workItem from="1610283173455" duration="16276000" />
+      <workItem from="1610355809559" duration="4833000" />
+      <workItem from="1610453760517" duration="113000" />
+      <workItem from="1610566711406" duration="648000" />
+      <workItem from="1610617874350" duration="6454000" />
+      <workItem from="1610654231006" duration="467000" />
+      <workItem from="1610657733860" duration="29000" />
+      <workItem from="1611347165709" duration="610000" />
+      <workItem from="1611419354002" duration="42000" />
+      <workItem from="1631286836735" duration="2487000" />
+      <workItem from="1631289345911" duration="9313000" />
+      <workItem from="1631360786489" duration="24000" />
+      <workItem from="1631362374761" duration="146000" />
+      <workItem from="1631362528653" duration="13380000" />
+      <workItem from="1631434451999" duration="12127000" />
+      <workItem from="1631548185458" duration="4474000" />
+      <workItem from="1631630860563" duration="2583000" />
+      <workItem from="1631698545273" duration="4115000" />
+      <workItem from="1631732148293" duration="3252000" />
+      <workItem from="1631780241262" duration="43000" />
+      <workItem from="1631814773290" duration="3762000" />
+      <workItem from="1631886287582" duration="13000" />
+      <workItem from="1631975281524" duration="3093000" />
+      <workItem from="1631985296269" duration="7605000" />
+      <workItem from="1632042464652" duration="624000" />
+    </task>
+    <task id="LOCAL-00001" summary="updated privacy policy">
+      <created>1609372495635</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1609372495635</updated>
+    </task>
+    <task id="LOCAL-00002" summary="added follower limit to env&#10;added more data to info api-endpoint&#10;added automated-update for export handler&#10;fixed notification-preferences bug&#10;fixed automated-update bug&#10;added above follower info to home panel&#10;added check for follower and friend count because of api limitations">
+      <created>1609633372137</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1609633372137</updated>
+    </task>
+    <task id="LOCAL-00003" summary="updated readme.md for api integration update&#10;renamed schema env-variable&#10;added api endpoints&#10;added more api export functions&#10;finished notification handler&#10;fixed update interval bug">
+      <created>1610654396320</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1610654396320</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="updated privacy policy" />
+    <MESSAGE value="added follower limit to env&#10;added more data to info api-endpoint&#10;added automated-update for export handler&#10;fixed notification-preferences bug&#10;fixed automated-update bug&#10;added above follower info to home panel&#10;added check for follower and friend count because of api limitations" />
+    <MESSAGE value="updated readme.md for api integration update&#10;renamed schema env-variable&#10;added api endpoints&#10;added more api export functions&#10;finished notification handler&#10;fixed update interval bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated readme.md for api integration update&#10;renamed schema env-variable&#10;added api endpoints&#10;added more api export functions&#10;finished notification handler&#10;fixed update interval bug" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="998" y="368" key="#TypeScript" timestamp="1631294005241">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="998" y="368" key="#TypeScript/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1631294005241" />
+    <state x="1010" y="447" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1631288701107">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1010" y="447" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1631288701107" />
+    <state x="1060" y="455" key="FileChooserDialogImpl" timestamp="1631780279963">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1060" y="455" key="FileChooserDialogImpl/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1631780279963" />
+    <state width="2517" height="401" key="GridCell.Tab.0.bottom" timestamp="1631288593669">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="2517" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1631288593669" />
+    <state width="2517" height="401" key="GridCell.Tab.0.center" timestamp="1631288593669">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="2517" height="401" key="GridCell.Tab.0.center/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1631288593669" />
+    <state width="2517" height="401" key="GridCell.Tab.0.left" timestamp="1631288593669">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="2517" height="401" key="GridCell.Tab.0.left/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1631288593669" />
+    <state width="2517" height="401" key="GridCell.Tab.0.right" timestamp="1631288593669">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="2517" height="401" key="GridCell.Tab.0.right/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1631288593669" />
+    <state x="248" y="122" key="MergeDialog" timestamp="1631287046087">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="248" y="122" key="MergeDialog/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1631287046087" />
+    <state x="781" y="345" key="SettingsEditor" timestamp="1631362512727">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="781" y="345" key="SettingsEditor/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1631362512727" />
+    <state x="1097" y="614" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1631556353371">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1097" y="614" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1631556353371" />
+    <state x="987" y="433" width="585" height="534" key="find.popup" timestamp="1631996922978">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="987" y="433" width="585" height="534" key="find.popup/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1631996922978" />
+    <state x="936" y="330" key="run.anything.popup" timestamp="1631735041443">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="936" y="330" key="run.anything.popup/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1631735041443" />
+    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup" timestamp="1631996177188">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1631996177188" />
+  </component>
+</project>

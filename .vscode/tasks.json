@@ -1,0 +1,37 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+        {
+            "type": "npm",
+            "script": "watch",
+            "label": "npm watch",
+            "detail": "encore dev --watch",
+            "isBackground": true,
+            "problemMatcher": []
+        },
+        {
+            "type": "shell",
+            "label": "Start Symfony",
+            "command": "symfony server:start",
+            "isBackground": true,
+            "problemMatcher": []
+        },
+        {
+            "type": "shell",
+            "label": "Update Database Schema",
+            "command": "php bin/console doctrine:schema:update --force",
+            "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "label": "npm build",
+            "detail": "encore production --progress"
+        }
+    ]
+}

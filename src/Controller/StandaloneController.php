@@ -93,4 +93,12 @@ class StandaloneController extends AbstractController
             'recaptcha_public' => $this->getParameter("recaptcha_public")
         ]);
     }
+
+    /**
+     * @Route("/{reactRouting}", name="home", defaults={"reactRouting": null}, requirements={"reactRouting"=".+"})
+     */
+    public function react()
+    {
+        return $this->render('test/index.html.twig');
+    }
 }
