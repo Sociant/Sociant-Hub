@@ -78,6 +78,7 @@ export type LanguageResource = {
 			oldestAccount: string
 		}
         lastUpdate: string
+		manualUpdate: string
 	}
 	user: {
 		followHistory: string

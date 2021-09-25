@@ -543,4 +543,15 @@ class TwitterModel
 
         return $twitterUser;
     }
+
+    public function getUserRelation(string $uuid, User $user) {
+        $connection = $this->createConnection($user);
+
+        $result = $connection->get("friendships/show", [
+            "source_id" => $user->getUuid(),
+            "target_id" => $uuid
+        ]);
+
+        return json_decode(json_encode($result), true);
+    }
 }

@@ -50,7 +50,7 @@ export type HomeResponse = {
 	activities: ActivityEntry[]
 	twitter_user: TwitterUserExtended | null
 	automated_update: AutomatedUpdate | null
-    can_update: boolean
+	can_update: boolean
 }
 
 export type Statistics = {
@@ -90,4 +90,38 @@ export type ActivityResponse = {
 
 export type ErrorResponse = {
 	error: string
+}
+
+export type Relationship = {
+		source: {
+			id: number
+			id_str: string
+			screen_name: string
+			following: boolean
+			followed_by: boolean
+			live_following: boolean
+			following_received: boolean
+			following_requested: boolean
+			notifications_enabled: boolean
+			can_dm: boolean
+			blocking: boolean
+			blocked_by: boolean
+			muting: boolean
+			want_retweets: boolean
+			all_replies: boolean
+			marked_spam: boolean
+		}
+		target: {
+			id: number
+			id_str: string
+			screen_name: string
+			following: boolean
+			followed_by: boolean
+			following_received: boolean
+			following_requested: boolean
+		}
+}
+
+export type RelationshipResponse = {
+	relationship: Relationship
 }

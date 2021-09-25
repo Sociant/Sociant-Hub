@@ -52,7 +52,8 @@ export default {
 			mostFollowers: 'Most followers',
 			oldestAccount: 'Oldest account'
 		},
-        lastUpdate: 'Last update:'
+        lastUpdate: 'Last update:',
+		manualUpdate: 'Manual update'
 	},
 	user: {
 		followHistory: 'Follow History',

@@ -147,6 +147,33 @@ export const UserData = styled.div`
 			margin-top: 0;
 		}
 	}
+
+	.relation-item {
+		display: flex;
+		align-items: center;
+		margin-bottom: 15px;
+
+		svg {
+			font-size: 16px;
+			width: 30px;
+			text-align: center;
+		}
+
+		&.self svg {
+			color: #FF8C00;
+		}
+
+		&.other svg {
+			color: #00B294;
+		}
+
+		span {
+			flex: 1;
+			padding-left: 5px;
+			color: ${ props => props.theme.textPrimary };
+			font-size: 14px;
+		}
+	}
 `
 
 export const Timeline = styled.div`

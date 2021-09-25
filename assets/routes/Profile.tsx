@@ -492,7 +492,7 @@ export default function Profile() {
 									whileTap="tap"
 									onClick={manualUpdate}
 									className={`base${canUpdate ? '' : ' disabled'}`}>
-									<span>Manual Update</span>
+									<span>{t('profile.manualUpdate')}</span>
 									<FontAwesomeIcon icon={faSync} spin={manualUpdating} />
 								</motion.div>
 							)}
@@ -530,7 +530,10 @@ export default function Profile() {
 						)}
 					</div>
 				</GraphSettings>
-                <span className="last-update">{ t('profile.lastUpdate') } {dateFormat(new Date(automatedUpdate.last_update * 1000), t('dateTimeFormat'))}</span>
+				<span className="last-update">
+					{t('profile.lastUpdate')}{' '}
+					{dateFormat(new Date(automatedUpdate.last_update * 1000), t('dateTimeFormat'))}
+				</span>
 			</MotionStatisticCard>
 		</ProfilePage>
 	)

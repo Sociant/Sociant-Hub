@@ -469,6 +469,20 @@ class ApiController extends AbstractController
     }
 
     /**
+     * @Route("/users/get/{uuid}/relation", name="users_get_relation")
+     */
+    public function usersGetRelation(Request $request, TwitterModel $twitterModel, ApiExportHandler $apiExportHandler, $uuid)
+    {
+        $user = $this->getUser();
+
+        $result = $twitterModel->getUserRelation($uuid, $user);
+
+        if($result) return $this->json($result);
+
+        return $this->json(["error"=>"unknown error"],404);
+    }
+
+    /**
      * @Route("/download/activities", name="download_activities")
      */
     public function downloadActivities(Request $request, ApiExportHandler $apiExportHandler)
@@ -664,5 +678,45 @@ class ApiController extends AbstractController
     
             return $response;
         }
+    }
+
+    /**
+     * @Route("/download/additional", name="download_additional")
+     */
+    public function downloadAdditional(Request $request, ApiExportHandler $apiExportHandler)
+    {
+        $user = $this->getUser();
+        $twitterUser = $user->getTwitterUser();
+        $setupCompleted = $user->getSetupCompleted();
+        $entityManager = $this->getDoctrine()->getManager();
+        $automatedUpdate = $entityManager->getRepository(AutomatedUpdate::class)->findOneBy(["user"=>$user->getId()]);
+        $analytics = $user->getAnalytics();
+
+        $apiNotifications = [];
+
+        $data = $entityManager->getRepository(ApiNotification::class)->findBy([
+            'user' => $user
+        ]);
+
+        foreach($data as $entry)
+            $apiNotifications[] = $apiExportHandler->exportApiNotification($entry);
+
+        $output = [
+            'uuid' => $user->getUuid(),
+            'screen_name' => $user->getTwitterUserScreenName(),
+            'setup_completed' => $setupCompleted,
+            'above_follower_limit' => $user->getAboveFollowerLimit(),
+            'twitter_user' => $twitterUser ? $apiExportHandler->exportTwitterUser($twitterUser) : null,
+            'notification_settings' => $apiNotifications,
+            'automated_update' => $automatedUpdate ? $apiExportHandler->exportAutomatedUpdate($automatedUpdate) : null,
+            "analytics" => ($analytics && !$user->getAboveFollowerLimit()) ? $apiExportHandler->exportUserAnalytics($analytics, true) : null
+        ];
+    
+        $response = new Response(json_encode($output));
+        $response->headers->set('Content-Encoding', 'UTF-8');
+        $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+        $response->headers->set('Content-Disposition', 'attachment; filename=sociant_hub_activities.json');
+    
+        return $response;
     }
 }

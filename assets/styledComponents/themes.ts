@@ -30,6 +30,11 @@ export type Theme = {
     footer: {
         background: string
     }
+	settings: {
+		item: string
+		itemHover: string
+		itemSelected: string
+	}
 }
 
 const lightTheme: Theme = {
@@ -63,7 +68,12 @@ const lightTheme: Theme = {
     },
     footer: {
         background: '#f8f8f8'
-    }
+    },
+	settings: {
+		item: '#ffffff',
+		itemHover: '#f8f8f8',
+		itemSelected: '#42A5F5'
+	}
 }
 
 const darkTheme: Theme = {
@@ -97,7 +107,12 @@ const darkTheme: Theme = {
     },
     footer: {
         background: '#1a1a1a'
-    }
+    },
+	settings: {
+		item: '#212121',
+		itemHover: '#1a1a1a',
+		itemSelected: '#0277BD'
+	}
 }
 
 export { lightTheme, darkTheme }
