@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import {
 	SpinnerButton,
 	MotionLoader,
@@ -10,25 +10,26 @@ import { useApp } from '../provider/AppProvider'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft, faCircleNotch } from '@fortawesome/pro-light-svg-icons'
 import { useTranslation } from 'react-i18next'
-import { ActivityEntry, ActivityResponse } from '../types/global'
+import { ActivityEntry, ActivityResponse, TwitterUser, UsersResponse } from '../types/global'
 import { formatAction, formatDate, getActionIcon } from '../utilities/utilities'
 
 import { motion } from 'framer-motion'
 import { ActivitiesPage, MotionActivitiesCard } from '../styledComponents/activityStyles'
 import React_2 from 'framer-motion/dist/framer-motion'
-import UserItem from '../components/activityUserItem'
+import UserItem from '../components/userItem'
 
-export default function Activities() {
+export default function Followers() {
 
 	const { data } = useApp()
-
 
 	const { t } = useTranslation()
 
 	const card = useRef()
 
+	const { type } = useParams()
+
 	const [loading, setLoading] = useState(true)
-	const [activities, setActivities] = useState<ActivityEntry[]>(null)
+	const [users, setUsers] = useState<TwitterUser[]>(null)
 	const [limit, setLimit] = useState(20)
 	const [page, setPage] = useState(0)
 	const [moreAvailable, setMoreAvailable] = useState(false)
@@ -43,18 +44,18 @@ export default function Activities() {
 	}, [])
 
 	const loadData = async (_page = page) => {
-		const response = await fetch(`/api/activities?limit=${limit}&page=${_page}`, {
+		const response = await fetch(`/api/users/${type}?limit=${limit}&page=${_page}`, {
 			headers: {
 				'Authorization': `Bearer ${data.apiToken}`,
 			},
 		})
 
-		const responseData: ActivityResponse = await response.json()
+		const responseData: UsersResponse = await response.json()
 
-		if(activities == null)
-			setActivities(responseData.items)
+		if(users == null)
+            setUsers(responseData.items)
 		else
-			setActivities([...activities, ...responseData.items])
+            setUsers([...users, ...responseData.items])
 
 		setLimit(responseData.limit)
 		setPage(responseData.page)
@@ -74,7 +75,7 @@ export default function Activities() {
 		tap: { scale: 0.95 },
 	}
 
-	if (loading && activities == null) return <MotionLoader
+	if (loading && users == null) return <MotionLoader
 		initial={{ opacity: 0, y: -50 }}
 		animate={{ opacity: 1, y: 0 }}>
 		<FontAwesomeIcon icon={faCircleNotch} spin={true} />
@@ -100,7 +101,7 @@ export default function Activities() {
 					<div className="title">
 						<h2>{t('profile.recentActivities')}</h2>
 					</div>
-					{activities.map((item: ActivityEntry, index: number) =>
+					{users.map((item: TwitterUser, index: number) =>
 						<UserItem item={item} origin='activities' t={t} key={index} />
 					)}
 					{

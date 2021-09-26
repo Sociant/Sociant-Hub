@@ -16,6 +16,7 @@ import User from './routes/User'
 import Activities from './routes/Activities'
 import { faHeart } from '@fortawesome/pro-solid-svg-icons'
 import Settings from './routes/Settings';
+import Followers from './routes/Followers';
 
 export type AppData = {
 	authenticated: boolean
@@ -88,6 +89,7 @@ export default function Base() {
                         <Route path="/user/:uuid" component={User} />
                         <Route path="/activities" component={Activities} />
                         <Route path="/settings" component={Settings} />
+                        <Route path="/followers/:type" component={Followers} />
                     </Switch>
                 </Content>
                 <Footer>

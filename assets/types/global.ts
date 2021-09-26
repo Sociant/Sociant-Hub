@@ -79,13 +79,20 @@ export type StatisticsResponse = {
 	analytics: Analytics
 }
 
-export type ActivityResponse = {
-	items: ActivityEntry[]
+export type PaginationResponse = {
 	length: number
 	limit: number
 	more_available: boolean
 	page: number
 	slim: boolean
+}
+
+export type ActivityResponse = PaginationResponse & {
+	items: ActivityEntry[]
+}
+
+export type UsersResponse = PaginationResponse & {
+	items: TwitterUserExtended[] | TwitterUser[]
 }
 
 export type ErrorResponse = {

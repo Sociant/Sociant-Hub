@@ -33,7 +33,7 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import { motion } from 'framer-motion'
-import UserItem from '../components/userItem'
+import UserItem from '../components/activityUserItem'
 import dateFormat from 'dateformat'
 
 export default function Profile() {
@@ -93,6 +93,8 @@ export default function Profile() {
 	}, [statistics])
 
 	useEffect(() => {
+        document.title = `Sociant Hub - ${ t('pageTitles.profile') }`;
+
 		const onScroll = (e) => {
 			if (profilePage.current) {
 				setScrollY(window.scrollY)
@@ -398,14 +400,18 @@ export default function Profile() {
 						</div>
 						<h2>{t('profile.followerAnalytics.title')}</h2>
 						<div className="item-row">
-							<div className="item">
-								{thousandSeparator(analytics.verified_followers)}
-								<small>{t('profile.followerAnalytics.verified')}</small>
-							</div>
-							<div className="item">
-								{thousandSeparator(analytics.protected_followers)}
-								<small>{t('profile.followerAnalytics.protected')}</small>
-							</div>
+							<Link to='/followers/verified' className="item-container">
+                                <motion.div variants={itemVariants} whileHover="hover" whileTap="tap" className="item">
+                                    {thousandSeparator(analytics.verified_followers)}
+                                    <small>{t('profile.followerAnalytics.verified')}</small>
+                                </motion.div>
+							</Link>
+							<Link to='/followers/protected' className="item-container">
+                                <motion.div variants={itemVariants} whileHover="hover" whileTap="tap" className="item">
+                                    {thousandSeparator(analytics.protected_followers)}
+                                    <small>{t('profile.followerAnalytics.protected')}</small>
+                                </motion.div>
+							</Link>
 						</div>
 						<div className="item-row">
 							<div className="item">

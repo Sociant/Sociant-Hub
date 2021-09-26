@@ -21,6 +21,8 @@ export default function Settings() {
 	const [updatePeriod, setUpdatePeriod] = useState('m')
 
 	useEffect(() => {
+        document.title = `Sociant Hub - ${ t('pageTitles.settings') }`;
+
 		setLoading(true)
 		loadData().then(() => {
 			setLoading(false)

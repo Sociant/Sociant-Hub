@@ -62,6 +62,8 @@ export default function User() {
 	const [relationship, setRelationship] = useState<Relationship>(null)
 
 	useEffect(() => {
+        document.title = `Sociant Hub - ${ t('pageTitles.userLoading') }`;
+
 		setLoading(true)
 		loadData().then(() => {
 			setLoading(false)
@@ -100,6 +102,8 @@ export default function User() {
 		setTwitterUser(responseData)
 		setActivities(activityResponseData.items)
 		setRelationship(relationResponseData.relationship)
+
+        document.title = `Sociant Hub - ${ t('pageTitles.user', { name: (responseData as TwitterUserExtended).screen_name }) }`;
 	}
 
 	const accountAge = useMemo(() => {

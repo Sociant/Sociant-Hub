@@ -157,11 +157,13 @@ export const Statistics = styled.div`
 		justify-content: flex-end;
 		width: 100%;
 		
-		.item {
+		.item,
+		.item-container {
 			flex: 1;
 		}
 		
-		.item + .item {
+		.item + .item,
+		.item-container + .item-container {
 			margin-left: 15px;
 		}
 	}

@@ -114,5 +114,13 @@ export default {
             twitter: '@{{ name }} auf Twitter',
             github: '@{{ name }} auf Github'
         }
+    },
+    pageTitles: {
+        activities: 'Aktivitäten',
+        home: 'Kenne deine Follower',
+        profile: 'Profil',
+        settings: 'Einstellungen',
+        user: '@{{ name }}',
+        userLoading: 'wird geladen' 
     }
 } as LanguageResource

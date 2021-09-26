@@ -140,6 +140,14 @@ export type LanguageResource = {
             github: string
         }
     }
+    pageTitles: {
+        activities: string
+        home: string
+        profile: string
+        settings: string
+        user: string
+        userLoading: string
+    }
 }
 
 export default i18n;
