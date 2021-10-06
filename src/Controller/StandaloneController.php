@@ -12,9 +12,7 @@ use Symfony\Component\Mailer\MailerInterface;
 
 class StandaloneController extends AbstractController
 {
-    /**
-     * @Route("/", name="index")
-     */
+    #[Route('/', name: 'index')]
     public function index(Request $request)
     {
         $loginError = null;
@@ -31,30 +29,23 @@ class StandaloneController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/privacy-policy", name="privacy_policy")
-     */
+    #[Route('/privacy-policy', name: 'privacy_policy')]
     public function privacy(Request $request)
     {
         return $this->render('standalone/privacy.html.twig',[
             "fromApp" => $request->query->has("from-app")
         ]);
     }
-    
-    /**
-     * @Route("/legal-disclosure", name="legal_disclosure")
-     */
+
+    #[Route('/legal-disclosure', name: 'legal_disclosure')]
     public function imprint(Request $request)
     {
         return $this->render('standalone/legal.html.twig',[
             "fromApp" => $request->query->has("from-app")
         ]);
     }
-    
-    /**
-     * @Route("/feedback", name="feedback")
-     * @Route("/contact", name="contact")
-     */
+
+    #[Route('/feedback', name: 'feedback'), Route('/contact', name: 'contact')]
     public function contact(Request $request, MailerInterface $mailer)
     {
 
@@ -94,9 +85,7 @@ class StandaloneController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{reactRouting}", name="home", defaults={"reactRouting": null}, requirements={"reactRouting"=".+"})
-     */
+    #[Route('/{reactRouting}', name: 'home', requirements: ["reactRouting"=>".+"], defaults: ["reactRouting"=>null])]
     public function react()
     {
         return $this->render('test/index.html.twig');

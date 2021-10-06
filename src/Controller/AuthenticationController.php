@@ -10,9 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticationController extends AbstractController
 {
-    /**
-     * @Route("/login", name="login")
-     */
+    #[Route('/login', name: 'login')]
     public function login(Request $request)
     {
         $callbackURL = $this->getParameter("twitter_callback_url");
@@ -35,9 +33,7 @@ class AuthenticationController extends AbstractController
         return $this->redirect($connection->url("oauth/authorize", ["oauth_token" => $requestToken["oauth_token"]]));
     }
 
-    /**
-     * @Route("/login/callback", name="login_callback")
-     */
+    #[Route('/login/callback', name: 'login_callback')]
     public function loginCallback(Request $request) {}
     
 

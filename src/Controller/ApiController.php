@@ -18,15 +18,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/api", name="api_")
- */
+#[Route('/api', name: 'api_')]
 class ApiController extends AbstractController
 {
 
-    /**
-     * @Route("/info", name="info")
-     */
+    #[Route('/info', name: 'info')]
     public function info(Request  $request, ApiExportHandler $apiExportHandler)
     {
         $user = $this->getUser();
@@ -60,9 +56,7 @@ class ApiController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/setup", name="setup", methods={"POST"})
-     */
+    #[Route('/setup', name: 'setup', methods: ['POST'])]
     public function setup(Request $request, ApiExportHandler $apiExportHandler, TwitterModel $twitterModel)
     {
         $user = $this->getUser();
@@ -135,9 +129,7 @@ class ApiController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/notification-settings", name="get_notification_settings", methods={"POST"})
-     */
+    #[Route('/notification-settings', name: 'get_notification_settings', methods: ['POST'])]
     public function getNotificationSettings(Request $request, ApiExportHandler $apiExportHandler)
     {
         $deviceToken = $request->request->get("device_token");
@@ -157,9 +149,7 @@ class ApiController extends AbstractController
         return $this->json($apiExportHandler->exportApiNotification($apiNotification));
     }
 
-    /**
-     * @Route("/notification-settings/remove", name="remove_notification_settings", methods={"POST"})
-     */
+    #[Route('/notification-settings/remove', name: 'remove_notification_settings', methods: ['POST'])]
     public function removeNotificationSettings(Request $request, ApiExportHandler $apiExportHandler)
     {
         $deviceToken = $request->request->get("device_token");
@@ -184,9 +174,7 @@ class ApiController extends AbstractController
         return $this->json(["result" => "success"]);
     }
 
-    /**
-     * @Route("/update-interval", name="update_interval", methods={"POST"})
-     */
+    #[Route('/update-interval', name: 'update_interval', methods: ['POST'])]
     public function updateInterval(Request $request, ApiExportHandler $apiExportHandler)
     {
         $interval = $request->request->get("interval");
@@ -212,9 +200,7 @@ class ApiController extends AbstractController
         return $this->json(["automated_update" => $apiExportHandler->exportAutomatedUpdate($automatedUpdate)]);
     }
 
-    /**
-     * @Route("/manual-update", name="manual_update", methods={"PUT"})
-     */
+    #[Route('/manual-update', name: 'manual_update', methods: ['PUT'])]
     public function manualUpdate(TwitterModel $twitterModel)
     {
         $user = $this->getUser();
@@ -267,9 +253,7 @@ class ApiController extends AbstractController
         return $apiNotification;
     }
 
-    /**
-     * @Route("/history/{type}", name="history")
-     */
+    #[Route('/history/{type}', name: 'history')]
     public function history($type, TwitterModel $twitterModel)
     {
         switch($type) {
@@ -286,9 +270,7 @@ class ApiController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/activities", name="activities")
-     */
+    #[Route('/activities', name: 'activities')]
     public function activities(Request $request, ApiExportHandler $apiExportHandler)
     {
         $limit = $request->query->getInt('limit', 15);
@@ -321,9 +303,7 @@ class ApiController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/user-activities/{id}", name="user_activities")
-     */
+    #[Route('/user-activities/{id}', name: 'user_activities')]
     public function userActivities(ApiExportHandler $apiExportHandler, $id)
     {
 
@@ -346,9 +326,7 @@ class ApiController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/home", name="home")
-     */
+    #[Route('/home', name: 'home')]
     public function home(TwitterModel $twitterModel, Request $request, ApiExportHandler $apiExportHandler)
     {
         $type = $request->query->get("type","day");
@@ -398,9 +376,7 @@ class ApiController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/statistics", name="statistics")
-     */
+    #[Route('/statistics', name: 'statistics')]
     public function statistics(Request $request, ApiExportHandler $apiExportHandler)
     {
         $slimTwitterUser = $request->query->getBoolean('slim', true);
@@ -415,9 +391,7 @@ class ApiController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/users/{type}", name="users")
-     */
+    #[Route('/users/{type}', name: 'users')]
     public function users(Request $request, TwitterModel $twitterModel, ApiExportHandler $apiExportHandler, $type)
     {
         $limit = $request->query->getInt('limit', 15);
@@ -451,9 +425,7 @@ class ApiController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/users/get/{uuid}", name="users_get")
-     */
+    #[Route('/users/get/{uuid}', name: 'users_get')]
     public function usersGet(Request $request, TwitterModel $twitterModel, ApiExportHandler $apiExportHandler, $uuid)
     {
         $slimTwitterUser = $request->query->getBoolean('slim', true);
@@ -468,9 +440,7 @@ class ApiController extends AbstractController
         return $this->json(["error"=>"unknown user"],404);
     }
 
-    /**
-     * @Route("/users/get/{uuid}/relation", name="users_get_relation")
-     */
+    #[Route('/users/get/{uuid}/relation', name: 'users_get_relation')]
     public function usersGetRelation(Request $request, TwitterModel $twitterModel, ApiExportHandler $apiExportHandler, $uuid)
     {
         $user = $this->getUser();
@@ -482,9 +452,7 @@ class ApiController extends AbstractController
         return $this->json(["error"=>"unknown error"],404);
     }
 
-    /**
-     * @Route("/download/activities", name="download_activities")
-     */
+    #[Route('/download/activities', name: 'download_activities')]
     public function downloadActivities(Request $request, ApiExportHandler $apiExportHandler)
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -555,9 +523,7 @@ class ApiController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/download/history/{period}", name="download_history")
-     */
+    #[Route('/download/history/{period}', name: 'download_history')]
     public function downloadHistory(Request $request, $period)
     {
         $entityManager = $this->getDoctrine()->getManager();
@@ -680,9 +646,7 @@ class ApiController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/download/additional", name="download_additional")
-     */
+    #[Route('/download/additional', name: 'download_additional')]
     public function downloadAdditional(Request $request, ApiExportHandler $apiExportHandler)
     {
         $user = $this->getUser();

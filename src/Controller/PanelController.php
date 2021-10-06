@@ -15,9 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PanelController extends AbstractController
 {
-    /**
-     * @Route("/setup", name="setup")
-     */
+    #[Route('/setup', name: 'setup')]
     public function setup(TwitterModel $twitterModel, Request $request)
     {
         $user = $this->getUser();
@@ -51,9 +49,7 @@ class PanelController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/home", name="home")
-     */
+    #[Route('/home', name: 'home')]
     public function home(TwitterModel $twitterModel, Request $request)
     {
         if(!$this->getUser()->getSetupCompleted()) return $this->redirectToRoute("panel_setup");
@@ -85,9 +81,7 @@ class PanelController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/activities", name="activities")
-     */
+    #[Route('/activities', name: 'activities')]
     public function activities()
     {
         if(!$this->getUser()->getSetupCompleted()) return $this->redirectToRoute("panel_setup");
@@ -100,9 +94,7 @@ class PanelController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/settings", name="settings")
-     */
+    #[Route('/settings', name: 'settings')]
     public function settings(TwitterModel $twitterModel, Request $request)
     {
         if(!$this->getUser()->getSetupCompleted()) return $this->redirectToRoute("panel_setup");
