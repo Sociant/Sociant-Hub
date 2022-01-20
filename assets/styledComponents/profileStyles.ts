@@ -123,16 +123,16 @@ export const StatisticCard = styled(Container)`
 `
 
 export const Statistics = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-gap: 15px;
 	text-align: left;
 	color: ${ props => props.theme.textPrimary }; 
 	
 	h2 {
 		font-weight: 600;
 		font-size: 22px;
-		margin: 40px 0 40px;
+		margin: 40px 0 20px;
 		position: relative;
 		padding-left: 10px;
 		
@@ -153,19 +153,10 @@ export const Statistics = styled.div`
 	}
 	
 	.item-row {
-		display: flex;
-		justify-content: flex-end;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
 		width: 100%;
-		
-		.item,
-		.item-container {
-			flex: 1;
-		}
-		
-		.item + .item,
-		.item-container + .item-container {
-			margin-left: 15px;
-		}
+		grid-gap: 15px;
 	}
 	
 	.item-container {
@@ -176,7 +167,6 @@ export const Statistics = styled.div`
 	.item {
 		font-size: 30px;
 		font-weight: 600;
-		margin-bottom: 15px;
 		width: 100%;
 		padding: 15px 25px;
 		border-radius: 6px;
@@ -247,9 +237,10 @@ export const ProfilePage = styled.div`
 	
 	.row {
         width: 100%;
-		display: flex;
-		align-items: flex-start;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
 		padding: 35px;
+		grid-gap: 50px;
 		
 		${ UserList } {
 			flex: 1;
@@ -257,7 +248,6 @@ export const ProfilePage = styled.div`
 		
 		${ Statistics } {
 			flex: 1;
-			margin-left: 50px;
 		}
 	}
 
@@ -267,6 +257,13 @@ export const ProfilePage = styled.div`
         font-size: 14px;
 		color: ${ props => props.theme.textSecondary }; 
     }
+
+	@media (max-width: 700px) {
+		.row {
+			display: flex;
+			flex-direction: column;
+		}
+	}
 `
 
 export const MotionStatisticCard = motion(StatisticCard)

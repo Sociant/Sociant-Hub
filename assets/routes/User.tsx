@@ -233,41 +233,41 @@ export default function User() {
 							{accountAge}
 							<small>{t('profile.userAnalytics.age')}</small>
 						</div>
-						<h2>Current Relationship</h2>
+						<h2>{t('user.relationship.title')}</h2>
 						{relationship.source.followed_by && (
 							<div className="relation-item other">
 								<FontAwesomeIcon icon={faUserFriends} />
-								<span>@{twitterUser.screen_name} is following you</span>
+								<span>{t('user.relationship.followOther', {name: twitterUser.screen_name})}</span>
 							</div>
 						)}
 						{relationship.source.following && (
 							<div className="relation-item self">
 								<FontAwesomeIcon icon={faUserFriends} />
-								<span>You are following @{twitterUser.screen_name}</span>
+								<span>{t('user.relationship.followSelf', {name: twitterUser.screen_name})}</span>
 							</div>
 						)}
 						{relationship.source.blocked_by && (
 							<div className="relation-item other">
 								<FontAwesomeIcon icon={faUserSlash} />
-								<span>@{twitterUser.screen_name} blocked you</span>
+								<span>{t('user.relationship.blockedOther', {name: twitterUser.screen_name})}</span>
 							</div>
 						)}
 						{relationship.source.blocking && (
 							<div className="relation-item self">
 								<FontAwesomeIcon icon={faUserSlash} />
-								<span>You blocked @{twitterUser.screen_name}</span>
+								<span>{t('user.relationship.blockedSelf', {name: twitterUser.screen_name})}</span>
 							</div>
 						)}
 						{relationship.source.muting && (
 							<div className="relation-item self">
 								<FontAwesomeIcon icon={faUserTimes} />
-								<span>You muted @{twitterUser.screen_name}</span>
+								<span>{t('user.relationship.mutedSelf', {name: twitterUser.screen_name})}</span>
 							</div>
 						)}
 						{relationship.source.can_dm && (
 							<div className="relation-item self">
 								<FontAwesomeIcon icon={faComment} />
-								<span>You can DM @{twitterUser.screen_name}</span>
+								<span>{t('user.relationship.dmSelf', {name: twitterUser.screen_name})}</span>
 							</div>
 						)}
 					</UserData>

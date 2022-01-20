@@ -2,12 +2,12 @@ import styled from 'styled-components'
 
 const TwitterButtonStyles = styled.a`
 	padding: 8px 16px;
-	border: solid 1px ${ props => props.theme.twitter.border };
+	border: solid 1px ${ props => props.white ? 'white' : props.theme.twitter.border };
 	border-radius: 5px;
 	display: flex;
 	align-items: center;
-	background: ${ props => props.theme.twitter.background };
-	color: ${ props => props.theme.twitter.text };
+	background: ${ props => props.white ? 'none' : props.theme.twitter.background };
+	color: ${ props => props.white ? 'white' : props.theme.twitter.text };
 	cursor: pointer;
 	text-decoration: none;
 	font-size: 14px;
@@ -19,9 +19,9 @@ const TwitterButtonStyles = styled.a`
 	}
 	
 	&:hover {
-		border-color: ${ props => props.theme.twitter.borderHover };
-		background: ${ props => props.theme.twitter.backgroundHover };
-		color: ${ props => props.theme.twitter.textHover };
+		border-color: ${ props => props.white ? '#1DA1F2' : props.theme.twitter.borderHover };
+		background: ${ props => props.white ? '#1DA1F2' : props.theme.twitter.backgroundHover };
+		color: ${ props => props.white ? '#ffffff' : props.theme.twitter.textHover };
 	}
 `
 

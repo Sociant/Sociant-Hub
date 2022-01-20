@@ -29,11 +29,14 @@ export type Theme = {
     }
     footer: {
         background: string
+		selectBackground: string
     }
 	settings: {
 		item: string
 		itemHover: string
 		itemSelected: string
+		tableOddRow: string
+		tableDivider: string
 	}
 }
 
@@ -67,12 +70,15 @@ const lightTheme: Theme = {
 		backgroundHover: '#f8f8f8'
     },
     footer: {
-        background: '#f8f8f8'
+        background: '#f8f8f8',
+		selectBackground: '#ffffff'
     },
 	settings: {
 		item: '#ffffff',
 		itemHover: '#f8f8f8',
-		itemSelected: '#42A5F5'
+		itemSelected: '#42A5F5',
+		tableOddRow: '#ffffff',
+		tableDivider: '#ffffff'
 	}
 }
 
@@ -106,12 +112,15 @@ const darkTheme: Theme = {
 		backgroundHover: '#323232'
     },
     footer: {
-        background: '#1a1a1a'
+        background: '#1a1a1a',
+		selectBackground: '#3A3A3A'
     },
 	settings: {
 		item: '#212121',
 		itemHover: '#1a1a1a',
-		itemSelected: '#0277BD'
+		itemSelected: '#0277BD',
+		tableOddRow: '#212121',
+		tableDivider: '#212121'
 	}
 }
 

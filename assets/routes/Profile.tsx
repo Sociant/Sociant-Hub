@@ -1,43 +1,31 @@
-import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react'
-const ReactApexChart = React.lazy(() => import('react-apexcharts'))
+import { faChevronDown, faCircleNotch, faSync } from '@fortawesome/pro-light-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import dateFormat from 'dateformat'
+import { motion } from 'framer-motion'
+import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import UserItem from '../components/activityUserItem'
+import { useApp } from '../provider/AppProvider'
 import { Loader, MotionLoader, UserList } from '../styledComponents/globalStyles'
 import {
-	ProfilePage,
-	MotionStatisticCard,
-	Statistics,
 	ChartContainer,
-	GraphSettings,
+	GraphSettings, MotionStatisticCard, ProfilePage, Statistics
 } from '../styledComponents/profileStyles'
-import { useApp } from '../provider/AppProvider'
 import {
-	ActivityEntry,
-	HistoryResponse,
-	HomeResponse,
-	StatisticsResponse,
-	TwitterUserExtended,
-	Statistics as StatisticsType,
-	Analytics,
-	HistoryEntry,
+	ActivityEntry, Analytics,
+	HistoryEntry, HistoryResponse,
+	HomeResponse, Statistics as StatisticsType, StatisticsResponse,
+	TwitterUserExtended
 } from '../types/global'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown, faCircleNotch, faSync } from '@fortawesome/pro-light-svg-icons'
 import {
-	formatAction,
-	formatDate,
-	getAccountAge,
-	getActionIcon,
-	getDifference,
-	thousandSeparator,
+	getAccountAge, thousandSeparator
 } from '../utilities/utilities'
-import { useTranslation } from 'react-i18next'
+const ReactApexChart = React.lazy(() => import('react-apexcharts'))
 
-import { motion } from 'framer-motion'
-import UserItem from '../components/activityUserItem'
-import dateFormat from 'dateformat'
 
 export default function Profile() {
-	const { data } = useApp()
+	const { data, profileChartScrollEffect } = useApp()
 
 	const [loading, setLoading] = useState(true)
 	const [periodLoading, setPeriodLoading] = useState(false)
@@ -327,7 +315,7 @@ export default function Profile() {
 
 	return (
 		<ProfilePage onClick={() => setPeriodToggle(false)} ref={profilePage}>
-			<ChartContainer key={period} style={chartContainerStyles}>
+			<ChartContainer key={period} style={ profileChartScrollEffect ? chartContainerStyles : null }>
 				{periodLoading ? (
 					<Loader>
 						<FontAwesomeIcon icon={faCircleNotch} spin={true} />

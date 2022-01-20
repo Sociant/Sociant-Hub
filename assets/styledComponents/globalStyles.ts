@@ -14,6 +14,7 @@ const GlobalStyle = createGlobalStyle`
   
   *, *:after, *:before {
     box-sizing: border-box;
+	-webkit-tap-highlight-color:  rgba(255, 255, 255, 0); 
   }
 `
 
@@ -147,6 +148,24 @@ export const UserList = styled.div`
 					margin-left: 5px;
 					transform: rotate(45deg);
 				}
+			}
+		}
+	}
+
+	@media (max-width: 520px) {
+		.item {
+			display: flex;
+			flex-wrap: wrap;
+
+			.name {
+				flex: 1;
+			}
+
+			.date-action {
+				min-width: 100%;
+				align-items: flex-start;
+				padding-left: 55px;
+				margin-top: 10px;
 			}
 		}
 	}

@@ -12,7 +12,7 @@ use Symfony\Component\Mailer\MailerInterface;
 
 class StandaloneController extends AbstractController
 {
-    #[Route('/', name: 'index')]
+    #[Route('/old', name: 'index')]
     public function index(Request $request)
     {
         $loginError = null;

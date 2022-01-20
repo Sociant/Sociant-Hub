@@ -62,6 +62,12 @@ export default function Followers() {
 		setMoreAvailable(responseData.more_available)
 	}
 
+	const getTitle = () => {
+		if(type === 'verified')
+			return 'profile.followersVerified';
+		return 'profile.followersProtected';
+	}
+
 	const loadMore = async () => {
 		if(loading) return;
 
@@ -99,7 +105,7 @@ export default function Followers() {
 				animate={{ opacity: 1, y: 0 }}>
 				<UserList>
 					<div className="title">
-						<h2>{t('profile.recentActivities')}</h2>
+						<h2>{t(getTitle())}</h2>
 					</div>
 					{users.map((item: TwitterUser, index: number) =>
 						<UserItem item={item} origin='activities' t={t} key={index} />

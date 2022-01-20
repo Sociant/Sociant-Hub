@@ -7,6 +7,7 @@ use App\Entity\AutomatedUpdate;
 use App\Entity\TwitterUser;
 use App\Entity\User;
 use App\Entity\UserAction;
+use App\Entity\UserRelation;
 use App\Entity\UserStatistic;
 use App\Handler\ApiExportHandler;
 use App\Handler\ApiNotificationHandler;
@@ -142,6 +143,7 @@ class ApiController extends AbstractController
             return $this->json(["error"=>"no device unique id provided"],500);
 
         $user = $this->getUser();
+
         $notificationPreferences = $request->request->has("notification_settings") ? json_decode($request->request->get("notification_settings"), true) : [];
 
         $apiNotification = $this->getApiNotification($deviceToken, $deviceUniqueId, $user, true, $notificationPreferences);
@@ -514,7 +516,7 @@ class ApiController extends AbstractController
                 ];
             }
         
-            $response = new Response(json_encode($output));
+            $response = new Response(json_encode($output, 128));
             $response->headers->set('Content-Encoding', 'UTF-8');
             $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
             $response->headers->set('Content-Disposition', 'attachment; filename=sociant_hub_activities.json');
@@ -622,7 +624,7 @@ class ApiController extends AbstractController
             $response = new Response($content);
             $response->headers->set('Content-Encoding', 'UTF-8');
             $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
-            $response->headers->set('Content-Disposition', 'attachment; filename=sociant_hub_activities.csv');
+            $response->headers->set('Content-Disposition', 'attachment; filename=sociant_hub_history_' . $period . '.csv');
     
             return $response;
         } else if($format === 'json') {
@@ -637,10 +639,68 @@ class ApiController extends AbstractController
                 ];
             }
         
-            $response = new Response(json_encode($output));
+            $response = new Response(json_encode($output, 128));
             $response->headers->set('Content-Encoding', 'UTF-8');
             $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
             $response->headers->set('Content-Disposition', 'attachment; filename=sociant_hub_history_' . $period . '.json');
+    
+            return $response;
+        }
+    }
+
+    #[Route('/download/list/{type}', name: 'download_list')]
+    public function downloadList(Request $request, $type)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+
+        $format = 'csv';
+
+        if($request->query->has('format')) {
+            switch($request->query->get('format')) {
+                case 'json': $format = 'json'; break;
+            }
+        }
+
+        if($type === 'followers')
+            $data = $this->getDoctrine()->getManager()->getRepository(UserRelation::class)
+                ->findOneBy([
+                    'type' => 'follower',
+                    'user' => $user
+                ]);
+        else
+            $data = $this->getDoctrine()->getManager()->getRepository(UserRelation::class)
+                ->findOneBy([
+                    'type' => 'following',
+                    'user' => $user
+                ]);
+
+        $output = [];
+
+        if($data)
+            foreach(json_decode($data->getData()) as $item)
+                $output[] = $item;
+
+        if($format === 'csv') {
+            $rows = [
+                implode(',', [ 'uuid' ]),
+                ...$output
+            ];
+    
+            $content = implode("\n", $rows);
+    
+            $response = new Response($content);
+            $response->headers->set('Content-Encoding', 'UTF-8');
+            $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
+            $response->headers->set('Content-Disposition', 'attachment; filename=sociant_hub_ids_' . $type .'.csv');
+    
+            return $response;
+        } else if($format === 'json') {
+            $response = new Response(json_encode($output, 128));
+            $response->headers->set('Content-Encoding', 'UTF-8');
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $response->headers->set('Content-Disposition', 'attachment; filename=sociant_hub_ids_' . $type .'.json');
     
             return $response;
         }
@@ -676,10 +736,10 @@ class ApiController extends AbstractController
             "analytics" => ($analytics && !$user->getAboveFollowerLimit()) ? $apiExportHandler->exportUserAnalytics($analytics, true) : null
         ];
     
-        $response = new Response(json_encode($output));
+        $response = new Response(json_encode($output, 128));
         $response->headers->set('Content-Encoding', 'UTF-8');
         $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename=sociant_hub_activities.json');
+        $response->headers->set('Content-Disposition', 'attachment; filename=sociant_hub_additional.json');
     
         return $response;
     }

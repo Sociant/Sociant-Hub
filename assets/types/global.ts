@@ -100,35 +100,44 @@ export type ErrorResponse = {
 }
 
 export type Relationship = {
-		source: {
-			id: number
-			id_str: string
-			screen_name: string
-			following: boolean
-			followed_by: boolean
-			live_following: boolean
-			following_received: boolean
-			following_requested: boolean
-			notifications_enabled: boolean
-			can_dm: boolean
-			blocking: boolean
-			blocked_by: boolean
-			muting: boolean
-			want_retweets: boolean
-			all_replies: boolean
-			marked_spam: boolean
-		}
-		target: {
-			id: number
-			id_str: string
-			screen_name: string
-			following: boolean
-			followed_by: boolean
-			following_received: boolean
-			following_requested: boolean
-		}
+	source: {
+		id: number
+		id_str: string
+		screen_name: string
+		following: boolean
+		followed_by: boolean
+		live_following: boolean
+		following_received: boolean
+		following_requested: boolean
+		notifications_enabled: boolean
+		can_dm: boolean
+		blocking: boolean
+		blocked_by: boolean
+		muting: boolean
+		want_retweets: boolean
+		all_replies: boolean
+		marked_spam: boolean
+	}
+	target: {
+		id: number
+		id_str: string
+		screen_name: string
+		following: boolean
+		followed_by: boolean
+		following_received: boolean
+		following_requested: boolean
+	}
 }
 
 export type RelationshipResponse = {
 	relationship: Relationship
+}
+
+export type InfoResponse = {
+	setup_completed: boolean
+	above_follower_limit: boolean
+	follower_limit: number
+	twitter_user: TwitterUser | TwitterUserExtended
+	notification_settings?: any
+	automated_update: AutomatedUpdate | null
 }

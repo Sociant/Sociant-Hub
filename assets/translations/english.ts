@@ -6,7 +6,9 @@ export default {
 		title: 'Sociant Hub',
 		items: {
 			home: 'Home',
-			settings: 'Settings'
+			settings: 'Settings',
+			profile: 'Profile',
+			logout: 'Logout'
 		},
 		signInText: 'Sign in with Twitter'
 	},
@@ -53,14 +55,25 @@ export default {
 			oldestAccount: 'Oldest account'
 		},
         lastUpdate: 'Last update:',
-		manualUpdate: 'Manual update'
+		manualUpdate: 'Manual update',
+		followersProtected: 'Private followers',
+		followersVerified: 'Verified followers'
 	},
 	user: {
 		followHistory: 'Follow History',
 		userDetails: 'User Details',
 		userStatistics: 'User Statistics',
 		twitterButton: 'View on Twitter',
-		noActivities: 'Keine Aktivitäten gefunden'
+		noActivities: 'Keine Aktivitäten gefunden',
+		relationship: {
+			title: 'Current relationship',
+			followOther: '@{{name}} is following you',
+			followSelf: 'You are following @{{name}}',
+			blockedOther: '@{{name}} has blocked you',
+			blockedSelf: 'You blocked @{{name}}',
+			mutedSelf: 'You muted @{{name}}',
+			dmSelf: 'You can DM @{{name}}'
+		}
 	},
 	actions: {
 		followSelf: 'you followed',
@@ -113,8 +126,112 @@ export default {
             title: 'Follow us',
             twitter: '@{{ name }} on Twitter',
             github: '@{{ name }} on Github'
-        }
+        },
+		theme: {
+			title: 'Theme',
+			items: {
+				darkmode: 'Darkmode',
+				lightmode: 'Lightmode',
+			}
+		},
+		language: {
+			title: 'Language',
+			items: {
+				english: 'English',
+				german: 'German'
+			}
+		},
+		logoVariant: {
+			title: 'Logo variant',
+			items: {
+				none: 'None',
+				pride: 'Pride-Flag',
+				agender: 'Agender-Flag',
+				asexual: 'Asexual-Flag',
+				androgyne: 'Androgyne-Flag',
+				aromantic: 'Aromantic-Flag',
+				bigender: 'Bigender-Flag',
+				bisexual: 'Bisexual-Flag',
+				demigirl: 'Demi-Girl-Flag',
+				demiguy: 'Demi-Guy-Flag',
+				deminonbinary: 'Demi-Nonbinary-Flag',
+				demisexual: 'Demi-Sexual-Flag',
+				genderfluid: 'Genderfluid-Flag',
+				genderqueer: 'Genderqueer-Flag',
+				lesbian: 'Lesbian-Flag',
+				neurotis: 'Neurotis-Flag',
+				nonbinary: 'Non-Binary-Flag',
+				omnisexual: 'Omni-Sexual-Flag',
+				pansexual: 'Pan-Sexual-Flag',
+				polysexual: 'Poly-Sexual-Flag',
+				transgender: 'Transgender-Flag',
+				aporagender: 'Aporagender-Flag',
+				paragender: 'Paragender-Flag'
+			}
+		}
     },
+	settings: {
+		title: 'Settings',
+		updateInterval: {
+			title: 'Update interval',
+			items: {
+				m: 'Manual update',
+				h1: 'Every hour',
+				h12: 'Every 12 hours',
+				d1: 'Every day',
+				w1: 'Every week'
+			}
+		},
+		theme: {
+			title: 'Theme',
+			items: {
+				darkmode: 'Darkmode',
+				lightmode: 'Lightmode'
+			}
+		},
+		profileChartScrollEffect: {
+			title: 'Scroll effect for chart in profile',
+			items: {
+				on: 'Enabled',
+				off: 'Disabled',
+			}
+		},
+		language: {
+			title: 'Language',
+			items: {
+				english: 'English',
+				german: 'German'
+			}
+		},
+		apiToken: {
+			title: 'Your API token',
+			hint: 'This token is linked to your account and can be used to access the Sociant Hub API. Dont share it with anyone!',
+		},
+		download: {
+			title: 'Download your data',
+			csv: 'CSV',
+			json: 'JSON',
+			followerHistory: {
+				title: 'Follower history',
+				subtitle: 'List with users you followed, unfollowed and vice versa'
+			},
+			followerCount: {
+				title: 'Follower Count',
+				types: {
+					total: 'total',
+					year: 'by year',
+					month: 'by month',
+					day: 'by day'
+				}
+			},
+			followerIds: 'Follower ids',
+			followingIds: 'Following ids',
+			additionalData: {
+				title: 'Additional data',
+				subtitle: 'Twitter-User, connected devices, automated updates, analytics and more'
+			}
+		}
+	},
     pageTitles: {
         activities: 'Activities',
         home: 'Know your followers',

@@ -10,16 +10,16 @@ export const UserCard = styled(Container)`
 `
 
 export const UserData = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-gap: 15px;
 	text-align: left;
 	color: ${ props => props.theme.textPrimary }; 
 	
 	h2 {
 		font-weight: 600;
 		font-size: 22px;
-		margin: 40px 0 40px;
+		margin: 40px 0 20px;
 		position: relative;
 		padding-left: 10px;
 		
@@ -88,24 +88,19 @@ export const UserData = styled.div`
 	}
 	
 	.item-row {
-		display: flex;
-		align-items: flex-start;
-		justify-content: flex-end;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
 		width: 100%;
+		grid-gap: 15px;
 		
 		.item {
 			flex: 1;
-		}
-		
-		.item + .item {
-			margin-left: 15px;
 		}
 	}
 	
 	.item {
 		font-size: 30px;
 		font-weight: 600;
-		margin-bottom: 15px;
 		width: 100%;
 		padding: 15px 25px;
 		border-radius: 6px;
@@ -172,6 +167,17 @@ export const UserData = styled.div`
 			padding-left: 5px;
 			color: ${ props => props.theme.textPrimary };
 			font-size: 14px;
+		}
+	}
+
+	@media (max-width: 500px) {
+		.profile-item {
+			flex-direction: column;
+			align-items: center;
+
+			img {
+				margin-bottom: 15px;
+			}
 		}
 	}
 `
@@ -253,17 +259,24 @@ export const UserPage = styled.div`
 	}
 	
 	.row {
-		display: flex;
-		align-items: flex-start;
 		padding: 35px;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+		grid-gap: 50px;
 		
 		${ UserData } {
 			flex: 1;
-			margin-left: 50px;
 		}
 		
 		${ Timeline } {
 			flex: 1;
+		}
+	}
+
+	@media (max-width: 700px) {
+		.row {
+			display: flex;
+			flex-direction: column;
 		}
 	}
 `
