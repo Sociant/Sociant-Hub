@@ -8,9 +8,6 @@ parameters:
     twitter_api_secret_key: '%env(TWITTER_API_SECRET_KEY)%'
     twitter_callback_url: '%env(TWITTER_CALLBACK_URL)%'
     mobile_platform_schema: '%env(MOBILE_PLATFORM_SCHEMA)%'
-    recaptcha_secret: '%env(REPATCHA_SECRET)%'
-    recaptcha_public: '%env(REPATCHA_PUBLIC)%'
-    recipient_email: '%env(RECIPIENT_EMAIL)%'
     follower_limit: '%env(FOLLOWER_LIMIT)%'
 
 services:
