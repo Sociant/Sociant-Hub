@@ -284,16 +284,19 @@ class ApiController extends AbstractController
             ->findActivitiesByUser($user, $limit, $page, true);
 
         $output = [];
+        $overwrittenLimit = $limit;
 
         foreach($activities as $activity)
             if(!is_null($activity->getTwitterUser()))
                 $output[] = $apiExportHandler->exportUserAction($activity, $slimTwitterUser);
+            else
+                $overwrittenLimit--;
 
         $items = array_slice($output, 0, $limit);
 
         return $this->json([
             'items' => $items,
-            'more_available' => sizeof($output) > $limit,
+            'more_available' => sizeof($output) > $overwrittenLimit,
             'length' => sizeof($items),
             'page' => $page,
             'limit' => $limit,
