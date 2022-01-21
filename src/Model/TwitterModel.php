@@ -237,7 +237,7 @@ class TwitterModel
                 "cursor" => $nextCursor
             ]);
 
-            $ids = array_merge($ids, $result["ids"]);
+            $ids = array_merge($ids, $result["ids"] ?? []);
 
             $loops++;
             $nextCursor = $result["next_cursor"];
