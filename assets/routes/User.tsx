@@ -251,7 +251,7 @@ export default function User() {
 						</div>
 						{lastActivity.last_activity && (
 							<>
-								<h2>Letzte Aktivität</h2>
+								<h2>{t('profile.userAnalytics.lastActivityTitle')}</h2>
 								<a
 									className="activity-link"
 									target="_blank"

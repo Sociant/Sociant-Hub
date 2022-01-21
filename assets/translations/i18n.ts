@@ -94,6 +94,7 @@ export type LanguageResource = {
 				minute: string
 				minute_plural: string
 			}
+			lastActivityTitle: string
 			lastActivity: {
 				tweet: string
 				reply: string

@@ -72,6 +72,7 @@ export default {
 				minute: '{{count}} minute',
 				minute_plural: '{{count}} minutes',
 			},
+			lastActivityTitle: 'Last activity',
 			lastActivity: {
 				tweet: 'Last tweet {{time}} ago',
 				reply: 'Last reply {{time}} ago',
