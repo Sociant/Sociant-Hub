@@ -286,7 +286,8 @@ class ApiController extends AbstractController
         $output = [];
 
         foreach($activities as $activity)
-            $output[] = $apiExportHandler->exportUserAction($activity, $slimTwitterUser);
+            if(!is_null($activity->getTwitterUser()))
+                $output[] = $apiExportHandler->exportUserAction($activity, $slimTwitterUser);
 
         $items = array_slice($output, 0, $limit);
 
