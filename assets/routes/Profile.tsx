@@ -1,4 +1,4 @@
-import { faChevronDown, faCircleNotch, faSync } from '@fortawesome/pro-light-svg-icons'
+import { faChevronDown, faCircleNotch, faSync, faWatch } from '@fortawesome/pro-light-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import dateFormat from 'dateformat'
 import { motion } from 'framer-motion'
@@ -10,19 +10,24 @@ import { useApp } from '../provider/AppProvider'
 import { Loader, MotionLoader, UserList } from '../styledComponents/globalStyles'
 import {
 	ChartContainer,
-	GraphSettings, MotionStatisticCard, ProfilePage, Statistics
+	GraphSettings,
+	MotionStatisticCard,
+	ProfilePage,
+	Statistics,
 } from '../styledComponents/profileStyles'
 import {
-	ActivityEntry, Analytics,
-	HistoryEntry, HistoryResponse,
-	HomeResponse, Statistics as StatisticsType, StatisticsResponse,
-	TwitterUserExtended
+	ActivityEntry,
+	Analytics,
+	HistoryEntry,
+	HistoryResponse,
+	HomeResponse,
+	Statistics as StatisticsType,
+	StatisticsResponse,
+	TwitterUserExtended,
 } from '../types/global'
-import {
-	getAccountAge, thousandSeparator
-} from '../utilities/utilities'
-const ReactApexChart = React.lazy(() => import('react-apexcharts'))
+import { getAccountAge, thousandSeparator } from '../utilities/utilities'
 
+const ReactApexChart = React.lazy(() => import('react-apexcharts'))
 
 export default function Profile() {
 	const { data, profileChartScrollEffect } = useApp()
@@ -51,6 +56,8 @@ export default function Profile() {
 	const [manualUpdating, setManualUpdating] = useState(false)
 
 	const [automatedUpdate, setAutomatedUpdate] = useState(null)
+
+	const [enoughGraphData, setEnoughGraphData] = useState(true)
 
 	const { t } = useTranslation()
 
@@ -81,7 +88,7 @@ export default function Profile() {
 	}, [statistics])
 
 	useEffect(() => {
-        document.title = `Sociant Hub - ${ t('pageTitles.profile') }`;
+		document.title = `Sociant Hub - ${t('pageTitles.profile')}`
 
 		const onScroll = (e) => {
 			if (profilePage.current) {
@@ -128,6 +135,8 @@ export default function Profile() {
 
 		const statisticsResponseData: StatisticsResponse = await statisticsResponse.json()
 
+		setEnoughGraphData(responseData.history.length > 1)
+
 		updateGraph(responseData.history)
 
 		setActivities(responseData.activities)
@@ -148,6 +157,8 @@ export default function Profile() {
 		})
 
 		const responseData: HistoryResponse = await response.json()
+
+		setEnoughGraphData(responseData.items.length > 1)
 
 		updateGraph(responseData.items)
 	}
@@ -315,15 +326,26 @@ export default function Profile() {
 
 	return (
 		<ProfilePage onClick={() => setPeriodToggle(false)} ref={profilePage}>
-			<ChartContainer key={period} style={ profileChartScrollEffect ? chartContainerStyles : null }>
+			<ChartContainer key={period} style={profileChartScrollEffect ? chartContainerStyles : null}>
 				{periodLoading ? (
 					<Loader>
 						<FontAwesomeIcon icon={faCircleNotch} spin={true} />
 					</Loader>
-				) : (
-					<Suspense fallback={<div>Loading...</div>}>
+				) : enoughGraphData ? (
+					<Suspense
+						fallback={
+							<Loader>
+								<FontAwesomeIcon icon={faCircleNotch} spin={true} />
+							</Loader>
+						}>
 						<ReactApexChart options={options} series={series} type="area" height={400} />
 					</Suspense>
+				) : (
+					<div className="not-enough-data">
+						<FontAwesomeIcon icon={faWatch} />
+						<b>{t('profile.graph.notEnoughData.title')}</b>
+						<span>{t('profile.graph.notEnoughData.message')}</span>
+					</div>
 				)}
 			</ChartContainer>
 			<MotionStatisticCard initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}>
@@ -388,17 +410,17 @@ export default function Profile() {
 						</div>
 						<h2>{t('profile.followerAnalytics.title')}</h2>
 						<div className="item-row">
-							<Link to='/followers/verified' className="item-container">
-                                <motion.div variants={itemVariants} whileHover="hover" whileTap="tap" className="item">
-                                    {thousandSeparator(analytics.verified_followers)}
-                                    <small>{t('profile.followerAnalytics.verified')}</small>
-                                </motion.div>
+							<Link to="/followers/verified" className="item-container">
+								<motion.div variants={itemVariants} whileHover="hover" whileTap="tap" className="item">
+									{thousandSeparator(analytics.verified_followers)}
+									<small>{t('profile.followerAnalytics.verified')}</small>
+								</motion.div>
 							</Link>
-							<Link to='/followers/protected' className="item-container">
-                                <motion.div variants={itemVariants} whileHover="hover" whileTap="tap" className="item">
-                                    {thousandSeparator(analytics.protected_followers)}
-                                    <small>{t('profile.followerAnalytics.protected')}</small>
-                                </motion.div>
+							<Link to="/followers/protected" className="item-container">
+								<motion.div variants={itemVariants} whileHover="hover" whileTap="tap" className="item">
+									{thousandSeparator(analytics.protected_followers)}
+									<small>{t('profile.followerAnalytics.protected')}</small>
+								</motion.div>
 							</Link>
 						</div>
 						<div className="item-row">

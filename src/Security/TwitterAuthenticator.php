@@ -121,6 +121,7 @@ class TwitterAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
+        /** @var User $user */
         $user = $token->getUser();
         $apiToken = $user->getApiToken();
 
@@ -134,7 +135,7 @@ class TwitterAuthenticator extends AbstractGuardAuthenticator
         if($request->query->get("return_type","login") == "api_token")
             return new RedirectResponse($this->container->getParameter("mobile_platform_schema") . "?token=" . $apiToken);
 
-        return new RedirectResponse("/panel/home");
+        return new RedirectResponse("/profile");
     }
 
     public function start(Request $request, AuthenticationException $authException = null)

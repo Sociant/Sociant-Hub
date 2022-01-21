@@ -114,6 +114,11 @@ class TwitterUser
      */
     private $lastUpdated;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $hasNftAvatar = false;
+
     public function __construct()
     {
         $this->userActions = new ArrayCollection();
@@ -372,6 +377,18 @@ class TwitterUser
     public function setLastUpdated(\DateTimeInterface $lastUpdated): self
     {
         $this->lastUpdated = $lastUpdated;
+
+        return $this;
+    }
+
+    public function getHasNftAvatar(): ?bool
+    {
+        return $this->hasNftAvatar;
+    }
+
+    public function setHasNftAvatar(bool $hasNftAvatar): self
+    {
+        $this->hasNftAvatar = $hasNftAvatar;
 
         return $this;
     }

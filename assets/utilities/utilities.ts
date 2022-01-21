@@ -1,5 +1,5 @@
-import dateFormat from 'dateformat'
 import { faArrowCircleDown, faArrowCircleUp, faQuestion } from '@fortawesome/pro-solid-svg-icons'
+import dateFormat from 'dateformat'
 import { TFunction } from 'i18next'
 import { TwitterUser } from '../types/global'
 
@@ -102,6 +102,26 @@ export function getAccountAge(createdAt: string, t: TFunction): string {
 	return output.join(', ')
 }
 
+export function getExpandedAge(createdAt: string, t: TFunction): string {
+	const difference = getDifference(Date.parse(createdAt), Date.now())
+
+	let output = []
+
+	if (difference.year > 0) output.push(t('profile.userAnalytics.ageItems.year', { count: difference.year }))
+	if (difference.year > 0 || difference.month > 0)
+		output.push(t('profile.userAnalytics.ageItems.month', { count: difference.month }))
+	if (difference.year > 0 || difference.month > 0 || difference.week > 0)
+		output.push(t('profile.userAnalytics.ageItems.week', { count: difference.week }))
+	if (difference.year > 0 || difference.month > 0 || difference.week > 0 || difference.day > 0)
+		output.push(t('profile.userAnalytics.ageItems.day', { count: difference.day }))
+	if (difference.year > 0 || difference.month > 0 || difference.week > 0 || difference.day > 0 || difference.hour > 0)
+		output.push(t('profile.userAnalytics.ageItems.hour', { count: difference.hour }))
+
+	output.push(t('profile.userAnalytics.ageItems.minute', { count: difference.minute }))
+
+	return output.join(', ')
+}
+
 export function isOnMobile() {
 	let check = false
 	;(function (a) {
@@ -114,7 +134,7 @@ export function isOnMobile() {
 			)
 		)
 			check = true
-	//@ts-ignore
+		//@ts-ignore
 	})(navigator.userAgent || navigator.vendor || window.opera)
 	return check
 }

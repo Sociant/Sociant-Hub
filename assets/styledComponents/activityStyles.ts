@@ -1,12 +1,12 @@
-import { Container, UserList } from './globalStyles'
-import styled from 'styled-components'
 import { motion } from 'framer-motion'
+import styled from 'styled-components'
+import { Container, UserList } from './globalStyles'
 
 export const ActivitiesCard = styled(Container)`
-	background: ${ props => props.theme.card.background };
+	background: ${(props) => props.theme.card.background};
 	border-radius: 6px;
 	width: 100%;
-	transition: background .2s ease;
+	transition: background 0.2s ease;
 `
 
 export const ActivitiesPage = styled.div`
@@ -17,8 +17,8 @@ export const ActivitiesPage = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	
-	${ UserList } {
+
+	${UserList} {
 		padding: 35px;
 	}
 `

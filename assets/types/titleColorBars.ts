@@ -1,14 +1,12 @@
-
-
 export const pride = ['#e40303', '#ff8c00', '#ffed00', '#008026', '#004dff', '#750787']
 
 export default {
-    'none': null,
-    'pride': pride
+	none: null,
+	pride: pride,
 }
 
 export function convertToGradient(colors: string[] | null, hardColors = true) {
-    if(colors == null) return 'none';
+	if (colors == null) return 'none'
 
 	const percentage = 100 / colors.length
 	let output = []

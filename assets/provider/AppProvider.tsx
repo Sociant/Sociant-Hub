@@ -1,7 +1,5 @@
-import React, { createContext, useState, useContext, useEffect } from 'react'
-import { Theme } from '../styledComponents/themes'
-import { darkTheme, lightTheme } from '../styledComponents/themes'
-import { pride } from '../types/titleColorBars'
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { darkTheme, lightTheme, Theme } from '../styledComponents/themes'
 import { isOnMobile } from '../utilities/utilities'
 
 export type AppType = {
@@ -25,23 +23,32 @@ export type AppData = {
 	screenName: string | null
 	name: string | null
 	apiToken: string | null
+	setupCompleted: boolean | null
 }
 
 export const AppContext = createContext<AppType>({
 	isReady: false,
-    theme: darkTheme,
+	theme: darkTheme,
 	titleBarColors: 'pride',
 	data: null,
 	profileChartScrollEffect: true,
+	setupCompleted: false,
 	setTheme: (_) => {},
-	setTitleBarColors: (colors: string) => {}
+	setTitleBarColors: (colors: string) => {},
+	setSetupCompleted: (completed: boolean) => {},
 })
 
-export const AppProvider = props => {
-	const [theme, setTheme] = useState<Theme>((localStorage.getItem('theme') ?? 'dark') === 'dark' ? darkTheme : lightTheme)
+export const AppProvider = (props) => {
+	const [theme, setTheme] = useState<Theme>(
+		(localStorage.getItem('theme') ?? 'dark') === 'dark' ? darkTheme : lightTheme
+	)
 	const [data, setData] = useState<AppData | null>(null)
 	const [titleBarColors, setTitleBarColors] = useState<string>(localStorage.getItem('titleBar') ?? 'pride')
-	const [profileChartScrollEffect, setProfileChartScrollEffect] = useState<boolean>((localStorage.getItem('profileChartScrollEffect') ?? !isOnMobile()).toString() === 'true')
+	const [profileChartScrollEffect, setProfileChartScrollEffect] = useState<boolean>(
+		(localStorage.getItem('profileChartScrollEffect') ?? !isOnMobile()).toString() === 'true'
+	)
+
+	const [setupCompleted, setSetupCompleted] = useState<boolean>(false)
 
 	const [isReady, setIsReady] = useState(false)
 
@@ -51,6 +58,7 @@ export const AppProvider = props => {
 		app.removeAttribute('data-app')
 
 		setData(appData)
+		setSetupCompleted(appData.setupCompleted ?? false)
 		setIsReady(true)
 	}, [])
 
@@ -72,9 +80,11 @@ export const AppProvider = props => {
 		titleBarColors,
 		data,
 		profileChartScrollEffect,
+		setupCompleted,
 		setTheme: (theme: Theme) => setTheme(theme),
 		setTitleBarColors: (colors: string) => setTitleBarColors(colors),
-		setProfileChartScrollEffect: (scrollEffect: boolean) => setProfileChartScrollEffect(scrollEffect)
+		setProfileChartScrollEffect: (scrollEffect: boolean) => setProfileChartScrollEffect(scrollEffect),
+		setSetupCompleted: (completed: boolean) => setSetupCompleted(completed),
 	}
 
 	return <AppContext.Provider value={defaultValue}>{props.children}</AppContext.Provider>

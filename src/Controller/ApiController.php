@@ -71,12 +71,6 @@ class ApiController extends AbstractController
         $deviceUniqueId = $request->request->get("device_unique_id");
 
         if(!$setupCompleted) {
-            if($deviceToken == null)
-                return $this->json(["error"=>"no device token provided"],500);
-
-            if($deviceUniqueId == null)
-                return $this->json(["error"=>"no device unique id provided"],500);
-
             $interval = $request->request->get("interval", "h1");
 
             switch($interval) {
@@ -86,7 +80,8 @@ class ApiController extends AbstractController
 
             $notificationPreferences = $request->request->has("notification_settings") ? json_decode($request->request->get("notification_settings"), true) : [];
 
-            $apiNotification = $this->getApiNotification($deviceToken, $deviceUniqueId, $user, true, $notificationPreferences);
+            if ($deviceToken != null && $deviceUniqueId != null)
+                $apiNotification = $this->getApiNotification($deviceToken, $deviceUniqueId, $user, true, $notificationPreferences);
 
             $twitterModel->fetchUserData($user,true,$interval);
             $automatedUpdate = $entityManager->getRepository(AutomatedUpdate::class)->findOneBy(["user"=>$user->getId()]);
@@ -448,6 +443,17 @@ class ApiController extends AbstractController
         $user = $this->getUser();
 
         $result = $twitterModel->getUserRelation($uuid, $user);
+
+        if($result) return $this->json($result);
+
+        return $this->json(["error"=>"unknown error"],404);
+    }
+
+    #[Route('/users/get/{uuid}/last-activity', name: 'users_get_last_activity')]
+    public function usersGetLastActivity(Request $request, TwitterModel $twitterModel, ApiExportHandler $apiExportHandler, $uuid)
+    {
+        $user = $this->getUser();
+        $result = $twitterModel->getLastActivity($uuid, $user);
 
         if($result) return $this->json($result);
 

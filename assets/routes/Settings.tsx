@@ -1,14 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Container, MotionLoader } from '../styledComponents/globalStyles'
-import { useApp } from '../provider/AppProvider'
+import { faClipboard } from '@fortawesome/pro-light-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleNotch, faClipboard } from '@fortawesome/pro-light-svg-icons'
-import { useTranslation } from 'react-i18next'
-import { APIKeyContainer, MotionSettingsPage, OptionRow } from '../styledComponents/setttingsStyles'
-
 import { motion } from 'framer-motion'
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useApp } from '../provider/AppProvider'
+import { Container } from '../styledComponents/globalStyles'
+import { APIKeyContainer, MotionSettingsPage, OptionRow } from '../styledComponents/setttingsStyles'
 import { darkTheme, lightTheme } from '../styledComponents/themes'
-import { AutomatedUpdate, InfoResponse } from '../types/global'
+import { InfoResponse } from '../types/global'
 
 export default function Settings() {
 	const { data, theme, setTheme, profileChartScrollEffect, setProfileChartScrollEffect } = useApp()
@@ -203,7 +202,7 @@ export default function Settings() {
 						className={`clipboard${apiKeyCopied != null ? (apiKeyCopied ? ' success' : ' error') : ''}`}
 						onClick={copyAPITokenToClipboard}>
 						<FontAwesomeIcon icon={faClipboard} />
-						<span>Kopieren</span>	
+						<span>Kopieren</span>
 					</motion.div>
 				</APIKeyContainer>
 

@@ -1,50 +1,40 @@
-import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react'
-import { Link, useParams, useLocation } from 'react-router-dom'
-import {
-	Container,
-	Loader,
-	MotionError404,
-	MotionLink,
-	MotionLoader,
-	MotionReturn,
-	SpinnerButton,
-} from '../styledComponents/globalStyles'
-import { useApp } from '../provider/AppProvider'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTwitter } from '@fortawesome/free-brands-svg-icons'
 import {
 	faBoxOpen,
 	faChevronLeft,
 	faCircleNotch,
 	faComment,
+	faPooStorm,
 	faUserFriends,
 	faUserSlash,
 	faUserTimes,
 } from '@fortawesome/pro-light-svg-icons'
+import { faBadgeCheck, faLock } from '@fortawesome/pro-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { motion } from 'framer-motion'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link, useLocation, useParams } from 'react-router-dom'
+import { useApp } from '../provider/AppProvider'
+import { MotionError404, MotionLink, MotionLoader, MotionReturn, SpinnerButton } from '../styledComponents/globalStyles'
+import TwitterButtonStyles from '../styledComponents/twitterButtonStyles'
+import { MotionUserCard, Timeline, UserData, UserPage } from '../styledComponents/userStyles'
 import {
 	ActivityEntry,
 	ErrorResponse,
-	HomeResponse,
+	LastActivity,
 	Relationship,
 	RelationshipResponse,
-	StatisticsResponse,
 	TwitterUserExtended,
 } from '../types/global'
-import { MotionUserCard, Timeline, UserCard, UserData, UserPage } from '../styledComponents/userStyles'
-import { MotionStatisticCard, StatisticCard, Statistics } from '../styledComponents/profileStyles'
 import {
 	formatActionExpanded,
 	formatDate,
 	getAccountAge,
 	getActionIcon,
-	getDifference,
+	getExpandedAge,
 	thousandSeparator,
 } from '../utilities/utilities'
-import TwitterButtonStyles from '../styledComponents/twitterButtonStyles'
-import { faTwitter } from '@fortawesome/free-brands-svg-icons'
-
-import { motion } from 'framer-motion'
-import { faBadgeCheck, faLock } from '@fortawesome/pro-solid-svg-icons'
 
 export default function User() {
 	const { data } = useApp()
@@ -60,9 +50,10 @@ export default function User() {
 	const [twitterUser, setTwitterUser] = useState<TwitterUserExtended>(null)
 	const [activities, setActivities] = useState<ActivityEntry[]>(null)
 	const [relationship, setRelationship] = useState<Relationship>(null)
+	const [lastActivity, setLastActivity] = useState<LastActivity>(null)
 
 	useEffect(() => {
-        document.title = `Sociant Hub - ${ t('pageTitles.userLoading') }`;
+		document.title = `Sociant Hub - ${t('pageTitles.userLoading')}`
 
 		setLoading(true)
 		loadData().then(() => {
@@ -99,17 +90,35 @@ export default function User() {
 
 		const activityResponseData: { items: ActivityEntry[] } = await activityResponse.json()
 
+		const lastActivityResponse = await fetch(`/api/users/get/${uuid}/last-activity`, {
+			headers: {
+				Authorization: `Bearer ${data.apiToken}`,
+			},
+		})
+
+		const lastActivityResponseData: LastActivity = await lastActivityResponse.json()
+
 		setTwitterUser(responseData)
 		setActivities(activityResponseData.items)
 		setRelationship(relationResponseData.relationship)
+		setLastActivity(lastActivityResponseData)
 
-        document.title = `Sociant Hub - ${ t('pageTitles.user', { name: (responseData as TwitterUserExtended).screen_name }) }`;
+		document.title = `Sociant Hub - ${t('pageTitles.user', {
+			name: (responseData as TwitterUserExtended).screen_name,
+		})}`
 	}
 
 	const accountAge = useMemo(() => {
 		if (!twitterUser) return null
 		return getAccountAge(twitterUser.created_at, t)
 	}, [twitterUser])
+
+	const lastActivityDate = useMemo(() => {
+		if (!twitterUser) return null
+		return t(`profile.userAnalytics.lastActivity.${lastActivity.last_activity_type}`, {
+			time: getExpandedAge(lastActivity.last_activity, t),
+		})
+	}, [lastActivity])
 
 	const itemVariants = {
 		hover: { scale: 1.05 },
@@ -185,6 +194,7 @@ export default function User() {
 							<img
 								src={twitterUser.profile_image_url.replace('_normal', '')}
 								alt={twitterUser.screen_name}
+								className={twitterUser.has_nft_avatar ? 'nft' : ''}
 							/>
 							<div>
 								<b>
@@ -196,6 +206,12 @@ export default function User() {
 									{twitterUser.protected && <FontAwesomeIcon icon={faLock} />}
 								</span>
 								<div className="description">{twitterUser.description}</div>
+								{twitterUser.has_nft_avatar && (
+									<div className="nft-warning">
+										<FontAwesomeIcon icon={faPooStorm} />
+										<span>{t('user.nftWarning')}</span>
+									</div>
+								)}
 								<TwitterButtonStyles
 									target="_blank"
 									href={`https://twitter.com/${twitterUser.screen_name}`}>
@@ -233,41 +249,52 @@ export default function User() {
 							{accountAge}
 							<small>{t('profile.userAnalytics.age')}</small>
 						</div>
+						{lastActivity.last_activity && (
+							<>
+								<h2>Letzte Aktivität</h2>
+								<a
+									className="activity-link"
+									target="_blank"
+									href={`https://twitter.com/${lastActivity.last_activity_screen_name}/status/${lastActivity.last_activity_id}`}>
+									{lastActivityDate}
+								</a>
+							</>
+						)}
 						<h2>{t('user.relationship.title')}</h2>
 						{relationship.source.followed_by && (
 							<div className="relation-item other">
 								<FontAwesomeIcon icon={faUserFriends} />
-								<span>{t('user.relationship.followOther', {name: twitterUser.screen_name})}</span>
+								<span>{t('user.relationship.followOther', { name: twitterUser.screen_name })}</span>
 							</div>
 						)}
 						{relationship.source.following && (
 							<div className="relation-item self">
 								<FontAwesomeIcon icon={faUserFriends} />
-								<span>{t('user.relationship.followSelf', {name: twitterUser.screen_name})}</span>
+								<span>{t('user.relationship.followSelf', { name: twitterUser.screen_name })}</span>
 							</div>
 						)}
 						{relationship.source.blocked_by && (
 							<div className="relation-item other">
 								<FontAwesomeIcon icon={faUserSlash} />
-								<span>{t('user.relationship.blockedOther', {name: twitterUser.screen_name})}</span>
+								<span>{t('user.relationship.blockedOther', { name: twitterUser.screen_name })}</span>
 							</div>
 						)}
 						{relationship.source.blocking && (
 							<div className="relation-item self">
 								<FontAwesomeIcon icon={faUserSlash} />
-								<span>{t('user.relationship.blockedSelf', {name: twitterUser.screen_name})}</span>
+								<span>{t('user.relationship.blockedSelf', { name: twitterUser.screen_name })}</span>
 							</div>
 						)}
 						{relationship.source.muting && (
 							<div className="relation-item self">
 								<FontAwesomeIcon icon={faUserTimes} />
-								<span>{t('user.relationship.mutedSelf', {name: twitterUser.screen_name})}</span>
+								<span>{t('user.relationship.mutedSelf', { name: twitterUser.screen_name })}</span>
 							</div>
 						)}
 						{relationship.source.can_dm && (
 							<div className="relation-item self">
 								<FontAwesomeIcon icon={faComment} />
-								<span>{t('user.relationship.dmSelf', {name: twitterUser.screen_name})}</span>
+								<span>{t('user.relationship.dmSelf', { name: twitterUser.screen_name })}</span>
 							</div>
 						)}
 					</UserData>

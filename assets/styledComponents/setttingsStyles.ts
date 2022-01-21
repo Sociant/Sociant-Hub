@@ -1,7 +1,5 @@
-import { Container } from './globalStyles'
-import styled from 'styled-components'
-import TwitterButtonStyles from './twitterButtonStyles'
 import { motion } from 'framer-motion'
+import styled from 'styled-components'
 
 export const OptionRow = styled.div`
 	display: grid;
@@ -16,23 +14,23 @@ export const OptionRow = styled.div`
 		align-items: center;
 		justify-content: center;
 		text-align: center;
-		background: ${ props => props.theme.settings.item };
+		background: ${(props) => props.theme.settings.item};
 		border-radius: 6px;
 		cursor: pointer;
 		border: solid 3px transparent;
-		transition: background .2s ease, border-color .2s ease;
+		transition: background 0.2s ease, border-color 0.2s ease;
 
 		&:hover {
-			background: ${ props => props.theme.settings.itemHover };
+			background: ${(props) => props.theme.settings.itemHover};
 		}
 
 		&.selected {
-			border-color: ${ props => props.theme.settings.itemSelected };
+			border-color: ${(props) => props.theme.settings.itemSelected};
 		}
 	}
 
 	&[disabled] {
-		opacity: .5;
+		opacity: 0.5;
 		pointer-events: none;
 	}
 
@@ -46,7 +44,7 @@ export const OptionRow = styled.div`
 
 export const APIKeyContainer = styled.div`
 	padding: 20px;
-	background: ${ props => props.theme.settings.tableOddRow };
+	background: ${(props) => props.theme.settings.tableOddRow};
 	border-radius: 10px;
 	margin-top: 20px;
 	margin-bottom: 45px;
@@ -57,21 +55,20 @@ export const APIKeyContainer = styled.div`
 		flex: 1;
 
 		span {
-			color: ${ props => props.theme.textPrimary };
+			color: ${(props) => props.theme.textPrimary};
 			font-family: 'Courier New', Courier, monospace;
 			display: flex;
 			align-items: center;
 		}
 
 		small {
-			color: ${ props => props.theme.textSecondary };
+			color: ${(props) => props.theme.textSecondary};
 			margin-top: 15px;
 		}
 	}
 
-
 	.clipboard {
-		background: ${ props => props.theme.background };
+		background: ${(props) => props.theme.background};
 		width: 40px;
 		height: 40px;
 		border-radius: 6px;
@@ -79,20 +76,20 @@ export const APIKeyContainer = styled.div`
 		place-items: center;
 		margin-left: 10px;
 		cursor: pointer;
-		color: ${ props => props.theme.textPrimary };
-		transition: background .2s ease, color .2s ease;
+		color: ${(props) => props.theme.textPrimary};
+		transition: background 0.2s ease, color 0.2s ease;
 
 		span {
 			display: none;
 		}
 
 		&.success {
-			background: #16A34A;
+			background: #16a34a;
 			color: #fff;
 		}
 
 		&.error {
-			background: #DC2626;
+			background: #dc2626;
 			color: #fff;
 		}
 	}
@@ -124,19 +121,19 @@ export const SettingsPage = styled.div`
 
 	h1 {
 		font-weight: 700;
-		color: ${ props => props.theme.textPrimary };
+		color: ${(props) => props.theme.textPrimary};
 		margin: 0 0 10px;
 		font-size: 22px;
 	}
 
 	h2 {
 		font-weight: 600;
-		color: ${ props => props.theme.textSecondary };
+		color: ${(props) => props.theme.textSecondary};
 		margin: 25px 0 5px;
 		font-size: 20px;
 	}
 
-	${ OptionRow } {
+	${OptionRow} {
 		margin: 10px 0 45px;
 	}
 
@@ -146,14 +143,14 @@ export const SettingsPage = styled.div`
 		border-collapse: collapse;
 
 		tr::after {
-			content: "";
+			content: '';
 			display: inline-block;
 			vertical-align: top;
 			min-height: 70px;
 		}
 
 		tr:nth-child(odd) td {
-			background: ${ props => props.theme.settings.tableOddRow };
+			background: ${(props) => props.theme.settings.tableOddRow};
 
 			&:first-child {
 				border-radius: 10px 0 0 10px;
@@ -166,23 +163,23 @@ export const SettingsPage = styled.div`
 
 		td {
 			padding: 10px 20px;
-			
+
 			&:not(:first-child) {
 				text-align: center;
 			}
 
 			a {
-				color: ${ props => props.theme.textPrimary };
+				color: ${(props) => props.theme.textPrimary};
 				text-decoration: none;
 			}
 
 			&:first-child {
 				font-weight: 600;
-				color: ${ props => props.theme.textPrimary };
+				color: ${(props) => props.theme.textPrimary};
 
 				small {
 					font-weight: 400;
-					color: ${ props => props.theme.textSecondary };
+					color: ${(props) => props.theme.textSecondary};
 				}
 			}
 		}
@@ -213,13 +210,13 @@ export const SettingsPage = styled.div`
 
 					a {
 						margin-right: 10px;
-						background: ${ props => props.theme.settings.item };
+						background: ${(props) => props.theme.settings.item};
 						padding: 10px 15px;
 						border-radius: 5px;
-						transition: background .2s ease;
+						transition: background 0.2s ease;
 
 						&:hover {
-							background: ${ props => props.theme.settings.itemHover };
+							background: ${(props) => props.theme.settings.itemHover};
 						}
 					}
 				}

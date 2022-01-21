@@ -48,7 +48,9 @@ class TwitterModel
     {
         $connection = $this->createConnection($user);
 
-        $userData = $connection->get("account/verify_credentials");
+        $userData = $connection->get("account/verify_credentials", [
+            "include_ext_has_nft_avatar" => true
+        ]);
         $twitterUser = $this->createTwitterUserFromArray((array) $userData);
 
         if($twitterUser == null) throw new Exception("Could not fetch user data, user might have removed API-Access.");
@@ -296,7 +298,8 @@ class TwitterModel
             $gluedIDs = implode(",", array_keys($needUpdate));
 
             $result = (array) $connection->get("users/lookup", [
-                "user_id" => $gluedIDs
+                "user_id" => $gluedIDs,
+                "include_ext_has_nft_avatar" => true
             ]);
 
             foreach ($result as $rawUser) {
@@ -310,7 +313,8 @@ class TwitterModel
 
     public function updateTwitterUserFromId(TwitterUser $twitterUser, TwitterOAuth $connection): ?TwitterUser {
         $result = (array) $connection->get("users/show", [
-            "user_id" => $twitterUser->getUuid()
+            "user_id" => $twitterUser->getUuid(),
+            "include_ext_has_nft_avatar" => true
         ]);
 
         if(isset($result["id"]))
@@ -342,6 +346,7 @@ class TwitterModel
         $twitterUser->setStatusesCount($user["statuses_count"]);
         $twitterUser->setTranslator($user["is_translator"]);
         $twitterUser->setProfileImageURL($user["profile_image_url_https"]);
+        $twitterUser->setHasNftAvatar($user["ext_has_nft_avatar"]);
         $twitterUser->setLastUpdated(new \DateTime());
 
         $this->entityManager->persist($twitterUser);
@@ -553,5 +558,69 @@ class TwitterModel
         ]);
 
         return json_decode(json_encode($result), true);
+    }
+
+    public function getLastActivity(string $uuid, User $user) {
+        $connection = $this->createConnection($user);
+
+        $lastTweetResult = $connection->get("statuses/user_timeline", [
+            "user_id" => $uuid,
+            "count" => 1,
+            "include_rts" => true,
+            "exclude_replies" => false
+        ]);
+
+        $lastLike = $connection->get("favorites/list", [
+            "user_id" => $uuid,
+            "count" => 1
+        ]);
+
+        $lastActivity = null;
+        $lastActivityId = null;
+        $lastActivityScreenName = null;
+        $lastActivityType = null;
+
+        if(is_array($lastTweetResult) && sizeof($lastTweetResult) > 0) {
+            $lastTweet = (array) $lastTweetResult[0];
+            $lastActivity = new \DateTime($lastTweet["created_at"]);
+            $lastActivityObject = $lastTweet;
+
+            $isRetweet = $lastTweet["retweeted_status"] ?? false;
+
+            if($isRetweet) {
+                $retweetedStatus = (array) $lastTweet["retweeted_status"];
+
+                $lastActivityId = $retweetedStatus["id_str"];
+                $lastActivityType = "retweet";
+                $lastActivityScreenName = ((array) $retweetedStatus["user"])["screen_name"];
+            } else if(isset($lastTweet["in_reply_to_status_id_str"])) {
+                $lastActivityId = $lastTweet["id_str"];
+                $lastActivityType = "reply";
+                $lastActivityScreenName = ((array) $lastTweet["user"])["screen_name"];
+            } else {
+                $lastActivityId = $lastTweet["id_str"];
+                $lastActivityType = "tweet";
+                $lastActivityScreenName = ((array) $lastTweet["user"])["screen_name"];
+            }
+        }
+
+        if(is_array($lastLike) && sizeof($lastLike) > 0) {
+            $lastLike = (array) $lastLike[0];
+            $createdAt = new \DateTime($lastLike["created_at"]);
+
+            if(is_null($lastActivity) || $createdAt > $lastActivity) {
+                $lastActivity = $createdAt;
+                $lastActivityId = $lastLike["id_str"];
+                $lastActivityType = "like";
+                $lastActivityScreenName = ((array) $lastLike["user"])["screen_name"];
+            }
+        }
+        
+        return [
+            'last_activity' => $lastActivity,
+            'last_activity_id' => $lastActivityId,
+            'last_activity_screen_name' => $lastActivityScreenName,
+            'last_activity_type' => $lastActivityType,
+        ];
     }
 }

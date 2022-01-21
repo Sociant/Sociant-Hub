@@ -1,19 +1,18 @@
 import styled from 'styled-components'
-import { motion } from 'framer-motion'
 import { Container } from './globalStyles'
 import TwitterButtonStyles from './twitterButtonStyles'
 
 export const HomePage = styled.div`
 	padding-bottom: 30px;
 
-	${ Container } .row {
+	${Container} .row {
 		display: flex;
 		padding: 5px 0;
 
 		&.reversed {
 			flex-direction: row-reverse;
 		}
-		
+
 		.image {
 			flex: 1.3;
 			margin: 20px;
@@ -22,7 +21,7 @@ export const HomePage = styled.div`
 				width: 100%;
 				max-width: 700px;
 				box-shadow: 0 1px 3px 0 rgb(63 63 68 / 25%);
-    			border-radius: 6px;
+				border-radius: 6px;
 			}
 
 			&.smaller {
@@ -39,13 +38,13 @@ export const HomePage = styled.div`
 			align-items: flex-start;
 
 			h1 {
-				color: ${ props => props.theme.textPrimary };
+				color: ${(props) => props.theme.textPrimary};
 				font-weight: 500;
 				font-size: 21px;
 			}
 
 			div {
-				color: ${ props => props.theme.textSecondary };
+				color: ${(props) => props.theme.textSecondary};
 				font-size: 18px;
 				max-width: 500px;
 			}
@@ -53,7 +52,7 @@ export const HomePage = styled.div`
 	}
 
 	@media (max-width: 750px) {
-		${ Container } .row {
+		${Container} .row {
 			flex-direction: column-reverse !important;
 			align-items: center;
 

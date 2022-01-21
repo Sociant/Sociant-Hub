@@ -1,8 +1,7 @@
 import i18n from 'i18next'
-import { useTranslation, initReactI18next } from 'react-i18next'
+import { initReactI18next } from 'react-i18next'
 import english from './english'
 import german from './german'
-import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
 
 const resources = {
 	en: {
@@ -13,18 +12,17 @@ const resources = {
 	},
 }
 
-i18n.use(initReactI18next)
-	.init({
-		resources,
-		lng: localStorage.getItem('language') ?? 'en',
-		fallbackLng: 'en',
-		interpolation: {
-			escapeValue: false,
-		},
-	})
+i18n.use(initReactI18next).init({
+	resources,
+	lng: localStorage.getItem('language') ?? 'en',
+	fallbackLng: 'en',
+	interpolation: {
+		escapeValue: false,
+	},
+})
 
 i18n.on('languageChanged', (language) => {
-	localStorage.setItem('language', language);
+	localStorage.setItem('language', language)
 })
 
 export type LanguageResource = {
@@ -39,6 +37,24 @@ export type LanguageResource = {
 		}
 		signInText: string
 	}
+	home: {
+		header: {
+			title: string
+			message: string
+		}
+		item1: {
+			title: string
+			message: string
+		}
+		item2: {
+			title: string
+			message: string
+		}
+		item3: {
+			title: string
+			message: string
+		}
+	}
 	profile: {
 		loading: string
 		graph: {
@@ -48,6 +64,10 @@ export type LanguageResource = {
 				hour: string
 				day: string
 				month: string
+			}
+			notEnoughData: {
+				title: string
+				message: string
 			}
 		}
 		recentActivities: string
@@ -69,6 +89,16 @@ export type LanguageResource = {
 				week_plural: string
 				day: string
 				day_plural: string
+				hour: string
+				hour_plural: string
+				minute: string
+				minute_plural: string
+			}
+			lastActivity: {
+				tweet: string
+				reply: string
+				retweet: string
+				like: string
 			}
 		}
 		followerAnalytics: {
@@ -89,6 +119,7 @@ export type LanguageResource = {
 	user: {
 		followHistory: string
 		userDetails: string
+		nftWarning: string
 		userStatistics: string
 		twitterButton: string
 		noActivities: string
@@ -142,6 +173,7 @@ export type LanguageResource = {
 			activities: string
 			settings: string
 			login: string
+			setup: string
 		}
 		legal: {
 			title: string
@@ -259,6 +291,12 @@ export type LanguageResource = {
 			}
 		}
 	}
+	setup: {
+		title: string
+		welcomeMessage: string
+		submitButton: string
+		loadingMessage: string
+	}
 	pageTitles: {
 		activities: string
 		home: string
@@ -266,6 +304,8 @@ export type LanguageResource = {
 		settings: string
 		user: string
 		userLoading: string
+		setup: string
+		imprint: string
 	}
 }
 

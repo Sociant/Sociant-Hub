@@ -141,3 +141,10 @@ export type InfoResponse = {
 	notification_settings?: any
 	automated_update: AutomatedUpdate | null
 }
+
+export type LastActivity = {
+	last_activity: string
+	last_activity_id: number
+	last_activity_screen_name: string
+	last_activity_type: string
+}

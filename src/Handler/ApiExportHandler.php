@@ -31,7 +31,8 @@ class ApiExportHandler
                 "protected"         => $twitterUser->getProtected(),
                 "verified"          => $twitterUser->getVerified(),
                 "translator"        => $twitterUser->getTranslator(),
-                "profile_image_url" => $twitterUser->getProfileImageURL()
+                "profile_image_url" => $twitterUser->getProfileImageURL(),
+                "has_nft_avatar"    => $twitterUser->getHasNftAvatar()
             ];
         else
             return [
@@ -50,7 +51,8 @@ class ApiExportHandler
                 "listed_count"      => $twitterUser->getListedCount(),
                 "favorites_count"   => $twitterUser->getFavoritesCount(),
                 "statuses_count"    => $twitterUser->getStatusesCount(),
-                "profile_image_url" => $twitterUser->getProfileImageURL()
+                "profile_image_url" => $twitterUser->getProfileImageURL(),
+                "has_nft_avatar"    => $twitterUser->getHasNftAvatar()
             ];
     }
 

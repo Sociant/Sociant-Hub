@@ -1,27 +1,17 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react'
-import { Link } from 'react-router-dom'
-import {
-	SpinnerButton,
-	MotionLoader,
-	MotionReturn,
-	UserList,
-} from '../styledComponents/globalStyles'
-import { useApp } from '../provider/AppProvider'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft, faCircleNotch } from '@fortawesome/pro-light-svg-icons'
-import { useTranslation } from 'react-i18next'
-import { ActivityEntry, ActivityResponse } from '../types/global'
-import { formatAction, formatDate, getActionIcon } from '../utilities/utilities'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { motion } from 'framer-motion'
-import { ActivitiesPage, MotionActivitiesCard } from '../styledComponents/activityStyles'
-import React_2 from 'framer-motion/dist/framer-motion'
+import React, { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import UserItem from '../components/activityUserItem'
+import { useApp } from '../provider/AppProvider'
+import { ActivitiesPage, MotionActivitiesCard } from '../styledComponents/activityStyles'
+import { MotionLoader, MotionReturn, SpinnerButton, UserList } from '../styledComponents/globalStyles'
+import { ActivityEntry, ActivityResponse } from '../types/global'
 
 export default function Activities() {
-
 	const { data } = useApp()
-
 
 	const { t } = useTranslation()
 
@@ -34,7 +24,7 @@ export default function Activities() {
 	const [moreAvailable, setMoreAvailable] = useState(false)
 
 	useEffect(() => {
-        document.title = `Sociant Hub - ${ t('pageTitles.activities') }`;
+		document.title = `Sociant Hub - ${t('pageTitles.activities')}`
 
 		setLoading(true)
 		loadData().then(() => {
@@ -45,16 +35,14 @@ export default function Activities() {
 	const loadData = async (_page = page) => {
 		const response = await fetch(`/api/activities?limit=${limit}&page=${_page}`, {
 			headers: {
-				'Authorization': `Bearer ${data.apiToken}`,
+				Authorization: `Bearer ${data.apiToken}`,
 			},
 		})
 
 		const responseData: ActivityResponse = await response.json()
 
-		if(activities == null)
-			setActivities(responseData.items)
-		else
-			setActivities([...activities, ...responseData.items])
+		if (activities == null) setActivities(responseData.items)
+		else setActivities([...activities, ...responseData.items])
 
 		setLimit(responseData.limit)
 		setPage(responseData.page)
@@ -62,7 +50,7 @@ export default function Activities() {
 	}
 
 	const loadMore = async () => {
-		if(loading) return;
+		if (loading) return
 
 		setLoading(true)
 		await loadData(page + 1)
@@ -74,48 +62,37 @@ export default function Activities() {
 		tap: { scale: 0.95 },
 	}
 
-	if (loading && activities == null) return <MotionLoader
-		initial={{ opacity: 0, y: -50 }}
-		animate={{ opacity: 1, y: 0 }}>
-		<FontAwesomeIcon icon={faCircleNotch} spin={true} />
-	</MotionLoader>
+	if (loading && activities == null)
+		return (
+			<MotionLoader initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }}>
+				<FontAwesomeIcon icon={faCircleNotch} spin={true} />
+			</MotionLoader>
+		)
 
 	return (
 		<ActivitiesPage>
-			<MotionReturn
-				className="return"
-				variants={itemVariants}
-				whileHover="hover"
-				whileTap="tap">
+			<MotionReturn className="return" variants={itemVariants} whileHover="hover" whileTap="tap">
 				<Link to="/profile">
 					<FontAwesomeIcon icon={faChevronLeft} />
 					{t('return.profile')}
 				</Link>
 			</MotionReturn>
-			<MotionActivitiesCard
-				ref={card}
-				initial={{ opacity: 0, y: 100 }}
-				animate={{ opacity: 1, y: 0 }}>
+			<MotionActivitiesCard ref={card} initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}>
 				<UserList>
 					<div className="title">
 						<h2>{t('profile.recentActivities')}</h2>
 					</div>
-					{activities.map((item: ActivityEntry, index: number) =>
-						<UserItem item={item} origin='activities' t={t} key={index} />
+					{activities.map((item: ActivityEntry, index: number) => (
+						<UserItem item={item} origin="activities" t={t} key={index} />
+					))}
+					{moreAvailable && (
+						<SpinnerButton>
+							<motion.div variants={itemVariants} whileHover="hover" whileTap="tap" onClick={loadMore}>
+								{loading && <FontAwesomeIcon icon={faCircleNotch} spin={true} />}
+								{t('loadMore')}
+							</motion.div>
+						</SpinnerButton>
 					)}
-					{
-						moreAvailable &&
-							<SpinnerButton>
-								<motion.div
-									variants={itemVariants}
-									whileHover="hover"
-									whileTap="tap"
-									onClick={loadMore}>
-									{ loading && <FontAwesomeIcon icon={ faCircleNotch } spin={true} /> }
-									{t('loadMore')}
-								</motion.div>
-							</SpinnerButton>
-					}
 				</UserList>
 			</MotionActivitiesCard>
 		</ActivitiesPage>

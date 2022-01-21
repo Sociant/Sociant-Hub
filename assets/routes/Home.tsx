@@ -18,12 +18,8 @@ export default function Home() {
 			<Header>
 				<Container>
 					<div className="description">
-						<h1>
-							Get to know your followers with <b>Sociant Hub</b>
-						</h1>
-						<div>
-							the easiest way to analyse and track your followers and unfollowers without any hassle
-						</div>
+						<h1 dangerouslySetInnerHTML={{ __html: t('home.header.title') }}></h1>
+						<div>{t('home.header.message')}</div>
 						<TwitterButtonStyles white href="/login">
 							<FontAwesomeIcon icon={faTwitter} />
 							{t('navigation.signInText')}
@@ -40,14 +36,8 @@ export default function Home() {
 						<img src="/assets/images/mockup-1-1.jpg" alt="" />
 					</div>
 					<div className="text">
-						<h2>
-							Everything at a <b>glance</b>
-						</h2>
-						<div>
-							See who and when follows and unfollows you, analyze your growth and learn more about your
-							followers. You can decide how often Sociant Hub should search for new followers and
-							unfollowers or you can do it by your own in your personal panel.
-						</div>
+						<h2>{t('home.item1.title')}</h2>
+						<div>{t('home.item1.message')}</div>
 					</div>
 				</div>
 				<div className="row">
@@ -55,14 +45,8 @@ export default function Home() {
 						<img src="/assets/images/mockup-1-2.jpg" alt="" />
 					</div>
 					<div className="text">
-						<h2>
-							Know your <b>followers</b>
-						</h2>
-						<div>
-							Wether you want to find out how many followers are verified, who is the oldest account or
-							how many tweets your followers have in total, Sociant Hub calculates everything for you so
-							you can sit back and relax..
-						</div>
+						<h2>{t('home.item2.title')}</h2>
+						<div>{t('home.item2.message')}</div>
 					</div>
 				</div>
 				<div className="row reversed">
@@ -70,14 +54,8 @@ export default function Home() {
 						<img src="/assets/images/mockup-2.jpg" alt="" />
 					</div>
 					<div className="text">
-						<h2>
-							Everything at a <b>glance</b>
-						</h2>
-						<div>
-							See who and when follows and unfollows you, analyze your growth and learn more about your
-							followers. You can decide how often Sociant Hub should search for new followers and
-							unfollowers or you can do it by your own in your personal panel.
-						</div>
+						<h2>{t('home.item3.title')}</h2>
+						<div>{t('home.item3.message')}</div>
 					</div>
 				</div>
 			</Container>
