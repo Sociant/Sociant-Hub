@@ -124,7 +124,7 @@ export default {
 	},
 	return: {
 		profile: 'Zurück zum Profil',
-		activities: 'Zurück zum Verlauf',
+		activities: 'Zurück zu Aktivitäten',
 	},
 	dateTimeFormat: 'HH:MM dd.mm.yyyy',
 	loadMore: 'mehr laden',
